@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.trhnthtm.mapper.TrHnthtMMapper">
+
+    <select id="selecthntList" resultType="com.trtm.iot.trhnthtm.entity.TrHnthtM" flushCache="true" useCache="false">
+        select * from `tr_hntht_m` where id>#{curid} and shebei_no in(${shebeilist}) limit 100;
+    </select>
+
+    <select id="selectHntHtList" resultType="com.trtm.iot.trhnthtm.entity.TrHnthtM" flushCache="true" useCache="false">
+
+            SELECT
+                *
+            FROM
+                tr_hntht_m
+            WHERE
+                shebei_no IN (${shebeilist})
+                AND 3 > istuisong
+    </select>
+
+    <select id="selectHntHtsyList" resultType="com.trtm.iot.trhnthtm.entity.TrHnthtM" flushCache="true" useCache="false">
+
+            SELECT
+                *
+            FROM
+                tr_hntht_m
+            WHERE shebei_no IN (${shebeilist})
+                AND 0 = istuisong
+    </select>
+</mapper>

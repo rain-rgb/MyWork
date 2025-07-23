@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.sy.sydpssysignature.mapper.SyDpsSySignatureMapper">
+    <update id="updateSignSql1">
+        UPDATE dps_yy_renwudan set jiancerenyuandate =#{baogaoriqi} WHERE yuancaijinchangdengjiId=(SELECT id FROM dps_yy_yuancaijinchangdengji where sampleNo=#{sampleno}
+    </update>
+    <update id="updateSignSql2">
+        update dps_yy_Measurement set status='2' where sampleid=#{id}
+    </update>
+
+    <select id="selectBYCAID" resultType="java.util.Map">
+        select id from dps_jc_CAUsbKey where CAID=#{caid} and CAStatus=0
+    </select>
+    <select id="selectSignSql1" resultType="java.util.Map">
+        SELECT top 1 tiNo FROM dps_sy_Report_S WHERE sampleNo=#{sampleno} and titype='1' and tiNoTemp='1'
+    </select>
+    <select id="selectSignSql2" resultType="java.util.Map">
+        SELECT top 1 baogaoriqi FROM dps_sy_tableHeader WHERE sampleNo=#{sampleno} and tiNo=#{tiNo} and tiNoTemp='1'
+    </select>
+    <select id="selectSignSql3" resultType="java.lang.Long">
+select count(0) from dps_sy_qianzhangliucheng where sampleId = #{id} and qianzhangzhuangtai=1 and liuchengleixing=#{type}
+    </select>
+    <select id="selectSignSql4" resultType="java.lang.Long">
+select count(0) from dps_sy_qianzhangliucheng where sampleId = #{id} and qianzhangzhuangtai=0
+    </select>
+    <select id="selectSignPerson" resultType="java.lang.String">
+       SELECT
+CASE
+	WHEN
+		b.`status` = 10 THEN
+			a.firstsign
+			WHEN b.`status` = 20 THEN
+			a.secondsign
+			WHEN b.`status` = 30 THEN
+			a.thirdsign
+            WHEN b.`status` = 40 THEN
+            "sign" ELSE NULL
+		END AS personid
+	FROM
+		`sy_signperson` a
+	LEFT JOIN sy_sign b ON a.sampleno = b.sampleno
+	WHERE
+	    a.sampleno = #{sampleno}
+    </select>
+
+    <select id="selectPhoneByName" resultType="java.lang.String">
+        select phone from sys_user where id = #{username}
+    </select>
+</mapper>

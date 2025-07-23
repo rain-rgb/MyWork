@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.tr_maoxiayuyingli_over_handler.mapper.TrMaoxiayuyingliOverHandlerMapper">
+    <select id="getDataById" resultType="String" flushCache="true" useCache="false">
+        SELECT id
+        FROM `bhz_cement_over_handler`
+        where 1 = 1
+          and uuid = #{uuid}
+    </select>
+    <insert id="chuZhiAddById">
+        INSERT into tr_maoxiayuyingli_over_handler
+        (baseId, problem_reasons, handle_way, handle_result, handle_time, handle_person, file_path2, overproof_status)
+        VALUES (#{uuid}, #{wtyy}, #{clfs}, #{cljg}, sysdate(), #{chuzhiren}, #{bizPath}, 10)
+    </insert>
+    <update id="chuZhiUpdateById">
+        UPDATE bhz_cement_over_handler
+        SET problem_reasons  = #{wtyy},
+            handle_way       = #{clfs},
+            handle_result    = #{cljg},
+            handle_time      = sysdate(),
+            handle_person    = #{chuzhiren},
+            file_path=#{bizPath},
+            overproof_status = 10
+        where 1 = 1
+          and baseId = #{uuid}
+    </update>
+</mapper>

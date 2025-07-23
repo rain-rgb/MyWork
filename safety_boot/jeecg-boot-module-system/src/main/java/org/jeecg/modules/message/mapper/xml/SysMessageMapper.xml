@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.message.mapper.SysMessageMapper">
+
+    <select id="SelectLists" resultType="org.jeecg.modules.message.entity.SysMessage" flushCache="true" useCache="false">
+        select * from sys_sms where (es_send_status='0' or es_send_status='2') and es_send_num =0
+    </select>
+
+
+    <select id="SelectListToJT" resultType="org.jeecg.modules.message.entity.SysMessage" flushCache="true" useCache="false">
+        select * from sys_sms where (es_send_status='0' or es_send_status='2') and es_send_num =0
+    </select>
+
+    <select id="selectones" resultType="org.jeecg.modules.message.entity.SysMessage" flushCache="true" useCache="false">
+        select * from sys_sms where remark=#{shebeiNo} and es_title like '%设备延时/未工作通知%' and create_time like #{no}
+    </select>
+</mapper>

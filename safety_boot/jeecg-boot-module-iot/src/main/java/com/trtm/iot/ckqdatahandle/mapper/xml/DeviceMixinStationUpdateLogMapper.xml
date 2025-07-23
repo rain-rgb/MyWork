@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.ckqdatahandle.mapper.DeviceMixinStationUpdateLogMapper">
+
+    <select id="countGroutingTotalUpdate" parameterType="String" resultType="Double">
+      select sum(grouting_total_update) from device_mixin_station_update_log
+      where sid=#{sid}
+    </select>
+</mapper>

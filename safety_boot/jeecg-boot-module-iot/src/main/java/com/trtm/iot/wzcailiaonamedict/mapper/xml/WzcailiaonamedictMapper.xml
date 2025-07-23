@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.wzcailiaonamedict.mapper.WzcailiaonamedictMapper">
+
+    <select id="selectBylmcailiaolx" resultType="java.lang.String" flushCache="true" useCache="false">
+        select group_concat(cailiaoNo) from ycl_cailiaodict where lmcailiaolx = #{i}
+    </select>
+
+
+
+
+    <select id="selectCailiaoNoByName" resultType="java.lang.String">
+        select cailiaoNo from ycl_cailiaodict  where cailiaoName = #{cailiaoName}
+    </select>
+    <select id="selectByYCCP" resultType="java.util.Map">
+        SELECT
+            cailiaoName,
+            group_concat( cailiaoNo ) as cailiaoNo
+        FROM
+        ycl_cailiaodict
+        where
+        sys_org_code LIKE concat(
+        #{code},
+        "%")
+        <if test="cprule!=0">
+            and
+            nodeType > #{cprule}
+        </if>
+        <if test="ycrule!=0">
+            and
+            nodeType &lt; #{ycrule}
+        </if>
+        GROUP BY
+            cailiaoName
+    </select>
+    <select id="selectListByYCCP" resultType="java.lang.String">
+        SELECT cailiaoNo FROM `ycl_cailiaodict` where
+        sys_org_code LIKE concat(
+        #{code},
+        "%")
+        <if test="cprule!=0">
+            and
+            nodeType > #{cprule}
+        </if>
+        <if test="ycrule!=0">
+            and
+            nodeType &lt; #{ycrule}
+        </if>
+    </select>
+    <select id="getcailiaoNoList" resultType="java.lang.String">
+        select cailiaoNo from ycl_cailiaodict where 1=1 <if test="nodeType != null">and nodeType=#{s}</if>
+    </select>
+    <select id="getGgXh" resultType="java.lang.String">
+        select DISTINCT guigexinghao from ycl_cailiaodict where guigexinghao is not null and guigexinghao != '' <if test="nodeType != null">and nodeType = #{nodeType}</if>
+    <if test="orgCode != null">and sys_org_code like concat(#{orgCode}, '%')</if>
+    </select>
+
+
+</mapper>

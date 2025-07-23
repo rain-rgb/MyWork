@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.lqbhz.mapper.BhzLqBasesMapper">
+
+    <select id="selectlqbhzones" resultType="com.trtm.iot.lqbhz.entity.BhzLqBases" flushCache="true" useCache="false">
+        select * from bhz_lq_bases where id>=#{id} and alertstate=#{alertstate} limit 500
+    </select>
+
+    <select id="selectlqbhzonesg" resultType="com.trtm.iot.lqbhz.entity.BhzLqBases" flushCache="true" useCache="false">
+        select * from bhz_lq_bases where id>=#{id} and alertstate=#{alertstate} and shebeibianhao in (${shebeiNo}) limit 100
+    </select>
+
+    <select id="queryone" resultType="com.trtm.iot.lqbhz.entity.BhzLqBases" flushCache="true" useCache="false">
+        select * from bhz_lq_bases where shebeibianhao=#{shebeiNo} order by chuliaoshijian desc  limit 1
+    </select>
+    <!--浙路品质235专用-->
+    <select id="selectList1" resultType="com.trtm.iot.lqbhz.entity.BhzLqBases" flushCache="true" useCache="false">
+        select *
+        from bhz_lq_bases
+        where  shebeibianhao in (${shebeiNo})
+        AND alertstate = 1
+        AND (iszlpz = 0 OR (iszlpz = 3 AND overproof_status >0))
+        AND chaobiaodengji > 1
+        AND project_name LIKE '%235%'
+        LIMIT 100
+    </select>
+    <!--浙路品质通用-->
+    <select id="selectListTY" resultType="com.trtm.iot.lqbhz.entity.BhzLqBases" flushCache="true" useCache="false">
+        select *
+        from bhz_lq_bases
+        where  shebeibianhao in (${shebeiNo})
+        AND alertstate = 1
+        AND (iszlpz = 0 OR (iszlpz = 3 AND overproof_status >0))
+        AND chaobiaodengji > 1
+        AND chuliaoshijian >= '2023-03-01'
+        LIMIT 100
+    </select>
+    <!--浙路品质疏港专用-->
+    <select id="selectListSG" resultType="com.trtm.iot.lqbhz.entity.BhzLqBases" flushCache="true" useCache="false">
+        select *
+        from bhz_lq_bases
+        where  shebeibianhao in (${shebeiNo})
+        AND alertstate = 1
+        AND (iszlpz = 0 OR (iszlpz = 3 AND overproof_status >0))
+        AND chaobiaodengji > 1
+        LIMIT 100
+    </select>
+
+    <select id="selectList2" resultType="com.trtm.iot.lqbhz.entity.BhzLqBases" flushCache="true" useCache="false">
+        select *
+        from bhz_lq_bases
+        where  shebeibianhao in (${shebeiNo})
+        and id>#{id}
+        AND alertstate = 1 and hunheliaoid in ('54','52')
+        LIMIT 1000
+    </select>
+
+    <select id="selectListtoDJ" resultType="com.trtm.iot.lqbhz.entity.BhzLqBases" flushCache="true" useCache="false">
+        select *
+        from bhz_lq_bases
+        where  shebeibianhao in (${shebeiNo})
+        and id>#{id}
+        AND alertstate > 0
+        and formula_no in ('33','34','36','75')
+        LIMIT 100
+    </select>
+
+    <select id="selectUpdateList" resultType="com.trtm.iot.lqbhz.entity.BhzLqBases" flushCache="true" useCache="false">
+        select *
+        from bhz_lq_bases
+        where  shebeibianhao = #{shebeiNo}
+        AND formula_no >= 350
+        AND 360 >= formula_no
+        LIMIT 100
+    </select>
+
+    <select id="selectListtoHC" resultType="com.trtm.iot.lqbhz.entity.BhzLqBases" flushCache="true" useCache="false">
+        select *
+        from bhz_lq_bases
+        where  shebeibianhao in (${shebeiNo})
+        and id>#{id}
+        AND alertstate = 1
+        and formula_no in ('33','34','36','75')
+        LIMIT 1000
+    </select>
+
+    <select id="selectcbList" resultType="com.trtm.iot.lqbhz.entity.BhzLqBases" flushCache="true" useCache="false">
+        select *
+        from bhz_lq_bases
+        where  shebeibianhao in (${shebeiNo})
+        AND alertstate = 1
+        AND chaobiaodengji > 0
+        AND (SUBSTRING_INDEX(jtjtuuid, '-', -1) != overproof_status OR jtjtuuid IS NULL)
+
+    </select>
+    <select id="selectWranCount" resultType="com.trtm.iot.lqbhz.entity.BhzLqWarnVO" flushCache="true"
+            useCache="false">
+        select
+        COUNT( * ) warnCount,
+        COUNT( if(chaobiaodengji = 1,true,null)) primaryCount,
+        COUNT( if(chaobiaodengji = 2,true,null)) middleCount,
+        COUNT( if(chaobiaodengji = 3,true,null)) advancedCount,
+        COUNT( if(timechaobiao = 1,true,null)) timeCount,
+        COUNT( if(timechaobiao = 1 and overproof_status = 20,true,null)) timeBiheCount,
+        COUNT( if(chaobiaodengji = 1 and overproof_status = 20 ,true,null)) primaryBiheCount,
+        COUNT( if(chaobiaodengji = 2 and overproof_status = 20 ,true,null)) middleBiheCount,
+        COUNT( if(chaobiaodengji = 3 and overproof_status = 20 ,true,null)) advancedBiheCount,
+        COUNT( if(wenduchaobiao = 1,true,null)) wenduWarnCount,
+        COUNT( if(wenduchaobiao = 1 and overproof_status = 20,true,null)) wenduBiheCount
+
+        from `bhz_lq_bases`
+       where exists (select sb.sbjno from `shebei_info` sb right join(select * from `sys_depart` where org_code like concat(#{orgCode},"%") ) depart on  sb.sys_org_code like concat(depart.org_code,"%") where sb.sbjno is not null GROUP BY sb.sbjno)
+
+    ;
+    </select>
+    <select id="selectWranCountByorgcde" resultType="com.trtm.iot.hntbhz.entity.BhzCementWarnVO" flushCache="true"
+            useCache="false">
+         select COUNT( if(chaobiaodengji = 1,true,null)) primaryCount,
+        COUNT( if(chaobiaodengji = 2,true,null)) middleCount,
+        COUNT( if(chaobiaodengji = 3,true,null)) advancedCount,
+						count(id) allDish,
+						s.depart_name project_name,
+						s.org_code sys_org_code,
+						COUNT( if(chaobiaodengji != 0 and overproof_status = 20 ,true,null)) biheCount,
+						COUNT( if(chaobiaodengji = 3,true,null))/count(id) allWarnLv,
+						s.sbjno shebei_no
+						from `bhz_lq_bases` b
+						left join (select depart.depart_name,depart.org_code,sb.sys_org_code,sb.sbjno from `shebei_info` sb right join(select * from `sys_depart` where org_category =4 ) depart on  sb.sys_org_code like concat(depart.org_code,"%")) s
+						on b.shebeibianhao = s.sbjno
+						where s.org_code is not null
+						and  s.org_code  like concat(#{orgCode},"%")
+
+						GROUP BY s.org_code ORDER BY allWarnLv desc limit 10
+
+    </select>
+    <select id="selectWranCountByshebeino" resultType="com.trtm.iot.hntbhz.entity.BhzCementWarnVO" flushCache="true"
+            useCache="false">
+	  	select
+			sum(result.primaryCount+result.middleCount+result.advancedCount) allWarnDish,
+			result.allDish,
+			result.biheCount,
+			result.shebei_name,
+			result.section_name,
+			result.shebei_no,
+			sum(result.primaryCount+result.middleCount+result.advancedCount)/result.allDish allWarnLv,
+			result.sys_org_code
+			from(select
+						   COUNT( b.id ) allDish,
+        COUNT( if(b.chaobiaodengji = 1,true,null)) primaryCount,
+        COUNT( if(b.chaobiaodengji = 2,true,null)) middleCount,
+        COUNT( if(b.chaobiaodengji = 3,true,null)) advancedCount,
+				COUNT( if(b.chaobiaodengji != 0 and b.overproof_status = 20,true,null)) biheCount,
+				s.sbjno shebei_no,
+				s.sbname shebei_name,
+						s.depart_name section_name,
+						s.sys_org_code sys_org_code
+						from `bhz_lq_bases` b
+						left join (select depart.depart_name,depart.org_code,sb.sys_org_code,sb.sbjno,sb.sbname from `shebei_info` sb right join(select * from `sys_depart` where org_category =#{i} ) depart on  sb.sys_org_code like concat(depart.org_code,"%")) s
+					on b.shebeibianhao = s.sbjno
+						where s.org_code like  concat(#{code},"%")
+						GROUP BY shebei_no) result
+						GROUP BY shebei_no  ORDER BY allWarnLv desc limit 10
+    </select>
+    <select id="selectBiaoduanByshebeino" resultType="com.trtm.iot.hntbhz.entity.BhzCementWarnVO" flushCache="true"
+            useCache="false">
+        select
+						count(b.id) allDish, COUNT( if(b.chaobiaodengji != 0,true,null)) allWarnDish ,  s.depart_name sectionName,
+						s.sys_org_code
+						from `bhz_lq_bases` b
+						left join  (select depart.depart_name,depart.org_code,sb.sys_org_code,sb.sbjno,sb.sbname from `shebei_info` sb right join(select * from `sys_depart` where org_category =7 ) depart on  sb.sys_org_code like concat(depart.org_code,"%")) s
+						on b.shebeibianhao = s.sbjno
+						where s.org_code like  concat(#{sysOrgCode},"%")
+						GROUP BY s.org_code
+    </select>
+    <select id="selectBiheCount" resultType="java.lang.Integer" flushCache="true"
+            useCache="false">
+select
+				  COUNT( if(chaobiaodengji != 0 and overproof_status = 20 ,true,null)) primaryBiheCount
+        from `bhz_lq_bases`
+				where exists (select sb.sbjno from `shebei_info` sb right join(select * from `sys_depart` where org_code like concat(#{orgCode},"%") ) depart on  sb.sys_org_code like concat(depart.org_code,"%") where sb.sbjno is not null GROUP BY sb.sbjno)
+
+
+    </select>
+
+    <select id="findYuJingS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_lq_bases where shebeibianhao in
+        <foreach collection="sheBeiNoList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+        and chaobiaodengji > 0
+    </select>
+    <select id="findBiHeS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_lq_bases where shebeibianhao in
+        <foreach collection="sheBeiNoList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+        and overproof_status = 20
+    </select>
+    <select id="findXiangMuZS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_lq_bases where shebeibianhao in
+        <foreach collection="sheBeiNoList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+    </select>
+
+    <select id="findYuJingSs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_lq_bases where shebeibianhao in
+        <foreach collection="sheBeiNoList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+        and chaobiaodengji > 0 and (chuliaoshijian like concat(#{dateNowStr},"%"))
+    </select>
+    <select id="findBiHeSs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_lq_bases where shebeibianhao in
+        <foreach collection="sheBeiNoList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+        and overproof_status = 20 and (chuliaoshijian like concat(#{dateNowStr},"%"))
+    </select>
+    <select id="findXiangMuZSs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_lq_bases where shebeibianhao in
+        <foreach collection="sheBeiNoList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+        and (chuliaoshijian like concat(#{dateNowStr},"%"))
+    </select>
+    <select id="selectwarnContent" resultType="java.util.Map" flushCache="true" useCache="false">
+        select shebeibianhao,chuliaoshijian,over_reason from ${tableName}  where over_reason != null and DATEDIFF(chuliaoshijian,NOW())=0 and shebeibianhao = #{sbjno} order by chuliaoshijian desc limit 1
+    </select>
+    <select id="selectLQBHZ" resultType="com.trtm.iot.lqbhz.entity.BhzLqBases" flushCache="true" useCache="false">
+        select * from bhz_lq_bases where id>#{curid} and shebeibianhao in (${shebeilist}) limit 50
+    </select>
+    <select id="selectProjectList" resultType="java.util.Map" flushCache="true" useCache="false">
+        select depart_name,org_code
+        from `sys_depart`
+        where org_code like concat(#{sys_org_code}, "%")
+          and org_category = #{i}
+    </select>
+    <select id="selectOverCount" resultType="java.lang.Double" flushCache="true" useCache="false">
+        select ${sql} from ${tableName}
+        <if test="shebeiList != null">
+            where shebeibianhao in
+            <foreach collection="shebeiList" item="item" index="index"  open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <select id="selectBHZUnifiedProcess" resultType="com.trtm.iot.lqbhz.entity.BhzLqBases" flushCache="true" useCache="false">
+        select *
+        from bhz_lq_bases
+        where id>#{curid}
+        and chaobiaodengji > 0
+        AND alertstate = 1
+        <if test="shebeiList != null">
+            AND shebeibianhao in
+            <foreach collection="shebeiList" item="item" index="index"  open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        limit 10
+    </select>
+    <select id="selectLQBHZRoad" resultType="com.trtm.iot.lqbhz.entity.BhzLqBases" flushCache="true" useCache="false">
+        select * from bhz_lq_bases where id>#{curid} and shebeibianhao in (${shebeilist}) limit 100
+    </select>
+    <select id="getDosage" resultType="com.trtm.iot.lqbhz.entity.BhzLqBasesDayYL" flushCache="true" useCache="false">
+        SELECT
+        formula_no as formulaNo,
+        CASE
+            WHEN
+                formula_no = '33' THEN
+                    'SMA-13'
+                    WHEN formula_no = '36' THEN
+                    'SMA-16'
+                    WHEN formula_no = '34' THEN
+                    'SUP-20'
+                    WHEN formula_no = '75' THEN
+                    'SUP-25' ELSE ''
+                END AS formulaName,
+                DATE( chuliaoshijian ) AS chuliaoshijian,
+                bhz_lq_cailiao.cailiaoming as materialName,
+                SUM( bhz_lq_cailiao.shijiyongliang ) AS actualDosage ,
+                ROUND( AVG( bhz_lq_cailiao.shijipb ), 2 ) AS actualScale
+            FROM
+                bhz_lq_bases
+                JOIN bhz_lq_cailiao ON bhz_lq_bases.guid = bhz_lq_cailiao.base_guid
+            WHERE
+                bhz_lq_bases.shebeibianhao = 'ydlm1blq_01'
+                AND formula_no IN ( '33', '34', '36', '75' )
+                AND DATE( chuliaoshijian ) = #{date}
+                AND formula_no = #{formulaNo}
+                AND cailiaoming NOT LIKE '粉料%'
+            GROUP BY
+                DATE( chuliaoshijian ),
+                bhz_lq_cailiao.cailiaoming,
+                formula_no
+        ORDER BY
+            DATE( chuliaoshijian ) DESC;
+    </select>
+    <select id="selectTongjiData" resultType="com.trtm.iot.hntbhz.vo.BhzCementBaseRC" flushCache="true"
+            useCache="false">
+        SELECT
+        COUNT( * ) as allDish,
+        COUNT( if(chaobiaodengji = 1,true,null)) as primaryCount,
+        COUNT( if(chaobiaodengji = 2,true,null)) as middleCount,
+        COUNT( if(chaobiaodengji = 3,true,null)) as advancedCount,
+        COUNT( if(overproof_status = 0 ,true,null) and if(chaobiaodengji != 0,true,null)) as allNotHandleDish,
+        COUNT( if(overproof_status > 0 ,true,null) and if(chaobiaodengji != 0,true,null)) as allHandleDish
+        FROM bhz_lq_bases
+
+        <if test="shebeiList != null">
+            WHERE shebeibianhao IN (${shebeiList})
+        </if>
+
+    </select>
+    <select id="selectCailiaoUse" resultType="com.trtm.iot.lqbhz.vo.BhzLqTongJi" flushCache="true" useCache="false">
+        select si.sbname as shebeiName,lc.cailiaoming as cailiaoName,SUM(lc.shijiyongliang) realUse,SUM(lc.theory_number) lilunUse
+        from bhz_lq_bases lb
+        inner join bhz_lq_cailiao lc
+        on lb.guid = lc.base_guid
+		inner join shebei_info si
+		on lb.shebeibianhao = si.sbjno
+        where lb.shebeibianhao in (${shebei})
+        and lb.chuliaoshijian between #{start} and #{end}
+        group by lb.shebeibianhao,lc.cailiaoming
+    </select>
+
+    <select id="selectdcdata" resultType="com.trtm.iot.lqbhz.vo.BhzLqCLDC" flushCache="true" useCache="false">
+        SELECT shebei_info.sbname, bhz_lq_bases.project_name, bhz_lq_bases.hunheliaoid, bhz_lq_bases.zongchanliang, bhz_lq_cailiao.cailiaoming, bhz_lq_cailiao.shijiyongliang, bhz_lq_cailiao.theory_number
+        FROM bhz_lq_cailiao JOIN bhz_lq_bases ON bhz_lq_bases.guid = bhz_lq_cailiao.base_guid
+        JOIN shebei_info ON shebei_info.sbjno = bhz_lq_cailiao.shebeibianhao
+        WHERE 1 = 1
+        <if test="shebeibianhao != null and shebeibianhao != ''">
+            AND bhz_lq_bases.shebeibianhao = #{shebeibianhao}
+        </if>
+        <if test="projectName != null and projectName != ''">
+            AND bhz_lq_bases.project_name = #{projectName}
+        </if>
+        <if test="hunheliaoid != null and hunheliaoid != ''">
+            AND bhz_lq_bases.hunheliaoid = #{hunheliaoid}
+        </if>
+        <if test="chuliaoshijian_begin != null and chuliaoshijian_begin != ''">
+            AND bhz_lq_bases.chuliaoshijian >= #{chuliaoshijian_begin}
+        </if>
+        <if test="chuliaoshijian_end != null and chuliaoshijian_end != ''">
+            AND #{chuliaoshijian_end} >= bhz_lq_bases.chuliaoshijian
+        </if>
+    </select>                                                                             
+</mapper>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.zhanglass.mapper.TrZhanglaSSMapper">
+
+    <select id="getselectList" resultType="com.trtm.iot.zhanglass.entity.TrZhanglaSS" flushCache="true" useCache="false">
+        select * from tr_zhangla_s_s where holeid =#{holeid}
+    </select>
+
+</mapper>

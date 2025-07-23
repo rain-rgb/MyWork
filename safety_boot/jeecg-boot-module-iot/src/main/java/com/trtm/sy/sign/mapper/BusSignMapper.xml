@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.sy.sign.mapper.BusSignMapper">
+    <update id="updateStatus">
+
+                update bus_sign
+                set status = #{status}
+                where signid = #{signid}
+
+    </update>
+    <delete id="removeByBginfoid">
+
+                delete from bus_sign where bginfoid = #{bginfoid}
+
+    </delete>
+    <select id="selectSignatureStatus" resultType="java.lang.Integer">
+
+                select signature_status from sys_tenant where tenant_name = #{tenantName}
+
+    </select>
+    <select id="selectListByCode" resultType="java.util.Map">
+
+        SELECT
+            a.*,
+        CASE
+
+                WHEN a.`status` = 10 THEN
+                r.jiancerenyuan
+                WHEN a.`status` = 11 THEN
+                r.fuherenyuan
+                WHEN a.`status` = 12 THEN
+                r.qianfarenyuan
+                WHEN a.`status` = 13 THEN
+                r.qianfarenyuan
+                WHEN a.`status` = 20 THEN
+                r.jiancerenyuan
+                WHEN a.`status` = 21 THEN
+                r.jilurenyuan
+                WHEN a.`status` = 22 THEN
+                r.fuherenyuan
+                WHEN a.`status` = 23 THEN
+                r.fuherenyuan ELSE NULL
+            END AS personid
+        FROM
+            (
+            SELECT
+                *
+            FROM
+                sy_sign
+            WHERE
+            org_code LIKE concat( "A05", '%' )) a
+            LEFT JOIN sy_dps_yy_renwudan r on a.sampleno = r.sample_no
+            order by a.create_time desc
+
+    </select>
+    <select id="selectNameById" resultType="java.lang.String">
+        select username from sys_user where id = #{personid}
+    </select>
+    <select id="selectNameByCode" resultType="java.lang.String">
+        select depart_name from sys_depart where org_code = #{orgcode}
+    </select>
+</mapper>

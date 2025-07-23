@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.zhiliangtaizuocfg.mapper.ZhiliangTaizuoCfgMapper">
+
+    <select id="selectzltaizuo" resultType="com.trtm.iot.zhiliangtaizuocfg.entity.ZhiliangTaizuoCfg" flushCache="true" useCache="false">
+        select * from zhiliang_taizuo_cfg where taizuono =#{taizuono}
+    </select>
+
+</mapper>

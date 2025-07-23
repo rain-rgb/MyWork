@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.entranceguardrecordreal.mapper.EntranceGuardRecordRealMapper">
+
+    <!--<select id="getBanZu" resultType="com.trtm.iot.entranceguardrecordreal.entity.EntranceGuardRecordReal">-->
+        <!--select count( DISTINCT (Names)) as isopen, DepartName-->
+        <!--from entrance_guard_record_real-->
+        <!--where shebeino=#{shebeino} and OpenTime is not null and AddDate is null and OpenTime > DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s')-->
+        <!--GROUP BY DepartName-->
+    <!--</select>-->
+    <select id="getBanZu" resultType="com.trtm.iot.entranceguardrecordreal.entity.EntranceGuardRecordReal">
+        select count( DISTINCT (Names)) as isopen, DepartName
+        from entrance_guard_record_real
+        where shebeino=#{shebeino} and OpenTime is not null and (AddDate &lt; OpenTime or adddate is null ) and OpenTime &gt; #{parse}
+        GROUP BY DepartName
+    </select>
+    <select id="getEntranceGuardRecordRealList"
+            resultType="com.trtm.iot.entranceguardrecordreal.entity.EntranceGuardRecordReal">
+        select * from entrance_guard_record_real
+        where shebeino=#{shebeino} and OpenTime is not null and (AddDate &lt; OpenTime or adddate is null) and OpenTime &gt; #{parse}
+        ORDER BY OpenTime desc
+    </select>
+    <select id="queryJiXinList"
+            resultType="com.trtm.iot.entranceguardrecordreal.entity.EntranceGuardRecordReal">
+        select * from entrance_guard_record_real
+        where shebeino=#{shebeino}
+          and OpenTime is not null and OpenTime &gt; DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s')
+        ORDER BY OpenTime desc
+    </select>
+    <select id="queryJiXinBanZuList"
+            resultType="com.trtm.iot.entranceguardrecordreal.entity.EntranceGuardRecordReal">
+        select count(DISTINCT(Names)) as DepartmentID, DepartName
+        from entrance_guard_record_real
+        where shebeino=#{shebeino}
+          and OpenTime is not null and OpenTime &gt; DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s')
+        GROUP BY DepartName
+    </select>
+    <select id="querylistAttendance"
+            resultType="com.trtm.iot.entranceguardrecordreal.entity.EntranceGuardRecordReal">
+        select count(DISTINCT (Names)) as isopen
+        from entrance_guard_record_real
+        where shebeino=#{shebeino}
+          and OpenTime is not null and OpenTime &gt; DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s')
+    </select>
+</mapper>

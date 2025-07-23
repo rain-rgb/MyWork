@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.lqbhz.mapper.BhzLqCailiaoMapper">
+
+	<delete id="deleteByMainId" parameterType="java.lang.String">
+		DELETE
+		FROM  bhz_lq_cailiao
+		WHERE
+			 base_guid = #{mainId} 	</delete>
+
+	<select id="selectByMainId" parameterType="java.lang.String" resultType="com.trtm.iot.lqbhz.entity.BhzLqCailiao">
+		SELECT *
+		FROM  bhz_lq_cailiao
+		WHERE
+			 base_guid = #{mainId}
+	</select>
+
+    <select id="selectdetail" resultType="com.trtm.iot.hntbhz.entity.BhzCementDetail">
+	select
+		id,
+		cailiaoleixing materialeType,
+		cailiaono materialeId,
+		cailiaoming materialeName,
+		shijiyongliang realityNumber,
+		theory_number theoryNumber,
+		base_guid	batchNo,
+		chaobiao overValue,
+		wucha errorValue,
+		chaobiaodengji materialeOverLevel
+		from bhz_lq_cailiao
+		WHERE
+			 base_guid = #{id}
+
+	</select>
+
+	<select id="getcailiaoList" resultType="com.trtm.iot.lqbhz.entity.BhzLqCailiao" flushCache="true" useCache="false">
+		SELECT cailiaoming,
+		SUM(shijiyongliang) AS shijiyongliang, SUM(theory_number) AS theory_number
+		FROM bhz_lq_cailiao
+		JOIN bhz_lq_bases ON bhz_lq_bases.guid = bhz_lq_cailiao.base_guid
+		WHERE 1=1
+		<if test="chuliaoshijian_end != null and chuliaoshijian_end !=''">
+			AND #{chuliaoshijian_end} >= chuliaoshijian
+		</if>
+		<if test="chuliaoshijian_begin != null and chuliaoshijian_begin !=''">
+			AND chuliaoshijian >= #{chuliaoshijian_begin}
+		</if>
+		<if test="hunheliaoid != null and hunheliaoid !=''">
+			AND hunheliaoid = #{hunheliaoid}
+		</if>
+		<if test="shebeibianhao != null and shebeibianhao !=''">
+			AND bhz_lq_bases.shebeibianhao = #{shebeibianhao}
+		</if>
+		<if test="projectName != null and projectName !=''">
+			AND project_name = #{projectName}
+		</if>
+		GROUP BY cailiaoming
+	</select>
+
+</mapper>

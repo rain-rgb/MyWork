@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.hc_datalinkage.mapper.HcDatalinkageMapper">
+    <select id="getList" resultType="com.trtm.iot.hc_datalinkage.entity.HcDatalinkage" flushCache="true"
+            useCache="false">
+        select *
+        from hc_datalinkage
+        where  truckId in (${shebeilist})
+        AND isdj = 0
+        LIMIT 100
+    </select>
+    <select id="getListjt" resultType="com.trtm.iot.hc_datalinkage.entity.HcDatalinkage" flushCache="true"
+            useCache="false">
+        select *
+        from hc_datalinkage
+        where  truckId in (${shebeilist})
+        AND id > #{curid}
+        LIMIT 100
+    </select>
+</mapper>

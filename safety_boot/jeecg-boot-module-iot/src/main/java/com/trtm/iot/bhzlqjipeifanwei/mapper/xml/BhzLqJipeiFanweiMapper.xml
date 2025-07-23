@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.bhzlqjipeifanwei.mapper.BhzLqJipeiFanweiMapper">
+
+    <select id="selectlist" resultType="com.trtm.iot.bhzlqjipeifanwei.entity.BhzLqJipeiFanwei" flushCache="true" useCache="false">
+        select *
+        from bhz_lq_jipei_fanwei
+        where sbjno in (${shebeino})
+          AND  id &gt; #{id}
+            limit 100
+    </select>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.zhangla.mapper.TrZhanglaMapper">
+
+
+
+
+
+    <select id="queryDeatilss" resultType="com.trtm.iot.zhangla.entity.ZhangLaDto" flushCache="true" useCache="false">
+        SELECT
+        m.syjid,
+        x.kualiang,
+        x.gcmc,
+        m.zlsj,
+        m.gsbh,
+        m.yxpc,
+        m.sclper,
+        (CASE WHEN m.hege='0' THEN '否' WHEN m.hege='不合格' THEN '否' ELSE '是' END) hege,
+        (CASE WHEN m.overproof_status=0 THEN '未处置' WHEN m.overproof_status=10 THEN '已处置' WHEN m.overproof_status=20 THEN '已闭合' ELSE '已驳回' END) overproof_status,
+        s.sbname,
+        h.handle_person,
+        h.approval_person, m.txml, m.sjzll, m.htl, m.zscl, m.llscl, m.yzlb, m.czlb, m.zzlb
+        FROM
+        tr_zhangla_m m left
+        JOIN tr_zhangla_xxb x ON m.syjid = x.syjid left
+        JOIN shebei_info s ON m.shebeibianhao = s.sbjno left
+        JOIN zhangla_yajiang_over_handler h on m.syjid=h.baseId
+        where (m.hege='0' or m.hege='不合格') and m.shebeibianhao=#{shebeiNo}
+        order by m.zlsj DESC
+    </select>
+
+    <select id="findOverHandler" resultType="com.trtm.iot.zhangla.entity.OverHandler" flushCache="true" useCache="false">
+        SELECT
+            problem_reasons,
+            handle_way,
+            handle_result,
+            handle_time,
+            handle_person,
+            supervisor_approval,
+            supervisor_result,
+            supervisor_handle_time,
+            approval_person,
+            remark,
+            file_path,
+            file_path2,
+            (CASE WHEN overproof_status=0 THEN '未处置' WHEN overproof_status=10 THEN '已处置' WHEN overproof_status=20 THEN '已闭合' ELSE '已驳回' END) overproof_status
+        FROM
+            zhangla_yajiang_over_handler
+        where baseId=#{syjid}
+    </select>
+
+</mapper>

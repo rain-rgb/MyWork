@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.mxesy.mapper.WendingDMapper">
+    <select id="getListjt" flushCache="true" useCache="false" resultType="com.trtm.iot.mxesy.entity.WendingD">
+        select *
+        FROM w_wendingdu_m
+        WHERE  fsbbh IN (${shebeilist})
+          AND isjtjt = 0
+            LIMIT 100
+    </select>
+</mapper>

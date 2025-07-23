@@ -1,0 +1,813 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.syj.mapper.TSyjzbMapper">
+
+    <!--压力机数据查询-->
+    <select id="queryMapperAnd" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        SELECT t_syjzb.*
+        FROM
+        t_syjzb
+        JOIN shebei_info ON t_syjzb.SBBH = shebei_info.sbjno
+        where 1=1
+        and shebei_info.sbtype = 4
+        <if test="sbbh!=null and sbbh!='' ">
+            AND t_syjzb.sbbh=#{sbbh}
+        </if>
+        <if test="pdjg!=null and pdjg!=''">
+            AND t_syjzb.pdjg=#{pdjg}
+            AND t_syjzb.pdjg=#{pdjg}
+        </if>
+        <if test="SYRQ != null ">
+            and t_syjzb.SYRQ &gt;= #{SYRQ}
+        </if>
+        <if test="SYWCSJ != null">
+            and t_syjzb.SYRQ &lt;= #{SYWCSJ}
+        </if>
+        <if test="shebeis!=null">
+            and t_syjzb.sbbh in (${shebeis})
+        </if>
+        <if test="sylx!=null and sylx!=''">
+            and t_syjzb.sylx = #{sylx}
+        </if>
+        group by t_syjzb.CJMC
+        order by t_syjzb.id desc
+    </select>
+
+    <!--&lt;!&ndash;万能机数据查询&ndash;&gt;-->
+    <!--    <select id="queryMapperAnds" resultType="com.trtm.iot.syj.entity.TSyjzb">-->
+    <!--        SELECT-->
+    <!--        version,-->
+    <!--        SYJID,-->
+    <!--        WTID,-->
+    <!--        SBBH ,-->
+    <!--        SYLX,-->
+    <!--        WTBH,-->
+    <!--        SJBH,-->
+    <!--        ZZRQ,-->
+    <!--        SYRQ ,-->
+    <!--        SYWCSJ,-->
+    <!--        LQ,-->
+    <!--        SJCC,-->
+    <!--        SJMJ,-->
+    <!--        SJSL,-->
+    <!--        SJQD,-->
+    <!--        ZSXS,-->
+    <!--        QDDBZ,-->
+    <!--        PDJG,-->
+    <!--        CZRY,-->
+    <!--        CJMC,-->
+    <!--        PZBM,-->
+    <!--        GCZJ,-->
+    <!--        AREA,-->
+    <!--        ISWJJ,-->
+    <!--        RTCODE,-->
+    <!--        SZFW,-->
+    <!--        FBL,-->
+    <!--        STATUS,-->
+    <!--        WTZS,-->
+    <!--        rec_guid,-->
+    <!--        BEIZHU,-->
+    <!--        tjstate,-->
+    <!--        judgestate,-->
+    <!--        SJSCSJ-->
+    <!--        FROM-->
+    <!--        t_syjzb-->
+    <!--        JOIN shebei_info ON t_syjzb.SBBH = shebei_info.sbjno-->
+    <!--        where 1=1-->
+    <!--        and shebei_info.sbtype = 3-->
+    <!--        <if test="sbbh!=null and sbbh!='' ">-->
+    <!--            AND t_syjzb.sbbh=#{sbbh}-->
+    <!--        </if>-->
+    <!--        <if test="pdjg!=null and pdjg!=''">-->
+    <!--            AND t_syjzb.pdjg=#{pdjg}-->
+    <!--        </if>-->
+    <!--        <if test="SYRQ != null ">-->
+    <!--            and t_syjzb.SYRQ &gt;= #{SYRQ}-->
+    <!--        </if>-->
+    <!--        <if test="SYWCSJ != null">-->
+    <!--            and t_syjzb.SYRQ &lt;= #{SYWCSJ}-->
+    <!--        </if>-->
+    <!--    </select>-->
+
+    <!--压力机超标查询-->
+    <select id="queryMapperService" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        SELECT
+        t_syjzb.*
+        FROM
+        t_syjzb
+        JOIN shebei_info ON t_syjzb.SBBH = shebei_info.sbjno
+        where 1=1
+        and shebei_info.sbtype = 4 and t_syjzb.PDJG in ("不合格","无效")
+        <if test="sbbh!=null and sbbh!='' ">
+            AND t_syjzb.sbbh=#{sbbh}
+        </if>
+        <if test="pdjg!=null and pdjg!=''">
+            AND t_syjzb.pdjg=#{pdjg}
+        </if>
+        <if test="SYRQ != null ">
+            and t_syjzb.SYRQ &gt;= #{SYRQ}
+        </if>
+        <if test="SYWCSJ != null">
+            and t_syjzb.SYRQ &lt;= #{SYWCSJ}
+        </if>
+        <if test="shebeis!=null">
+            and t_syjzb.sbbh in (${shebeis})
+        </if>
+        group by t_syjzb.WTBH,t_syjzb.CJMC
+        order by t_syjzb.id desc
+    </select>
+
+    <!--压力机超标处理-->
+    <select id="queryMapperServicecl" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        SELECT
+        t_syjzb.*
+        FROM
+        t_syjzb
+        JOIN shebei_info ON t_syjzb.SBBH = shebei_info.sbjno
+        where 1=1
+        and shebei_info.sbtype = 4 and t_syjzb.PDJG in ("不合格","无效")
+        <if test="sbbh!=null and sbbh!='' ">
+            AND t_syjzb.sbbh=#{sbbh}
+        </if>
+        and t_syjzb.overproof_status != 20
+        <if test="pdjg!=null and pdjg!=''">
+            AND t_syjzb.pdjg=#{pdjg}
+        </if>
+        <if test="SYRQ != null ">
+            and t_syjzb.SYRQ &gt;= #{SYRQ}
+        </if>
+        <if test="SYWCSJ != null">
+            and t_syjzb.SYRQ &lt;= #{SYWCSJ}
+        </if>
+        <if test="shebeis!=null">
+            and t_syjzb.sbbh in (${shebeis})
+        </if>
+        group by t_syjzb.WTBH,t_syjzb.CJMC
+        order by t_syjzb.id desc
+    </select>
+
+    <!--抗压抗折数据查询-->
+    <select id="defaultBtester" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        SELECT t.* FROM
+        t_syjzb as t
+        JOIN shebei_info ON t.SBBH = shebei_info.sbjno
+        where 1=1 and shebei_info.sbtype=12
+        <if test="sbbh!=null and sbbh!='' ">
+            AND t.sbbh=#{sbbh}
+        </if>
+        <if test="pdjg!=null and pdjg!=''">
+            AND t.pdjg=#{pdjg}
+        </if>
+        <if test="SYRQ != null ">
+            and t.SYRQ &gt;= #{SYRQ}
+        </if>
+        <if test="SYWCSJ != null">
+            and t.SYRQ &lt;= #{SYWCSJ}
+        </if>
+        <if test="shebeis!=null">
+            and t.sbbh in (${shebeis})
+        </if>
+        <if test="sylx!=null and sylx!=''">
+            and t.sylx = #{sylx}
+        </if>
+        order by t.id desc
+    </select>
+
+    <!--抗压抗折超标查询-->
+    <select id="defaultBtester2" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        SELECT t.* FROM
+        t_syjzb as t
+        JOIN shebei_info ON t.SBBH = shebei_info.sbjno
+        where 1=1 and shebei_info.sbtype=12 and t.PDJG in ("不合格","无效")
+        <if test="sbbh!=null and sbbh!='' ">
+            AND t.sbbh=#{sbbh}
+        </if>
+        <if test="SYRQ != null ">
+            and t.SYRQ &gt;= #{SYRQ}
+        </if>
+        <if test="SYWCSJ != null">
+            and t.SYRQ &lt;= #{SYWCSJ}
+        </if>
+        <if test="shebeis!=null">
+            and t.sbbh in (${shebeis})
+        </if>
+        order by t.id desc
+    </select>
+
+    <!--抗压抗折超标处理-->
+    <select id="defaultBtesterdeal" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        SELECT t.* FROM
+        t_syjzb as t
+        JOIN shebei_info ON t.SBBH = shebei_info.sbjno
+        where 1=1 and shebei_info.sbtype=12 and t.PDJG in ("不合格","无效") and t.overproof_status != 20
+        <if test="sbbh!=null and sbbh!='' ">
+            AND t.sbbh=#{sbbh}
+        </if>
+        <if test="SYRQ != null ">
+            and t.SYRQ &gt;= #{SYRQ}
+        </if>
+        <if test="SYWCSJ != null">
+            and t.SYRQ &lt;= #{SYWCSJ}
+        </if>
+        <if test="shebeis!=null">
+            and t.sbbh in (${shebeis})
+        </if>
+        order by t.id desc
+    </select>
+
+    <!-- 万能机数据查询 -->
+    <select id="queryWnjPageList" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select
+        t_syjzb.id,
+        t_syjzb.sbbh,
+        t_syjzb.syjid,
+        t_syjzb.sylx,
+        t_syjzb.cjmc,
+        t_syjzb.lq,
+        t_syjzb.sjcc,
+        t_syjzb.sjsl,
+        t_syjzb.sjqd,
+        t_syjzb.qddbz,
+        t_syjzb.syrq,
+        t_syjzb.pdjg
+        from t_syjzb join shebei_info on
+        t_syjzb.SBBH=shebei_info.sbjno where shebei_info.sbtype='3'
+        <if test="shebeis!=null">
+            and t_syjzb.sbbh in (${shebeis})
+        </if>
+        <if test=" sbbh!= null and  sbbh!=''">
+            and t_syjzb.sbbh =#{sbbh}
+        </if>
+        <if test=" pdjg!= null and  pdjg!=''">
+            and pdjg =#{pdjg}
+        </if>
+        <if test="syrq_begin != null ">
+            and t_syjzb.SYRQ &gt;= #{syrq_begin}
+        </if>
+        <if test="syrq_end != null">
+            and t_syjzb.SYRQ &lt;= #{syrq_end}
+        </if>
+        <if test="sylx!=null and sylx!=''">
+            and t_syjzb.sylx = #{sylx}
+        </if>
+        -- group by t_syjzb.CJMC
+        order by t_syjzb.id desc
+    </select>
+
+    <!-- 万能机超标查询  -->
+    <select id="queryWnjChaoBiaoPageList" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select
+        t_syjzb.*
+        from t_syjzb join shebei_info on
+        t_syjzb.SBBH=shebei_info.sbjno where 1 = 1 and shebei_info.sbtype='3' and t_syjzb.PDJG = "不合格"
+        <if test=" sbbh!= null and  sbbh!=''">
+            and sbbh =#{sbbh}
+        </if>
+        <if test=" pdjg!= null and  pdjg!=''">
+            and pdjg =#{pdjg}
+        </if>
+        <if test="syrq_begin != null ">
+            and t_syjzb.SYRQ &gt;= #{syrq_begin}
+        </if>
+        <if test="syrq_end != null">
+            and t_syjzb.SYRQ &lt;= #{syrq_end}
+        </if>
+        <if test="shebeis!=null">
+            and t_syjzb.sbbh in (${shebeis})
+        </if>
+        group by t_syjzb.CJMC
+        order by t_syjzb.id desc
+    </select>
+
+    <!-- 万能机超标处置审核驳回查询  -->
+    <select id="queryWnjChaoBiaoCLPageList" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select
+        t_syjzb.id.*
+        from t_syjzb join shebei_info on
+        t_syjzb.SBBH=shebei_info.sbjno where 1 = 1 and shebei_info.sbtype='3' and t_syjzb.PDJG = "不合格"
+        <if test=" sbbh!= null and  sbbh!=''">
+            and sbbh =#{sbbh}
+        </if>
+        and t_syjzb.overproof_status!=20
+        <if test=" pdjg!= null and  pdjg!=''">
+            and pdjg =#{pdjg}
+        </if>
+        <if test="syrq_begin != null ">
+            and t_syjzb.SYRQ &gt;= #{syrq_begin}
+        </if>
+        <if test="syrq_end != null">
+            and t_syjzb.SYRQ &lt;= #{syrq_end}
+        </if>
+        <if test="shebeis!=null">
+            and t_syjzb.sbbh in (${shebeis})
+        </if>
+        group by t_syjzb.CJMC
+        order by t_syjzb.id desc
+    </select>
+
+    <!--恒应力一体机数据查询-->
+    <select id="queryMapperhylytjList" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        SELECT
+        t_syjzb.*
+        FROM
+        t_syjzb
+        JOIN shebei_info ON t_syjzb.SBBH = shebei_info.sbjno
+        where 1=1
+        and shebei_info.sbtype = 28
+        <if test="sbbh!=null and sbbh!='' ">
+            AND t_syjzb.sbbh=#{sbbh}
+        </if>
+        <if test="pdjg!=null and pdjg!=''">
+            AND t_syjzb.pdjg=#{pdjg}
+        </if>
+        <if test="SYRQ != null ">
+            and t_syjzb.SYRQ &gt;= #{SYRQ}
+        </if>
+        <if test="SYWCSJ != null">
+            and t_syjzb.SYRQ &lt;= #{SYWCSJ}
+        </if>
+        <if test="shebeis!=null">
+            and t_syjzb.sbbh in (${shebeis})
+        </if>
+        group by t_syjzb.WTBH,t_syjzb.CJMC
+        order by t_syjzb.id desc
+    </select>
+
+    <!--恒应力一体机超标查询-->
+    <select id="queryMapperhylytjList1" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        SELECT
+        t_syjzb.*
+        FROM
+        t_syjzb
+        JOIN shebei_info ON t_syjzb.SBBH = shebei_info.sbjno
+        where 1=1
+        and shebei_info.sbtype = 28 and t_syjzb.PDJG="不合格"
+        <if test="sbbh!=null and sbbh!='' ">
+            AND t_syjzb.sbbh=#{sbbh}
+        </if>
+        <if test="pdjg!=null and pdjg!=''">
+            AND t_syjzb.pdjg=#{pdjg}
+        </if>
+        <if test="SYRQ != null ">
+            and t_syjzb.SYRQ &gt;= #{SYRQ}
+        </if>
+        <if test="SYWCSJ != null">
+            and t_syjzb.SYRQ &lt;= #{SYWCSJ}
+        </if>
+        <if test="shebeis!=null">
+            and t_syjzb.sbbh in (${shebeis})
+        </if>
+        group by t_syjzb.WTBH,t_syjzb.CJMC
+        order by t_syjzb.id desc
+    </select>
+
+    <!--恒应力一体机超标处理-->
+    <select id="queryMapperhylytjdealList" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        SELECT
+        t_syjzb.*
+        FROM
+        t_syjzb
+        JOIN shebei_info ON t_syjzb.SBBH = shebei_info.sbjno
+        where 1=1
+        and shebei_info.sbtype = 28 and t_syjzb.PDJG in ("不合格","无效") and t_syjzb.overproof_status != 20
+        <if test="sbbh!=null and sbbh!='' ">
+            AND t_syjzb.sbbh=#{sbbh}
+        </if>
+        <if test="pdjg!=null and pdjg!=''">
+            AND t_syjzb.pdjg=#{pdjg}
+        </if>
+        <if test="SYRQ != null ">
+            and t_syjzb.SYRQ &gt;= #{SYRQ}
+        </if>
+        <if test="SYWCSJ != null">
+            and t_syjzb.SYRQ &lt;= #{SYWCSJ}
+        </if>
+        <if test="shebeis!=null">
+            and t_syjzb.sbbh in (${shebeis})
+        </if>
+        group by t_syjzb.WTBH,t_syjzb.CJMC
+        order by t_syjzb.id desc
+    </select>
+
+    <select id="countList" resultType="java.util.Map">
+        SELECT
+        d.depart_name,
+        IFNULL(sum(m.sycount),0) sycount,
+        IFNULL(sum(m.over),0) chaobiao,
+        (case WHEN sum(m.sycount) is null THEN 100 ELSE ROUND( sum(m.over)/sum(m.sycount)*100,1) END ) chaobiaolv
+
+        FROM
+        ( select count(1) sycount,SBBH,SUM(case WHEN PDJG = '不合格' THEN 1 ELSE 0 END ) AS over from t_syjzb GROUP BY
+        SBBH
+        ) m
+        INNER JOIN shebei_info s ON m.SBBH = s.sbjno
+        RIGHT JOIN ( select depart_name,org_code from sys_depart WHERE org_code LIKE #{orgCode} AND org_category in
+        <foreach collection="categorys" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+        ) d ON s.sys_org_code = d.org_code
+        GROUP BY d.org_code
+        ORDER BY chaobiaolv DESC
+    </select>
+    <!--压力机查询总数 合格数  不合格数-->
+    <select id="stsPageLists" resultType="java.util.Map">
+        select
+        IFNULL(count(*),0) sums,
+        IFNULL(sum(case when t_syjzb.PDJG='合格' then 1 else 0 end),0) as sumtrue,
+        IFNULL(sum(case when t_syjzb.PDJG='不合格' then 1 else 0 end),0) as sumsfalse
+        FROM `t_syjzb` join shebei_info on t_syjzb.SBBH=shebei_info.sbjno where shebei_info.sbtype = '4'
+        <if test="shebeis!=null">
+            and t_syjzb.sbbh in (${shebeis})
+        </if>
+    </select>
+    <!--万能机查询总数 合格数  不合格数-->
+    <select id="stsPageLists1" resultType="java.util.Map">
+        select
+        IFNULL(count(*),0) sums,
+        IFNULL(sum(case when t_syjzb.PDJG='合格' then 1 else 0 end),0) as sumtrue,
+        IFNULL(sum(case when t_syjzb.PDJG='不合格' then 1 else 0 end),0) as sumsfalse
+        FROM `t_syjzb` join shebei_info on t_syjzb.SBBH=shebei_info.sbjno where shebei_info.sbtype = '3'
+        <if test="shebeis!=null">
+            and t_syjzb.sbbh in (${shebeis})
+        </if>
+    </select>
+    <!--抗压抗折机查询总数 合格数  不合格数-->
+    <select id="stsPageLists2" resultType="java.util.Map">
+        select
+        IFNULL(count(*),0) sums,
+        IFNULL(sum(case when t_syjzb.PDJG='合格' then 1 else 0 end),0) as sumtrue,
+        IFNULL(sum(case when t_syjzb.PDJG='不合格' then 1 else 0 end),0) as sumsfalse
+        FROM `t_syjzb` join shebei_info on t_syjzb.SBBH=shebei_info.sbjno where shebei_info.sbtype = '12'
+        <if test="shebeis!=null">
+            and t_syjzb.sbbh in (${shebeis})
+        </if>
+    </select>
+
+    <!--压力机查询总数 合格数  不合格数-->
+    <select id="stsPageLists3" resultType="java.util.Map">
+        select
+        IFNULL(count(*),0) sums,
+        IFNULL(sum(case when t_syjzb.PDJG='合格' then 1 else 0 end),0) as sumtrue,
+        IFNULL(sum(case when t_syjzb.PDJG='不合格' then 1 else 0 end),0) as sumsfalse,
+        IFNULL(sum(case when t_syjzb.overproof_status>0 then 1 else 0 end),0) as sumslv
+        FROM `t_syjzb` join shebei_info on t_syjzb.SBBH=shebei_info.sbjno where shebei_info.sbtype = '4'
+        <if test="shebeis!=null">
+            and t_syjzb.sbbh in (${shebeis})
+        </if>
+    </select>
+    <!--万能机查询总数 合格数  不合格数-->
+    <select id="stsPageLists4" resultType="java.util.Map">
+        select
+        IFNULL(count(*),0) sums,
+        IFNULL(sum(case when t_syjzb.PDJG='合格' then 1 else 0 end),0) as sumtrue,
+        IFNULL(sum(case when t_syjzb.PDJG='不合格' then 1 else 0 end),0) as sumsfalse,
+        IFNULL(sum(case when t_syjzb.overproof_status>0 then 1 else 0 end),0) as sumslv
+        FROM `t_syjzb` join shebei_info on t_syjzb.SBBH=shebei_info.sbjno where shebei_info.sbtype = '3'
+        <if test="shebeis!=null">
+            and t_syjzb.sbbh in (${shebeis})
+        </if>
+    </select>
+    <!--抗压抗折机查询总数 合格数  不合格数-->
+    <select id="stsPageLists5" resultType="java.util.Map">
+        select
+        IFNULL(count(*),0) sums,
+        IFNULL(sum(case when t_syjzb.PDJG='合格' then 1 else 0 end),0) as sumtrue,
+        IFNULL(sum(case when t_syjzb.PDJG='不合格' then 1 else 0 end),0) as sumsfalse,
+        IFNULL(sum(case when t_syjzb.overproof_status>0 then 1 else 0 end),0) as sumslv
+        FROM `t_syjzb` join shebei_info on t_syjzb.SBBH=shebei_info.sbjno where shebei_info.sbtype = '12'
+        <if test="shebeis!=null">
+            and t_syjzb.sbbh in (${shebeis})
+        </if>
+    </select>
+    <select id="selectsyjonesstatistics" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select *
+        from t_syjzb
+        where id > #{id}
+          and statistics = #{statistics} limit 10
+    </select>
+
+    <select id="queryone" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select *
+        from t_syjzb
+        where SBBH = #{shebeiNo}
+        order by SJSCSJ desc limit 1
+    </select>
+
+    <select id="selectLists" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select *
+        from t_syjzb
+        where SBBH in (${shebeiNo})
+          AND id > #{id}
+          and isbhkykz = 0 LIMIT 100
+    </select>
+
+    <select id="selectListToJTJT" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select *
+        from t_syjzb
+        where SBBH in (${shebeilist})
+          AND issend = 0
+          AND SYLX = '100135' LIMIT 100
+    </select>
+
+    <select id="selectListData" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select *
+        from t_syjzb
+        where SBBH in (${shebeilist})
+          and isbhkykz = 0
+        group by SJBH LIMIT 1000
+    </select>
+
+    <select id="getsjbhData" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select *
+        from t_syjzb
+        where SJBH = #{sjbh}
+          and SBBH = #{sbbh}
+          AND SYJID != #{syjid}
+          and isbhkykz = 0
+    </select>
+
+    <select id="selectListone" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select *
+        from t_syjzb
+        where SBBH in (${shebeilist})
+          AND isbhkykz = 0
+          AND SYRQ >= DATE_SUB(CURDATE(), INTERVAL 30 DAY) LIMIT 100
+    </select>
+
+    <select id="selectSyjList" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+
+        SELECT *
+        FROM t_syjzb
+        WHERE SBBH IN (${shebeilist})
+          AND ('合格' = PDJG OR '有效' = PDJG)
+          AND 0 = issend
+    </select>
+
+    <select id="selectSyjylList" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        SELECT t1.*
+        FROM t_syjzb t1
+                 JOIN f_yaliji t2 ON t1.SYJID = t2.SYJID
+        WHERE t2.issend = 0
+          AND t1.SBBH IN (${shebeilist})
+          AND (t1.PDJG = '合格' OR t1.PDJG = '有效')
+    </select>
+
+    <select id="selectSyjwnList" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        SELECT t1.*
+        FROM t_syjzb t1
+                 JOIN f_wangnj t2 ON t1.SYJID = t2.SYJID
+        WHERE t2.issend = 0
+          AND t1.SBBH IN (${shebeilist})
+          AND (t1.PDJG = '合格' OR t1.PDJG = '有效')
+    </select>
+
+    <select id="selectSyjListbl" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+
+        SELECT *
+        FROM t_syjzb
+        WHERE SBBH IN (${shebeilist})
+          AND ('合格' = PDJG OR '有效' = PDJG)
+          AND 10 > issend
+          AND issend > 0
+    </select>
+
+    <!--    苏台三期（新视窗）-->
+    <select id="selectStsqList" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select *
+        from t_syjzb
+        where SBBH in (${shebeilist})
+          and issend = 0 LIMIT 500
+    </select>
+    <!--    苏台三期（新视窗）-->
+    <select id="selectStsqList1" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select *
+        from t_syjzb
+        where SBBH in (${shebeilist})
+          and issend = 3 LIMIT 500
+    </select>
+    <!--    浙路品质-->
+    <select id="selectSyjListzlpz" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select *
+        from t_syjzb
+        where SBBH in (${shebeilist})
+          AND ('不合格' = PDJG OR '0' = PDJG)
+          AND (iszlpz = 0 OR (iszlpz = 3 AND overproof_status > 0)) LIMIT 100
+    </select>
+
+    <select id="selectSyjListytwnd" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select *
+        from t_syjzb
+        where SBBH in (${shebeilist})
+          and issend = 0 LIMIT 500
+    </select>
+
+    <select id="selectSTlist" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select *
+        from t_syjzb
+        where SBBH in (${shebeilist})
+          AND id > #{curid}
+          and SYRQ > date_sub(CURDATE(), interval 7 DAY)
+        order by id ASC LIMIT 100
+    </select>
+
+    <select id="selectYJQSlist" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select *
+        from t_syjzb
+        where SBBH in (${shebeilist})
+          AND issend = 0 LIMIT 100
+    </select>
+
+    <select id="selectzj" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select *
+        from t_syjzb
+        where SBBH in (${shebeilist})
+          AND id > #{curid} LIMIT 100
+    </select>
+
+    <!--    品茗初始化混凝土抗压实验数据推送查询-->
+    <select id="queryLists" resultType="com.trtm.iot.syj.entity.SyjzbVo" flushCache="true" useCache="false">
+        SELECT sy.id,
+               sy.SYJID,
+               sy.SJQD,
+               sy.LQ,
+               sy.SBBH,
+               (it.item_text)                                                                    SYLX,
+               sy.SJBH,
+               sy.CJMC,
+               sy.GCMC,
+               sy.SJCC,
+               sy.SJSL,
+               sy.QDDBZ,
+               sy.SYRQ,
+               (CASE WHEN sy.PDJG = '合格' THEN '0' WHEN sy.PDJG = '有效' THEN '0' ELSE '1' END) PDJG,
+               sy.CZRY,
+               sb.sbname,
+               sb.sys_org_code,
+               sy.PZBM,
+               sy.GCZJ
+        FROM t_syjzb sy
+                 JOIN shebei_info sb ON sy.SBBH = sb.sbjno
+                 join sys_dict_item it on sy.SYLX = it.item_value
+        WHERE sy.SYLX = #{sylx}
+          and sy.SBBH in (${shebeilist})
+          and sy.id > #{curid} LIMIT 1000
+    </select>
+
+    <select id="querySylx" resultType="String" flushCache="true" useCache="false">
+        select distinct ts.sylx
+        from t_syjzb ts
+                 inner join shebei_info sb
+                            on ts.sbbh = sb.sbjno
+        where sb.sbtype = #{sbtype}
+          and sb.sys_org_code like concat(#{sysorgcode}, '%')
+    </select>
+
+    <select id="getCountWarningByOC" resultType="com.trtm.iot.syj.entity.TSyjzb" flushCache="true" useCache="false">
+        select *
+        from t_syjzb
+        where pdjg in ('不合格', '无效')
+          and SYRQ &gt;= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+          and sbbh in (select DISTINCT sbjno from shebei_info where sys_org_code like concat(#{orgCode}, '%'))
+    </select>
+
+    <select id="getCountBHByOC" resultType="com.trtm.iot.syj.entity.TSyjzb" flushCache="true" useCache="false">
+        select *
+        from t_syjzb
+        where pdjg in ('不合格', '无效')
+          and overproof_status = 20
+          and SYRQ &gt;= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+          and sbbh in (select DISTINCT sbjno from shebei_info where sys_org_code like concat(#{orgCode}, '%'))
+    </select>
+
+    <select id="getCountWarning" resultType="com.trtm.iot.syj.entity.TSyjzb" flushCache="true" useCache="false">
+        select *
+        from t_syjzb
+        where pdjg in ('不合格', '无效')
+          and SYRQ &gt;= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+    </select>
+
+    <select id="getCountBH" resultType="com.trtm.iot.syj.entity.TSyjzb" flushCache="true" useCache="false">
+        select *
+        from t_syjzb
+        where pdjg in ('不合格', '无效')
+          and overproof_status = 20
+          and SYRQ &gt;= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+    </select>
+    <select id="selectListSy" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select * from t_syjzb where id > #{curid} and SBBH IN <foreach collection="strsToList1" item="item"
+                                                                       index="index" separator="," open="(" close=")">
+        ${item}
+    </foreach> order by id limit 1000
+    </select>
+
+    <select id="findXiangMuZStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from t_syjzb where SBBH in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and (SYRQ like concat(#{dateNowStr},"%"))
+    </select>
+    <select id="findYuJingStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from t_syjzb where SBBH in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and (pdjg='无效' or pdjg='不合格') and (SYRQ like concat(#{dateNowStr},"%"))
+    </select>
+    <select id="findBiHeStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from t_syjzb where SBBH in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and overproof_status=20 and (SYRQ like concat(#{dateNowStr},"%"))
+    </select>
+    <select id="selectSYJData" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select *
+        from t_syjzb
+        where SBBH in (${shebeilist})
+          AND id > #{curid}
+        order by id asc LIMIT 30
+    </select>
+    <select id="selectSYJYuJingData" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select *
+        from t_syjzb
+        where SBBH in (${shebeilist})
+          AND id > #{curid}
+          AND (pdjg = '不合格' or pdjg = '无效') LIMIT 10
+    </select>
+
+    <select id="getBzcList" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.bzc">
+        SELECT
+        SBBH,
+        LQ,
+        count(1) num,
+        ROUND(AVG(QDDBZ), 2) qddbzavg,
+        ROUND(STDDEV(QDDBZ), 2) AS qddbzbzc,
+        SJQD
+        FROM
+        t_syjzb
+        WHERE
+        SBBH in (${shebei})
+        <if test="lq!=null and lq!='' ">
+            AND t_syjzb.lq=#{lq}
+        </if>
+        <if test="sjqd!=null and sjqd!='' ">
+            AND t_syjzb.sjqd=#{sjqd}
+        </if>
+        <if test="stadate!=null and stadate!='' ">
+            AND t_syjzb.syrq>=#{stadate}
+        </if>
+        <if test="enddate!=null and enddate!='' ">
+            AND #{enddate}>=t_syjzb.syrq
+        </if>
+        AND QDDBZ IS NOT NULL
+        AND PDJG = '合格'
+        GROUP BY
+        SBBH,
+        LQ,
+        SJQD
+        ORDER BY num DESC
+        LIMIT #{pageSize} OFFSET #{pageNo}
+    </select>
+
+    <select id="getBzcListcount" flushCache="true" useCache="false" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        (
+        SELECT
+        SBBH,
+        LQ,
+        count(1) num,
+        ROUND(AVG(QDDBZ), 2) qddbzavg,
+        ROUND(STDDEV(QDDBZ), 2) AS qddbzbzc,
+        SJQD
+        FROM
+        t_syjzb
+        WHERE
+        SBBH IN (${shebei})
+        <if test="lq!=null and lq!='' ">
+            AND t_syjzb.lq=#{lq}
+        </if>
+        <if test="sjqd!=null and sjqd!='' ">
+            AND t_syjzb.sjqd=#{sjqd}
+        </if>
+        <if test="stadate!=null and stadate!='' ">
+            AND t_syjzb.syrq>=#{stadate}
+        </if>
+        <if test="enddate!=null and enddate!='' ">
+            AND #{enddate}>=t_syjzb.syrq
+        </if>
+        AND QDDBZ IS NOT NULL
+        AND PDJG = '合格'
+        GROUP BY
+        SBBH,
+        LQ,
+        SJQD
+        ) a
+    </select>
+
+    <select id="seletListPanan351" flushCache="true" useCache="false" resultType="com.trtm.iot.syj.entity.TSyjzb">
+        select *
+        from t_syjzb
+        where SBBH in (${shebeilist})
+        AND ISSEND = 0 LIMIT 100
+    </select>
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.zhilianggongxu.mapper.ZhiliangGongxuMapper">
+
+    <select id="selectgongxu" useCache="false" flushCache="true" resultType="com.trtm.iot.zhilianggongxu.entity.ZhiliangGongxu">
+        select * from zhiliang_gongxu where uuid =#{uuid}
+    </select>
+
+    <select id="selectgongxuPinmin" useCache="false" flushCache="true" resultType="com.trtm.iot.zhilianggongxu.entity.ZhiliangGongxu">
+        select * from zhiliang_gongxu where uuid =#{uuid} and pinmin = 0
+    </select>
+
+    <select id="selectuuid" useCache="false" flushCache="true" resultType="com.trtm.iot.zhilianggongxu.entity.ZhiliangGongxu">
+        select * from zhiliang_gongxu where uuid =#{uuid} and xuhao =#{xuhao}
+    </select>
+
+    <select id="selectuuidlist" useCache="false" flushCache="true" resultType="com.trtm.iot.zhilianggongxu.entity.ZhiliangGongxu">
+        select * from zhiliang_gongxu where uuid =#{uuid} and xuhao =#{xuhao}
+    </select>
+
+</mapper>

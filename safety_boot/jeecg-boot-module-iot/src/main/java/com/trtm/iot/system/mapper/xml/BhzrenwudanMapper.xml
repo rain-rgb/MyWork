@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.system.mapper.BhzrenwudanMapper">
+
+    <select id="queryselectlist" useCache="false" flushCache="true" resultType="com.trtm.iot.system.entity.Bhzrenwudan">
+        select *
+        from bhzrenwudan
+        where Code = #{code}
+        and station &lt; #{station}
+        <if test="sysOrgCode != null and sysOrgCode != ''">
+            AND sys_org_code like CONCAT(#{sysOrgCode},'%')
+        </if>
+        and isdel = 0
+    </select>
+
+    <select id="queryselectlist1" useCache="false" flushCache="true" resultType="com.trtm.iot.system.entity.Bhzrenwudan">
+        select *
+        from bhzrenwudan
+        where Code = #{code}
+        and station = #{station}
+        <if test="sysOrgCode != null and sysOrgCode != ''">
+            AND sys_org_code like CONCAT(#{sysOrgCode},'%')
+        </if>
+        and isdel = 0
+    </select>
+
+    <select id="selectLists" flushCache="true" useCache="false" resultType="com.trtm.iot.system.entity.Bhzrenwudan">
+        select *
+        from `bhzrenwudan`
+        where sys_org_code like "A05A01A05A01%"
+          and id > #{curid} limit 100
+    </select>
+
+    <select id="getToDayrwdInfo" flushCache="true" useCache="false" resultType="java.util.Map" >
+        SELECT
+            r.CODE,
+            r.BegTim,
+            r.ConsPos,
+            r.treeid,
+            r.Customer,
+            rs.shebei_no,
+            IFNULL( r.Mete, 0 ) Mete,
+            IFNULL( rs.Metes, 0 ) Metes,
+            IFNULL( rs.dish_count, 0 ) dishcount
+        FROM
+            bhzrenwudan r
+                LEFT JOIN renwudan_schedule rs ON r.CODE = rs.CODE
+        WHERE
+            DATE( r.BegTim ) = DATE(NOW())
+        <if test="orgCode != null and orgCode != ''">
+            AND r.sys_org_code like CONCAT(#{orgCode},'%')
+        </if>
+        <if test="shebeino != null and shebeino != ''">
+            AND rs.shebei_no = #{shebeino}
+        </if>
+
+
+
+    </select>
+
+    <!--    <select id="getTaskStaBySysOrgCode" flushCache="true" useCache="false"-->
+    <!--            resultType="com.trtm.iot.system.entity.StatisticsAndPageVo">-->
+    <!--        SELECT-->
+    <!--        (-->
+    <!--        SELECT-->
+    <!--        COUNT( a.`Code` )-->
+    <!--        FROM-->
+    <!--        bhzrenwudan a-->
+    <!--        LEFT JOIN renwudan_schedule b ON a.`Code` = b.`Code`-->
+    <!--        INNER JOIN `Shigongphb` c ON b.`Code` = c.renwudan-->
+    <!--        WHERE-->
+    <!--        <if test="sysOrgCode!= null">-->
+    <!--            a.sys_org_code LIKE #{sysOrgCode} AND-->
+    <!--        </if>-->
+    <!--        a.STATUS = 1-->
+    <!--        AND b.bfb = 100.00-->
+    <!--        ) AS 'done',-->
+    <!--        (-->
+    <!--        SELECT-->
+    <!--        COUNT( a.`Code` )-->
+    <!--        FROM-->
+    <!--        bhzrenwudan a-->
+    <!--        LEFT JOIN renwudan_schedule b ON a.`Code` = b.`Code`-->
+    <!--        INNER JOIN `Shigongphb` c ON b.`Code` = c.renwudan-->
+    <!--        WHERE-->
+    <!--        <if test="sysOrgCode!= null">-->
+    <!--            a.sys_org_code LIKE #{sysOrgCode} AND-->
+    <!--        </if>-->
+    <!--        a.STATUS = 1-->
+    <!--        AND a.EndTim >= NOW()-->
+    <!--        AND b.bfb &lt;100.00-->
+    <!--        ) AS 'inProduction',-->
+    <!--        (-->
+    <!--        SELECT-->
+    <!--        COUNT( a.`Code` )-->
+    <!--        FROM-->
+    <!--        bhzrenwudan a-->
+    <!--        LEFT JOIN renwudan_schedule b ON a.`Code` = b.`Code`-->
+    <!--        INNER JOIN `Shigongphb` c ON b.`Code` = c.renwudan-->
+    <!--        WHERE-->
+    <!--        <if test="sysOrgCode!= null">-->
+    <!--            a.sys_org_code LIKE #{sysOrgCode} AND-->
+    <!--        </if>-->
+    <!--        a.STATUS = 1-->
+    <!--        AND a.EndTim &lt; NOW()-->
+    <!--        AND b.bfb &lt;100.00-->
+    <!--        ) AS 'lag',-->
+    <!--        (-->
+    <!--        SELECT-->
+    <!--        COUNT( 1 )-->
+    <!--        FROM-->
+    <!--        bhzrenwudan a-->
+    <!--        INNER JOIN `Shigongphb` b ON a.`Code` = b.renwudan-->
+    <!--        LEFT JOIN `renwudan_schedule` c ON b.renwudan = c.`Code`-->
+    <!--        WHERE-->
+    <!--        <if test="sysOrgCode!= null">-->
+    <!--            a.sys_org_code LIKE #{sysOrgCode} AND-->
+    <!--        </if>-->
+    <!--        a.STATUS = 1-->
+    <!--        AND c.`Code` IS NULL-->
+    <!--        ) AS 'ingredientsNotProduced',-->
+    <!--        (-->
+    <!--        SELECT-->
+    <!--        COUNT( 1 )-->
+    <!--        FROM-->
+    <!--        bhzrenwudan a-->
+    <!--        LEFT JOIN `Shigongphb` b ON a.`Code` = b.renwudan-->
+    <!--        WHERE-->
+    <!--        <if test="sysOrgCode!= null">-->
+    <!--            a.sys_org_code LIKE #{sysOrgCode} AND-->
+    <!--        </if>-->
+    <!--        a.STATUS = 1-->
+    <!--        AND b.`renwudan` IS NULL-->
+    <!--        ) AS 'reviewNotIngredients',-->
+    <!--        (-->
+    <!--        SELECT-->
+    <!--        COUNT( 1 )-->
+    <!--        FROM-->
+    <!--        bhzrenwudan-->
+    <!--        WHERE-->
+    <!--        <if test="sysOrgCode!= null">-->
+    <!--            sys_org_code LIKE #{sysOrgCode} AND-->
+    <!--        </if>-->
+    <!--        STATUS = 0-->
+    <!--        ) AS 'unreviewed'-->
+    <!--    </select>-->
+
+    <select id="getTaskStaBySysOrgCode" flushCache="true" useCache="false"
+            resultType="com.trtm.iot.system.entity.StatisticsAndPageVo">
+      SELECT
+	count(
+	IF
+		( STATUS = 0, TRUE, NULL )) as unreviewed,
+		count(
+		IF
+			( STATUS = 1, TRUE, NULL )) as reviewNotIngredients,
+			count(
+			IF
+				( STATUS = 3, TRUE, NULL )) as ingredientsNotProduced,
+				count(
+				IF
+					( STATUS = 4, TRUE, NULL )) as inProduction,
+					count(
+					IF
+						( STATUS = 5, TRUE, NULL )) as done,
+						count(
+						IF
+							( STATUS = 6, TRUE, NULL )) as lag
+
+						FROM
+	bhzrenwudan
+    </select>
+
+    <select id="getTaskToPM" flushCache="true" useCache="false" resultType="com.trtm.iot.system.entity.TaskVo">
+        SELECT a.Code         AS taskId,
+               a.sys_org_code AS mixId,
+               a.ProjName     AS projectName,
+               a.ConsPos      AS constructionPosition,
+               a.Pour         AS pouringType,
+               a.BegTim       AS startTime,
+               a.EndTim       AS endTime,
+               a.BetLev       AS strengthGrade,
+               a.Lands        AS slump,
+               a.Mete         AS taskVolume,
+               b.Metes        AS productionVolume,
+               b.bfb          AS rate,
+               a.create_by    AS createId
+        FROM `bhzrenwudan` AS a
+                 INNER JOIN `renwudan_schedule` AS b ON A.Code = B.Code
+        WHERE a.sys_org_code LIKE #{code} LIMIT 30
+    </select>
+    <select id="getTaskSta2" resultType="com.trtm.iot.system.entity.StatisticsAndPageVo">
+        SELECT
+        count(
+        IF
+        ( STATUS = 0, TRUE, NULL )) as unreviewed,
+        count(
+        IF
+        ( STATUS = 1, TRUE, NULL )) as reviewNotIngredients,
+        count(
+        IF
+        ( STATUS = 3, TRUE, NULL )) as ingredientsNotProduced,
+        count(
+        IF
+        ( STATUS = 4, TRUE, NULL )) as inProduction,
+        count(
+        IF
+        ( STATUS = 5, TRUE, NULL )) as done,
+        count(
+        IF
+        ( STATUS = 6, TRUE, NULL )) as lag
+        FROM
+        bhzrenwudan
+        where
+
+        sys_org_code LIKE #{orgCode}
+
+        <if test="conspos!= null">
+            AND conspos LIKE #{conspos}
+        </if>
+        <if test="dattim_begin!= null">
+            AND DatTim LIKE #{dattim_begin}
+        </if>
+        <if test="dattim_end!= null">
+            AND DatTim LIKE #{dattim_begin}
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.czsh.mapper.BhzCementOverHandlerMapper">
+<!--  根据id查询是否存在处置或者审核信息  -->
+    <select id="dataById" resultType="String">
+        SELECT id FROM `bhz_cement_over_handler` where 1 = 1
+        and baseId = #{hntbatch}
+    </select>
+    <select id="listToday" flushCache="true" useCache="false" resultType="com.trtm.iot.czsh.entity.BhzCementOverHandler">
+
+        SELECT *
+        FROM `bhz_cement_over_handler`
+        where supervisor_handle_time BETWEEN CONCAT(CURDATE(),' 00:00:00') AND CONCAT(CURDATE(),' 23:59:59')
+        or
+        handle_time BETWEEN CONCAT(CURDATE(),' 00:00:00') AND CONCAT(CURDATE(),' 23:59:59')
+        and shebei_no in (${shebeilist});
+    </select>
+
+
+    <!--  根据id添加审核信息  -->
+    <insert id="shenHeAddById">
+        INSERT into bhz_cement_over_handler
+        (baseId,supervisor_approval,supervisor_result,supervisor_handle_time,overproof_status,file_path,approval_person)
+        VALUES (#{hntbatch},#{spyj},#{spjg},sysdate(),20,#{bizPath},#{shenpiren})
+    </insert>
+
+<!--  根据id修改审核信息 -->
+    <update id="shenHeUpdateById">
+        UPDATE bhz_cement_over_handler SET
+        supervisor_approval = #{spyj},
+        supervisor_result = #{spjg},
+        supervisor_handle_time = sysdate(),
+        overproof_status = 20,
+        approval_person=#{shenpiren},
+        file_path = #{bizPath}
+        where baseId = #{hntbatch}
+    </update>
+
+<!--  根据id添加处置信息  -->
+    <insert id="chuZhiAddById" >
+        INSERT into bhz_cement_over_handler
+        (baseId,problem_reasons,handle_way,handle_result,handle_time,handle_person,file_path2,overproof_status)
+        VALUES (#{hntbatch},#{wtyy},#{clfs},#{cljg},sysdate(),#{chuzhiren},#{bizPath},10)
+    </insert>
+    <insert id="BhzchuZhiAddById">
+          INSERT into bhz_cement_over_handler
+        (baseId,problem_reasons,handle_way,handle_result,handle_time,handle_person,file_path2,overproof_status)
+        VALUES (#{hntbatch},#{wtyy},#{clfs},#{cljg},sysdate(),#{chuzhiren},#{bizPath},#{status})
+    </insert>
+    <insert id="BhzSHAddById">
+         INSERT into bhz_cement_over_handler
+        (baseId,supervisor_approval,supervisor_result,supervisor_handle_time,overproof_status,file_path,approval_person)
+        VALUES (#{hntbatch},#{spyj},#{spjg},sysdate(),#{status},#{bizPath},#{shenpiren})
+    </insert>
+    <insert id="BhzZHBSHAddById">
+         INSERT into bhz_cement_over_handler
+        (baseId,headquarters_approval,headquarters_result,headquarters_handle_time,overproof_status,file_path3,headquarters_person)
+        VALUES (#{hntbatch},#{zhbyj},#{zhbjg},sysdate(),#{status},#{bizPath},#{shenpiren})
+    </insert>
+    <insert id="BhzShBoHuiAddById">
+         INSERT into bhz_cement_over_handler
+        (baseId,overproof_status,approval_person,remark,supervisor_handle_time)
+        VALUES (#{hntbatch},#{status},#{people},#{jlbh},sysdate())
+    </insert>
+    <insert id="BhzZHBBoHuiAddById">
+         INSERT into bhz_cement_over_handler
+        (baseId,overproof_status,headquarters_person,headquarters_remark,headquarters_handle_time)
+        VALUES (#{hntbatch},#{status},#{shenpiren},#{zhbbh},sysdate())
+    </insert>
+    <!--  根据id修改处置信息  -->
+    <update id="chuZhiUpdateById">
+        UPDATE bhz_cement_over_handler SET
+        problem_reasons = #{wtyy},
+        handle_way = #{clfs},
+        handle_result = #{cljg},
+        handle_time = sysdate(),
+        handle_person = #{chuzhiren},
+        file_path=#{bizPath},
+        overproof_status = 10
+        where 1=1
+        and baseId = #{hntbatch}
+    </update>
+    <update id="BhzchuZhiUpdateById">
+        UPDATE bhz_cement_over_handler SET
+        problem_reasons = #{wtyy},
+        handle_way = #{clfs},
+        handle_result = #{cljg},
+        handle_time = sysdate(),
+        handle_person = #{chuzhiren},
+        file_path2=#{bizPath},
+        overproof_status = #{status}
+        where 1=1
+        and baseId = #{hntbatch}
+    </update>
+    <update id="BhzSHUpdateById">
+         UPDATE bhz_cement_over_handler SET
+        supervisor_approval = #{spyj},
+        supervisor_result = #{spjg},
+        supervisor_handle_time = sysdate(),
+        overproof_status = #{status},
+        approval_person=#{shenpiren},
+        file_path = #{bizPath}
+        where baseId = #{hntbatch}
+    </update>
+    <update id="BhzZHBSHUpdateById">
+          UPDATE bhz_cement_over_handler SET
+        headquarters_approval = #{zhbyj},
+        headquarters_result = #{zhbjg},
+        headquarters_handle_time = sysdate(),
+        overproof_status = #{status},
+        headquarters_person=#{shenpiren},
+        file_path3 = #{bizPath}
+        where baseId = #{hntbatch}
+    </update>
+    <update id="BhzShBoHuiUpdateById">
+         UPDATE bhz_cement_over_handler SET
+        overproof_status = #{status},
+        approval_person=#{people},
+        supervisor_handle_time = sysdate(),
+        remark = #{jlbh}
+        where baseId = #{hntbatch}
+    </update>
+    <update id="BhzZHBBoHuiUpdateById">
+        UPDATE bhz_cement_over_handler SET
+        overproof_status = #{status},
+        headquarters_person=#{shenpiren},
+        headquarters_handle_time = sysdate(),
+        headquarters_remark = #{zhbbh}
+        where baseId = #{hntbatch}
+    </update>
+</mapper>

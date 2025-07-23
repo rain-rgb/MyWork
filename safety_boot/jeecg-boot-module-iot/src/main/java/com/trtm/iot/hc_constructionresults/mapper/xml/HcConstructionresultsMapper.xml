@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.hc_constructionresults.mapper.HcConstructionresultsMapper">
+
+    <select id="selectsum" resultType="string" flushCache="true" useCache="false">
+        select id from hc_constructionresults where sectionId in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and beginTime like #{dateNowStr}
+    </select>
+
+    <select id="selecid" resultType="string" flushCache="true" useCache="false">
+        select id from hc_constructionresults where projectId in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and beginTime between  #{date_begin} and #{date_end}
+    </select>
+</mapper>

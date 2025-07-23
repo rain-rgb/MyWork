@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.zhydstatistics.mapper.DeviceElectrcStatisticsMapper">
+
+    <select id="selectlimit" resultType="com.trtm.iot.zhydstatistics.entity.DeviceElectrcStatistics" flushCache="true" useCache="false">
+        SELECT * FROM `device_electrc_statistics` where imei =#{sbno}
+        <if test="date!=null || date!=''">
+            and statistics_time =#{date}
+        </if>
+    </select>
+
+</mapper>

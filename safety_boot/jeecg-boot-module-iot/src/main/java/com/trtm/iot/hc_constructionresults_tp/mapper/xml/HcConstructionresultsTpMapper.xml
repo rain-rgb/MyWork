@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.hc_constructionresults_tp.mapper.HcConstructionresultsTpMapper">
+    <select id="selectsum" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from hc_constructionresults_tp where crid in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+    </select>
+</mapper>

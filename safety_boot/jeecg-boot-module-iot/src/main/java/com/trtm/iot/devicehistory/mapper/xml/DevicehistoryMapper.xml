@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.devicehistory.mapper.DevicehistoryMapper">
+
+    <select id="selectListes" resultType="com.trtm.iot.devicehistory.entity.Devicehistory" useCache="false" flushCache="true">
+        select * from devicehistory where DevAddr in (${DevAddr}) and id>#{id} limit 100
+    </select>
+
+    <select id="selectdeviceone" resultType="com.trtm.iot.devicehistory.entity.Devicehistory" useCache="false" flushCache="true">
+        select * from devicehistory where id >=#{curid} and alertstate =#{alertstate} limit 100
+    </select>
+
+    <select id="queryone" resultType="com.trtm.iot.devicehistory.entity.Devicehistory" useCache="false" flushCache="true">
+        select * from devicehistory where DevAddr=#{shebeiNo} order by TimeValue desc limit 1
+    </select>
+
+    <select id="selectlistdata" resultType="com.trtm.iot.devicehistory.entity.Devicehistory" useCache="false" flushCache="true">
+        select * from devicehistory where DevAddr in (${strsToList1}) and id &gt; #{curid} limit 100
+    </select>
+
+    <select id="selectlistToSHYJ" resultType="com.trtm.iot.devicehistory.entity.Devicehistory" useCache="false" flushCache="true">
+        select * from devicehistory where DevAddr in (${shebeiNo}) and id &gt; #{id} limit 500
+    </select>
+
+    <select id="selectlistYJQS" resultType="com.trtm.iot.devicehistory.entity.Devicehistory" useCache="false" flushCache="true">
+        select * from devicehistory where DevAddr in (${shebeiNo}) and id &gt; #{id} limit 500
+    </select>
+
+    <select id="selectlistYLQ" resultType="com.trtm.iot.devicehistory.entity.Devicehistory" useCache="false" flushCache="true">
+        select * from devicehistory where DevAddr in (${shebeiNo}) and id &gt; #{id} and istuisong = 0 limit 500
+    </select>
+
+    <select id="selectlistdatatop1" resultType="com.trtm.iot.devicehistory.entity.Devicehistory" useCache="false" flushCache="true">
+        select * from devicehistory where DevAddr in (${strsToList1})  and id &gt; #{curid}  LIMIT 100
+    </select>
+    <select id="selectListByDev" resultType="com.trtm.iot.devicehistory.entity.Devicehistory">
+         select DevAddr,
+         max(TimeValue) as TimeValue ,
+         id,
+         Pm10,
+         Pm25,
+         Noise,
+         Temperature,
+         Humidity,
+         Wind,
+         WindSpeed,
+         WindDirection,
+         alertstate,
+         status,
+         pm25status,
+         pm10status,
+         noisestatus,
+         temstatus,
+         humstatus,
+         windstatus,
+         winsdstatus,
+         tsp,
+         atmpressure
+         from devicehistory
+         where DevAddr in (${DevAddr})
+         GROUP BY DevAddr
+    </select>
+    <select id="selectNewByDev" useCache="false" flushCache="true" resultType="com.trtm.iot.devicehistory.entity.Devicehistory">
+      SELECT * from `devicehistory` WHERE id in (SELECT t2.* FROM (SELECT id from devicehistory WHERE DevAddr = #{shebeino} and TimeValue > date_sub(CURDATE(), interval 7 DAY) ORDER BY TimeValue desc LIMIT 1) t2 )
+    </select>
+
+    <select id="selectyjList" resultType="com.trtm.iot.devicehistory.entity.Devicehistory" flushCache="true" useCache="false">
+        SELECT *
+        FROM devicehistory
+        WHERE DevAddr IN (${shebeilist})
+          AND ID > #{curid}
+            LIMIT 1000
+    </select>
+</mapper>

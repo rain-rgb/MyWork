@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.sy.sycspz.mapper.SyMParamBoxqtyMapper">
+    <select id="mparamraboxqtyList" resultType="java.util.Map">
+        SELECT  * FROM SY_M_PARAM_BOXQTY a where 1=1
+        <if test="boxno != null and boxno != ''">
+
+            and a.Boxno like concat('%',#{boxno},'%')
+
+        </if>
+        <if test="orgCode != null and orgCode != ''">
+
+            and a.departId like concat(#{orgCode},'%')
+
+        </if>
+        order by  id asc
+    </select>
+</mapper>

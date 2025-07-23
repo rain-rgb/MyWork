@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.sy.tableform.mapper.TableFormMapper">
+
+
+    <select id="selectParentItemType" resultType="com.trtm.sy.sylxdps.entity.SyDpsJcTestitemtype">
+        select * from sy_dps_jc_testitemtype where titParentCode is null and titCode in
+        <foreach collection="titCodes" item="item" index="index" open="(" separator="," close=")">#{item}</foreach>
+    </select>
+
+    <select id="selectSonsItemType" resultType="com.trtm.sy.sylxdps.entity.SyDpsJcTestitemtype">
+        select * from sy_dps_jc_testitemtype where titParentCode = #{titcode}
+    </select>
+
+</mapper>

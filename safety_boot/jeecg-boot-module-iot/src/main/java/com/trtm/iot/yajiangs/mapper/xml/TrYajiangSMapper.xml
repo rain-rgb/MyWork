@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.yajiangs.mapper.TrYajiangSMapper">
+
+<!--    压浆超标数据查询 首先查询出 s表孔道超标数据 然后其他Controller层处理-->
+    <select id="selectListPage" resultType="com.trtm.iot.yajiangs.entity.TrYajiangS">
+       select
+       tr_yajiang_s.*
+       FROM tr_yajiang_s JOIN tr_yajiang_m ON
+        tr_yajiang_s.syjid=tr_yajiang_m.syjid  AND (tr_yajiang_s.hege='0' or tr_yajiang_s.hege = '不合格')
+        <if test="shebeibianhao!=null and shebeibianhao!='' ">
+            AND tr_yajiang_m.yjsbbh=#{shebeibianhao}
+        </if>
+        AND tr_yajiang_s.overproof_status!=20
+        <if test="shebeis!=null">
+            AND tr_yajiang_m.yjsbbh IN (${shebeis})
+        </if>
+        GROUP BY tr_yajiang_s.syjid
+        ORDER by tr_yajiang_s.id DESC
+    </select>
+
+    <select id="selectChaobiaoListPage" resultType="com.trtm.iot.yajiangs.entity.TrYajiangS">
+        select
+        tr_yajiang_s.*
+        FROM tr_yajiang_s JOIN tr_yajiang_m ON
+        tr_yajiang_s.syjid=tr_yajiang_m.syjid  AND (tr_yajiang_s.hege='0' or tr_yajiang_s.hege = '不合格')
+        <if test="shebeibianhao!=null and shebeibianhao!='' ">
+            AND tr_yajiang_m.yjsbbh=#{shebeibianhao}
+        </if>
+        <if test="shebeis!=null">
+            AND tr_yajiang_m.yjsbbh IN (${shebeis})
+        </if>
+        GROUP BY tr_yajiang_s.syjid
+        ORDER by tr_yajiang_s.id DESC
+    </select>
+    <select id="selectChaobiaoListPage1" resultType="com.trtm.iot.yajiangs.entity.TrYajiangS">
+        select
+        tr_yajiang_s.*
+        FROM tr_yajiang_s JOIN tr_yajiang_m ON
+        tr_yajiang_s.syjid=tr_yajiang_m.syjid  AND (tr_yajiang_s.is_over_level='1')
+        <if test="shebeibianhao!=null and shebeibianhao!='' ">
+            AND tr_yajiang_m.yjsbbh=#{shebeibianhao}
+        </if>
+        <if test="shebeis!=null">
+            AND tr_yajiang_m.yjsbbh IN (${shebeis})
+        </if>
+        <if test="overproofStatus==null">
+            AND tr_yajiang_m.overproof_status != 20
+        </if>
+        GROUP BY tr_yajiang_s.syjid
+        ORDER by tr_yajiang_s.id DESC
+    </select>
+
+    <select id="selectListbltozl" resultType="com.trtm.iot.yajiangs.entity.TrYajiangS" flushCache="true" useCache="false" >
+        SELECT
+            tr_yajiang_s.*
+        FROM
+            tr_yajiang_s
+        JOIN tr_yajiang_m ON tr_yajiang_s.syjid = tr_yajiang_m.syjid
+        AND tr_yajiang_s.iszl = 0
+        AND tr_yajiang_m.ismt = 1
+        AND tr_yajiang_m.yjsbbh IN (${shebeis})
+    </select>
+
+    <select id="findBysyjid" flushCache="true" useCache="false" resultType="com.trtm.iot.yajiangm.entity.TrYajiangSM">
+        select
+            hege
+        from
+            tr_yajiang_s
+        where
+            syjid=#{syjid}
+    </select>
+
+
+    <select id="findSheBeiIds" resultType="String"  flushCache="true" useCache="false">
+        select syjid from tr_yajiang_m where yjsbbh in <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+    </select>
+
+    <select id="findXiangMuZS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_s where syjid in
+        <foreach collection="sheBeiNoList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+    </select>
+
+    <select id="findYuJingS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_s where syjid in
+        <foreach collection="sheBeiNoList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and (hege='0' or hege='不合格')
+    </select>
+
+    <select id="findBiHeS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_s where syjid in
+        <foreach collection="sheBeiNoList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and overproof_status=20
+    </select>
+
+    <select id="queryIdBySheBeiNo" resultType="string" flushCache="true" useCache="false">
+        select syjid from tr_yajiang_m where yjsbbh=#{sheBeiNo}
+    </select>
+
+    <select id="queryCount" resultType="integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_s where syjid=#{id}
+    </select>
+
+    <select id="queryBuhe" resultType="integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_s where syjid=#{id} and hege='0'
+    </select>
+
+    <select id="queryStatus" resultType="integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_s where syjid=#{id} and overproof_status=20
+    </select>
+
+    <select id="findSheBeiSyJid" resultType="String" flushCache="true" useCache="false">
+        select syjid from tr_yajiang_m where yjsbbh=#{sb}
+    </select>
+
+    <select id="qyeryByXiangMu" resultType="com.trtm.iot.devicepipepilehistorydataone.entity.GongYiVo" flushCache="true" useCache="false">
+        select
+            count(b.id) allDish,count(if(hege='0' or hege='不合格', TRUE, NULL)) allWarnDish,count(if(overproof_status=20, TRUE, NULL)) biheCount,
+            s.sbname shebeiName,
+            s.depart_name sectionName,
+            s.sbjno shebeiNo,
+            s.sys_org_code sysOrgCode
+        from `tr_yajiang_s` b join tr_yajiang_m y on b.syjid=y.syjid
+                              join  (select depart.depart_name,depart.org_code,sb.sys_org_code,sb.sbjno,sb.sbname from `shebei_info` sb right join(select * from `sys_depart` where org_category =7) depart on  sb.sys_org_code like concat(depart.org_code,"%")) s
+                                         on y.yjsbbh = s.sbjno
+        where s.org_code like  concat(#{orgCode},"%")
+
+        GROUP BY y.yjsbbh  ORDER BY allWarnDish desc limit 10
+    </select>
+
+    <select id="queryCountBySheBei" resultType="com.trtm.iot.devicepipepilehistorydataone.entity.GongYiVo" flushCache="true" useCache="false">
+        select
+            count(b.id) allDish,count(if(b.hege='0' or hege='不合格' , TRUE, NULL)) allWarnDish,count(if(overproof_status=20, TRUE, NULL)) biheCount,
+            s.sbname shebeiName,
+            s.depart_name sectionName,
+            s.sbjno shebeiNo,
+            s.sys_org_code sysOrgCode
+        from tr_yajiang_s b join tr_yajiang_m m on b.syjid=m.syjid
+                            join  (select depart.depart_name,depart.org_code,sb.sys_org_code,sb.sbjno,sb.sbname from `shebei_info` sb right join(select * from `sys_depart` where org_category =#{orgCategory} ) depart on  sb.sys_org_code like concat(depart.org_code,"%")) s
+                                  on m.yjsbbh = s.sbjno
+        where s.org_code like  concat(#{orgCode},"%")
+
+        GROUP BY m.yjsbbh  ORDER BY allWarnDish desc limit 10
+    </select>
+
+    <select id="queryCountZy" resultType="com.trtm.iot.devicepipepilehistorydataone.entity.GongYiVo" flushCache="true" useCache="false">
+        select count(b.id) allDish,count(if(b.hege='0' or hege='不合格' , TRUE, NULL)) allWarnDish,count(if(b.overproof_status=20, TRUE, NULL)) biheCount,s.depart_name sectionName,s.sys_org_code sysOrgCode
+        from tr_yajiang_s b join tr_yajiang_m m on b.syjid=m.syjid
+                            join  (select depart.depart_name,depart.org_code,sb.sys_org_code,sb.sbjno,sb.sbname from shebei_info sb right join(select * from `sys_depart` where org_category =#{orgCategory} ) depart on  sb. sys_org_code like concat(depart.org_code,"%")) s
+                                  on m.yjsbbh = s.sbjno
+        where s.org_code like  concat(#{orgCode},"%")
+        GROUP BY s.org_code
+    </select>
+
+
+
+    <select id="queryDeatilss" resultType="com.trtm.iot.zhangla.entity.YaJiangVo" flushCache="true" useCache="false">
+        select s.yajiangsj,s.kongdao,s.yajiangmosh,s.peihebi,s.shuijiaobi,s.jiaobansj,s.starttime,s.endtime,s.jinjiangyal,s.fanjiangyal,s.chixushijia,s.jinjiangshu,s.fanjianglia,s.zkyl,
+        (CASE WHEN s.hege='0' THEN '否' WHEN s.hege='不合格' THEN '否' ELSE '是' END) hege,s.yjcs,s.mjqk,s.syjid
+        from tr_yajiang_s s join tr_yajiang_m m on s.syjid=m.syjid where (hege='0' or hege='不合格') and
+        m.yjsbbh=#{shebeiNo} order by starttime desc
+    </select>
+
+    <select id="findOverHandler" resultType="com.trtm.iot.zhangla.entity.OverHandler" flushCache="true" useCache="false">
+        select problem_reasons,handle_way,handle_result,handle_time,handle_person,supervisor_approval,supervisor_result,supervisor_handle_time,approval_person,remark,file_path,
+            file_path2,(CASE WHEN overproof_status=0 THEN '未处置' WHEN overproof_status=10 THEN '已处置' WHEN overproof_status=20 THEN '已闭合' ELSE '已驳回' END) overproof_status from zhangla_yajiang_over_handler where baseId=#{syjid}
+    </select>
+    <select id="count" resultType="java.lang.Integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_s s join tr_yajiang_m m on s.syjid= m.syjid where yjsbbh in <foreach collection="sheBs" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+    </select>
+    <select id="findCount" resultType="java.lang.Integer"  flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_s s join tr_yajiang_m m on s.syjid= m.syjid where (s.is_over_level = 1) and m.yjsbbh in <foreach collection="sheBs" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+    </select>
+    <select id="selectCo" resultType="java.lang.Integer"  flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_s s join tr_yajiang_m m on s.syjid= m.syjid where s.overproof_status=20 and yjsbbh in <foreach collection="sheBs" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+    </select>
+    <select id="findHeGeCount" resultType="java.lang.Integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_s s join tr_yajiang_m m on s.syjid= m.syjid where (s.is_over_level = 0 ) and m.yjsbbh in <foreach collection="sheBs" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+    </select>
+    <select id="findXiangMuZSs" resultType="java.lang.Integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_s s join tr_yajiang_m m on s.syjid=m.syjid where m.yjsbbh in
+        <foreach collection="sheBs" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+    </select>
+
+
+    <select id="findXiangMutime" parameterType="list" resultType="java.util.Map" flushCache="true" useCache="false">
+        select
+        count( 1 ) zongs,
+        count(CASE WHEN is_over_level > 0 THEN 1 END ) yujings ,
+        count(CASE WHEN is_over_level > 0 AND overproof_status = 20 THEN 1 END ) bihes
+        from tr_yajiang_m where yjsbbh in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+        <if test="dateNowStr != null and dateNowStr != ''">
+            and (yjsj like concat(#{dateNowStr},"%"))
+        </if>
+    </select>
+
+    <select id="findXiangMuZStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_m where yjsbbh in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and (yjsj like concat(#{dateNowStr},"%"))
+    </select>
+    <select id="findYuJingStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_m where yjsbbh in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and (is_over_level=1) and (yjsj like concat(#{dateNowStr},"%"))
+    </select>
+    <select id="findBiHeStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_m where yjsbbh in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and overproof_status=20 and (yjsj like concat(#{dateNowStr},"%"))
+    </select>
+
+    <select id="findXiangMuZStimes" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_s where syjid in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and yajiangsj between #{beginTime} and #{endTime}
+    </select>
+<!--    <select id="findYuJingStimes" parameterType="list" resultType="Integer" flushCache="true" useCache="false">-->
+<!--        select count(*) from tr_yajiang_s where syjid in-->
+<!--        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and (hege='0' or hege='不合格') and yajiangsj between #{beginTime} and #{endTime}-->
+<!--    </select>-->
+    <select id="findYuJingStimes" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_s where syjid in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and (is_over_level=1 ) and yajiangsj between #{beginTime} and #{endTime}
+    </select>
+    <select id="findBiHeStimes" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_s where syjid in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and overproof_status=20 and yajiangsj between #{beginTime} and #{endTime}
+    </select>
+
+    <select id="findXiangMuZSss" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_s where syjid in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and yajiangsj like concat(#{time},'%')
+    </select>
+    <select id="findYuJingSs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_s where syjid in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and (is_over_level=1 ) and yajiangsj like concat(#{time},'%')
+    </select>
+    <select id="findBiHeSs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_s where syjid in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and overproof_status=20 and yajiangsj like concat(#{time},'%')
+    </select>
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.trgangjinbhcm.mapper.TrGangjinbhcMMapper">
+
+    <select id="getgbhgl" parameterType="java.lang.String" resultType="java.util.Map" >
+        SELECT
+            s.sectionid,
+            ifnull( sum(( gj.passRate * gj.zoneCount )/ 100 ),0 ) AS passRate,
+            ifnull( sum( gj.zoneCount ), 0 ) AS zoneCount
+        FROM
+            ( SELECT sb.sectionid, sb.sbjno, sb.projectid FROM shebei_info sb WHERE sb.projectid = #{projectid,jdbcType=VARCHAR} and sb.sbtype=42 ) s
+                LEFT JOIN tr_gangjinbhc_m gj ON gj.shebei_no = s.sbjno
+                AND gj.targetType = #{targetType,jdbcType=VARCHAR}
+        GROUP BY
+            s.sectionid
+
+
+    </select>
+    <select id="selectGbList" resultType="com.trtm.iot.trgangjinbhcm.entity.TrGangjinbhcM" flushCache="true" useCache="false">
+
+            SELECT
+                *
+            FROM
+                tr_gangjinbhc_m
+            WHERE
+                shebei_no IN (${shebeilist})
+                AND 3 > istuisong
+    </select>
+
+    <select id="selectGangJinList" resultType="com.trtm.iot.trgangjinbhcm.entity.TrGangjinbhcM" flushCache="true" useCache="false">
+        select * from `tr_gangjinbhc_m`
+        where  shebei_no in (${shebeilist})
+        and istuisong = 0
+        limit 100;
+    </select>
+
+    <select id="selecbyzhid" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_gangjinbhc_m where shebei_no in
+        <foreach collection="sheBeiNoList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and targetType like #{zhifu}
+    </select>
+
+    <select id="selecbyzhidbhg" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_gangjinbhc_m where shebei_no in
+        <foreach collection="sheBeiNoList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and targetType like #{zhifu} and passRate > 60
+    </select>
+</mapper>

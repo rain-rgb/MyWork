@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.byssta.mapper.BysStaMapper">
+
+    <select id="selectlimit" resultType="com.trtm.iot.byssta.entity.BysSta" flushCache="true" useCache="false">
+        select * from `bys_sta` where shebeiNo =#{shebeino}
+        <if test="datanyr1!=null||datanyr1!=''">
+            and statistics_time =#{datanyr1}
+        </if>
+    </select>
+
+</mapper>

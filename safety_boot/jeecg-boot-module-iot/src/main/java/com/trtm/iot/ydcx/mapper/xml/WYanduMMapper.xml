@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.ydcx.mapper.WYanduMMapper">
+
+    <select id="selectSYSwHeGeLv" resultType="java.util.Map">
+        SELECT
+            count(*) AS allDish,
+            count(
+                    IF
+                        ( isQualified = "合格", TRUE, NULL )) AS bhgDish,
+            count(
+                    IF
+                        ( isQualified = "不合格", TRUE, NULL )) AS hgDish
+        FROM
+            ${tableName}
+        <if test="shebeiList.size()>0">
+            where fsbbh in
+            <foreach collection="shebeiList" item="item" index="index"  open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="getListjt" flushCache="true" useCache="false" resultType="com.trtm.iot.ydcx.entity.WYanduM">
+        select *
+        FROM w_yandu_m
+        WHERE fsbbh IN (${shebeilist})
+          AND isjtjt = 0 LIMIT 100
+    </select>
+</mapper>

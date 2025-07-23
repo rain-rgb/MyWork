@@ -1,0 +1,751 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.wztaizhang.mapper.WztaizhangMapper">
+    <update id="updateDelegateState">
+        update wztaizhang
+        set delegate_state=#{num}
+        where id = #{id}
+    </update>
+    <update id="updateUseNumByPici">
+        update wztaizhang
+        set usenum=usenum + #{num}
+        where pici = #{pici}
+    </update>
+
+    <select id="selectPiciBylc" resultType="java.util.Map" flushCache="true" useCache="false">
+        SELECT DISTINCTROW
+                   CONCAT_WS(
+		'|',
+		lc.pici,
+		CASE WHEN tz.jianyanstate = 0 THEN
+				'未检验'
+				WHEN tz.jianyanstate = 1 THEN
+				'合格'
+				WHEN tz.jianyanstate = 3 THEN
+				'检验中' ELSE '未检'
+			END
+
+		) AS `text`,
+                lc.pici `value`,
+               tz.jianyanstate
+        FROM
+            ( SELECT * FROM `wztaizhang_lc` WHERE liaocangno = #{lcguid} ORDER BY create_time DESC LIMIT 5 ) as lc
+                LEFT JOIN wztaizhang tz ON lc.pici = tz.pici
+    </select>
+
+    <select id="selectPiciBylc2" resultType="java.util.Map" flushCache="true" useCache="false">
+        SELECT
+            CONCAT_WS(
+                    '|',
+                    lc.pici,
+                    CASE WHEN tz.jianyanstate = 0 THEN
+                             '未检验'
+                         WHEN tz.jianyanstate = 1 THEN
+                             '合格'
+                         WHEN tz.jianyanstate = 3 THEN
+                             '检验中' ELSE '不合格'
+                        END
+
+                ) AS `text`,
+            lc.pici `value`,
+            lc.create_time,
+            tz.jianyanstate,
+            tz.jingzhongt,
+            ROUND( SUM(u.uses),2) uses,
+            ROUND((tz.jingzhongt- IFNULL(SUM(u.uses),0) ), 2)  residu
+        FROM
+            ( SELECT * FROM `wztaizhang_lc` WHERE liaocangno =  #{lcguid} ORDER BY create_time DESC LIMIT 8 ) as lc
+                LEFT JOIN wztaizhang tz ON lc.pici = tz.pici AND lc.cailiaono = tz.cailiaoNo
+                LEFT JOIN ycl_usage_detail  u on  u.inspection_lot_number = tz.pici
+        GROUP BY lc.pici
+        ORDER BY lc.create_time
+    </select>
+
+    <select id="selectLists" resultType="com.trtm.iot.wztaizhang.entity.Wztaizhang" flushCache="true" useCache="false">
+        select *
+        from wztaizhang
+        where id &gt;= #{curid}
+          and shebeibianhao in (${strsToList1}) limit 100
+    </select>
+
+    <select id="getListzlpz" resultType="com.trtm.iot.wztaizhang.entity.Wztaizhang" flushCache="true" useCache="false">
+        select *
+        from wztaizhang
+        where shebeibianhao in (${shebeilist})
+            and islzpz = 0
+            limit 100
+    </select>
+
+    <select id="queryones" resultType="com.trtm.iot.wztaizhang.entity.Wztaizhang" flushCache="true" useCache="false">
+        select *
+        from wztaizhang
+        where sys_org_code = #{sysOrgCode}
+          and cailiaoNo = #{cailiaoNo}
+          and gongyingshangdanweibianma = #{gongyinsgangNo}
+        order by id desc limit 1
+    </select>
+
+    <select id="queryoness" resultType="com.trtm.iot.wztaizhang.entity.Wztaizhang" flushCache="true" useCache="false">
+        select *
+        from wztaizhang
+        where sys_org_code = #{sysOrgCode}
+          and cailiaoNo = #{cailiaoNo}
+          and gongyingshangdanweibianma = #{gongyinsgangNo}
+          and pici = #{pici}
+        order by id desc limit 1
+    </select>
+
+    <select id="selectolddata" resultType="com.trtm.iot.wztaizhang.entity.Wztaizhang" flushCache="true"
+            useCache="false">
+        select *
+        from wztaizhang
+        where id &lt; #{ids}
+          and isfinish = 0
+    </select>
+
+    <select id="selectPici" resultType="String" flushCache="true" useCache="false">
+        select count(wzt.pici) as pici
+        from wztaizhang wzt
+                 inner join wzcailiaonamedict wzc on wzt.cailiaono = wzc.cailiaono
+        where wzc.nodetype = #{nodetype}
+          and wzt.sys_org_code like concat(#{orgcode}, '%')
+        group by wzc.nodetype
+    </select>
+
+    <select id="selectBhgPici" resultType="String" flushCache="true" useCache="false">
+        select count(wzt.jianyanstate) as jianyanstate
+        from wztaizhang wzt
+                 inner join wzcailiaonamedict wzc on wzt.cailiaono = wzc.cailiaono
+        where wzc.nodetype = #{nodetype}
+          and wzt.jianyanstate = 2
+          and wzt.sys_org_code like concat(#{orgcode}, '%')
+    </select>
+
+    <select id="selectBhgPiciByBd" resultType="com.trtm.iot.wztaizhang.entity.Wztaizhang" flushCache="true"
+            useCache="false">
+        select *
+        from wztaizhang wzt
+                 inner join wzcailiaonamedict wzc
+                            on wzt.cailiaono = wzc.cailiaono
+        where wzt.jianyanstate = 2
+          and wzc.nodetype = #{nodetype}
+          and wzt.sys_org_code = #{orgcode}
+    </select>
+
+    <select id="queryJypList" resultType="com.trtm.iot.wztaizhang.entity.JypWztz" flushCache="true" useCache="false">
+        select w.id,
+               w.danwei,
+               w.sys_org_code,
+               w.pici,
+               c.cailiaoName,
+               w.guigexinghao,
+               g.gongyingshangName,
+               w.jingzhongT,
+               w.jinchangshijian,
+               w.storage_place as  cunfangdidian,
+               w.use_part as       sampleGcbw,
+               w.shengchanpihao as shengchanpihao,
+               w.LCbianhao as lcbh,
+               w.chuchangshijian,
+               w.zhibaodan
+        from wztaizhang w
+                 join wzcailiaonamedict_man c on w.cailiaoNo = c.cailiaoNo
+                 join wzgongyingshang_man g on w.gongyingshangdanweibianma = g.guid
+        where w.jystatus = 0
+          and w.gblx = 1
+          and w.isfinish = 1 limit 100
+    </select>
+
+    <select id="queryJypList2" resultType="com.trtm.iot.wztaizhang.entity.JypWztz" flushCache="true" useCache="false">
+        select w.id,
+               w.sys_org_code,
+               w.pici,
+               w.shengchanpihao as shengchanpihao,
+               c.cailiaoName,
+               w.guigexinghao,
+               g.gongyingshangName,
+               w.jingzhongT,
+               w.danwei,
+               w.jinchangshijian,
+               w.storage_place  as cunfangdidian,
+               w.use_part       as sampleGcbw,
+               w.LCbianhao as lcbh,
+               w.chuchangshijian,
+               w.zhibaodan
+        from wztaizhang w
+                 join wzcailiaonamedict c on w.cailiaoNo = c.cailiaoNo
+                 join wzgongyingshang g on w.gongyingshangdanweibianma = g.guid
+        where w.jystatus = 0
+          and w.gblx = 0
+          and w.jinchangshijian >= #{curdate}
+          limit 100
+    </select>
+
+    <select id="selectmapList" resultType="java.util.Map" flushCache="true" useCache="false">
+        SELECT
+        temp2.nodetype AS nodetype,
+        temp2.num / temp2.sum * 100 AS hege
+        FROM
+        (
+        SELECT
+        count( IF ( ( jianyanstate != 0 AND jianyanstate != 3 ) or ( choujianstate != 0 AND choujianstate != 3 ) , TRUE,
+        NULL ) ) sum,
+        count(
+        IF
+        ( jianyanstate = 1 OR choujianstate = 1 , TRUE, NULL )) num,
+        nodetype,
+        jinchangshijian
+        FROM
+        wztaizhang
+        WHERE
+        jinchangshijian BETWEEN #{jinchangshijian_begin} AND #{jinchangshijian_end}
+        <if test="cprule!=0">
+            AND
+            nodetype > #{cprule}
+        </if>
+        <if test="ycrule!=0">
+            AND
+            nodetype &lt; #{ycrule}
+            AND
+            nodetype != "11"
+        </if>
+        AND nodetype IS NOT NULL
+        GROUP BY
+        nodetype
+        ) temp2
+        WHERE
+        temp2.sum != 0
+        AND temp2.sum IS NOT NULL
+        AND temp2.num != 0
+        AND temp2.num IS NOT NULL
+        ORDER BY
+        hege DESC
+
+    </select>
+    <select id="selectByYearList" resultType="java.util.Map" flushCache="true" useCache="false">
+        SELECT
+        a.itemYear itemYear,
+        ifnull(b.count, 0) AS count,
+        ifnull(b.hegeCount, 0) AS hegeCount
+
+        FROM
+        (
+        SELECT
+        YEAR (now()) AS itemYear
+        UNION ALL
+        SELECT
+        YEAR (now()) - 1 AS itemYear
+        UNION ALL
+        SELECT
+        YEAR (now()) - 2 AS itemYear
+        UNION ALL
+        SELECT
+        YEAR (now()) - 3 AS itemYear
+        UNION ALL
+        SELECT
+        YEAR (now()) - 4 AS itemYear
+        ) a
+        LEFT JOIN (
+        SELECT
+        DATE_FORMAT(jinchangshijian, "%Y") date,
+        count(id) count,
+        COUNT(if(jianyanstate = 1, true, null)) hegeCount
+        FROM
+        wztaizhang
+        <if test="cprule!=0">
+            where
+            cailiaoNo > #{cprule}
+        </if>
+        <if test="ycrule!=0">
+            where
+            cailiaoNo &lt; #{ycrule}
+        </if>
+        GROUP BY
+        date
+        ) b ON a.itemYear = b.date ORDER BY a.itemYear ;
+    </select>
+    <select id="selectNumByCode" resultType="com.trtm.iot.wztaizhang.vo.WztaizhangKBVO">
+        select count(id) allPici,
+        COALESCE(sum(jingzhongT), 0) allWeight,
+        COUNT(if(jianyanstate = 2, true, null)) unPici,
+        COUNT(if(jianyanstate = 1, true, null)) hegePici,
+
+        COALESCE(sum(if(jianyanstate = 2, jingzhongT, 0)), 0) unWeight
+        from wztaizhang w
+        where sys_org_code like concat(#{code}, "%")
+        <if test="cailiaoNo!=null">
+            and nodetype = #{cailiaoNo}
+        </if>
+        and jinchangshijian between #{beginTime} and #{endTime}
+
+    </select>
+    <select id="selectBiaoduanBycode" resultType="java.util.Map">
+        SELECT depart_name, org_code
+        from sys_depart
+        where org_category = 7
+          and org_code like concat(#{code}, "%")
+        order by depart_name asc
+    </select>
+    <select id="selectByProject" resultType="java.util.Map">
+        SELECT depart_name, org_code
+        from sys_depart
+        where org_category = 4
+          and org_code like concat(#{code}, "%")
+    </select>
+
+    <select id="selectMonthByCode" resultType="java.util.Map">
+        SELECT
+        (
+        CASE
+
+        WHEN a.MONTH = '01' THEN
+        "1月"
+        WHEN a.MONTH = '02' THEN
+        "2月"
+        WHEN a.MONTH = '03' THEN
+        "3月"
+        WHEN a.MONTH = '04' THEN
+        "4月"
+        WHEN a.MONTH = '05' THEN
+        "5月"
+        WHEN a.MONTH = '06' THEN
+        "6月"
+        WHEN a.MONTH = '07' THEN
+        "7月"
+        WHEN a.MONTH = '08' THEN
+        "8月"
+        WHEN a.MONTH = '09' THEN
+        "9月"
+        WHEN a.MONTH = '10' THEN
+        "10月"
+        WHEN a.MONTH = '11' THEN
+        "11月"
+        WHEN a.MONTH = '12' THEN
+        "12月"
+        END
+        ) AS month,
+        ifnull( b.hegeCount / b.count, 0 ) AS hegeLv
+        FROM
+        (
+        SELECT
+        DATE_FORMAT( CURDATE(), '%m' ) AS MONTH UNION
+        SELECT
+        DATE_FORMAT( CURDATE() - INTERVAL 1 MONTH, '%m' ) AS MONTH UNION
+        SELECT
+        DATE_FORMAT( CURDATE() - INTERVAL 2 MONTH, '%m' ) AS MONTH UNION
+        SELECT
+        DATE_FORMAT( CURDATE() - INTERVAL 3 MONTH, '%m' ) AS MONTH UNION
+        SELECT
+        DATE_FORMAT( CURDATE() - INTERVAL 4 MONTH, '%m' ) AS MONTH UNION
+        SELECT
+        DATE_FORMAT( CURDATE() - INTERVAL 5 MONTH, '%m' ) AS MONTH UNION
+        SELECT
+        DATE_FORMAT( CURDATE() - INTERVAL 6 MONTH, '%m' ) AS MONTH UNION
+        SELECT
+        DATE_FORMAT( CURDATE() - INTERVAL 7 MONTH, '%m' ) AS MONTH UNION
+        SELECT
+        DATE_FORMAT( CURDATE() - INTERVAL 8 MONTH, '%m' ) AS MONTH UNION
+        SELECT
+        DATE_FORMAT( CURDATE() - INTERVAL 9 MONTH, '%m' ) AS MONTH UNION
+        SELECT
+        DATE_FORMAT( CURDATE() - INTERVAL 10 MONTH, '%m' ) AS MONTH UNION
+        SELECT
+        DATE_FORMAT( CURDATE() - INTERVAL 11 MONTH, '%m' ) AS MONTH
+        ORDER BY
+        MONTH
+        ) a
+        LEFT JOIN (
+        SELECT
+        DATE_FORMAT( jinchangshijian, '%m' ) date,
+        count( IF
+        ( jianyanstate != 0 and jianyanstate != 3, TRUE, NULL ) ) count,
+        COUNT(
+        IF
+        ( jianyanstate = 1, TRUE, NULL )) hegeCount
+        FROM
+        wztaizhang
+        WHERE
+        jinchangshijian BETWEEN #{beginTime}
+        AND #{endTime}
+        AND sys_org_code LIKE concat( #{code},"%")
+        <if test="cprule!=0">
+            AND
+            nodetype > #{cprule}
+        </if>
+        <if test="ycrule!=0">
+            AND
+            nodetype &lt; #{ycrule}
+            and nodetype != "11"
+        </if>
+        <if test="stringList!=null">
+            and
+            nodetype in
+            <foreach collection="stringList" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        GROUP BY date ) b ON a.MONTH = b.date
+        ORDER BY
+        a.MONTH;
+    </select>
+    <select id="selectCountByPro" resultType="java.lang.Double">
+        SELECT
+        ifnull(count(IF(jianyanstate = 1, TRUE, NULL)) / count(IF(jianyanstate != 0 and jianyanstate != 3, TRUE,
+        NULL)),0) as hegeLv
+        FROM
+        wztaizhang
+        WHERE
+        sys_org_code LIKE concat(
+        #{sys_depart_orgcode},
+        "%")
+        and jinchangshijian BETWEEN #{beginTime} and #{endTime}
+        <if test="cprule!=0">
+            and
+            nodetype > #{cprule}
+        </if>
+        <if test="ycrule!=0">
+            and
+            nodetype &lt; #{ycrule}
+            and nodetype != "11"
+        </if>
+        <if test="stringList!=null">
+            and
+            nodetype in
+            <foreach collection="stringList" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <select id="selectMLvByCode" resultType="java.util.Map">
+        SELECT
+        ifnull(count(IF(jianyanstate = 1, TRUE, NULL)) / count(IF(jianyanstate != 0 and jianyanstate != 3, TRUE,
+        NULL)),0) as hegeLv
+        FROM
+        wztaizhang
+        WHERE
+        sys_org_code LIKE concat(
+        #{code},
+        "%")
+        and jinchangshijian BETWEEN #{beginTime} and #{endTime}
+        <if test="cprule!=0">
+            and
+            nodetype > #{cprule}
+        </if>
+        <if test="ycrule!=0">
+            and
+            nodetype &lt; #{ycrule}
+            and nodetype != "11"
+        </if>
+        <if test="stringList!=null">
+            and
+            nodetype in
+            <foreach collection="stringList" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+
+    </select>
+    <select id="selectCountByCl" resultType="java.lang.Double">
+        SELECT ifnull(count(IF(jianyanstate = 1, TRUE, NULL)) / count(IF(jianyanstate != 0 and jianyanstate != 3, TRUE,
+        NULL)), 0) AS hegeLv
+        FROM wztaizhang
+        WHERE sys_org_code LIKE concat(
+        #{code},
+        "%")
+        and jinchangshijian BETWEEN #{beginTime} and #{endTime}
+        <if test="cailiaoNo!=null">
+            and
+            nodetype in
+            <foreach collection="cailiaoNo" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+    </select>
+
+    <select id="selectByV" resultType="com.trtm.iot.wztaizhang.entity.Wztaizhang">
+        select * from wztaizhang w where 1=1
+        <if test="null != queryVo.guigexinghao">and w.guigexinghao like concat('%', #{queryVo.guigexinghao}, '%')</if>
+        <if test="null != queryVo.cailiaono">
+            and w.cailiaoNo in (${queryVo.cailiaono})
+        </if>
+        <if test="null != queryVo.caiLiaoNos and queryVo.caiLiaoNos.size > 0">
+            and w.cailiaoNo in
+            <foreach collection="queryVo.caiLiaoNos" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="queryVo.usePart != null">and w.use_part like concat('%',#{queryVo.usePart},'%')</if>
+        <if test="null != queryVo.guids">
+            and w.gongyingshangdanweibianma = #{queryVo.guids}
+        </if>
+        <if test="queryVo.jinchangshijian != null">and w.jinchangshijian like concat(#{queryVo.jinchangshijian},'%')
+        </if>
+        <if test="queryVo.delegateState == 1">and w.delegate_state = 1</if>
+        <if test="queryVo.delegateState == 0">and w.delegate_state = 0</if>
+        <if test="queryVo.pici != null and queryVo.pici != ''">and w.pici like concat('%', #{queryVo.pici}, '%')</if>
+        <if test="queryVo.sys_depart_orgcode != null">and w.sys_org_code like concat(#{queryVo.sys_depart_orgcode},
+            '%')
+        </if>
+        <if test="queryVo.orgCode != null">and w.sys_org_code like concat(#{queryVo.orgCode}, '%')</if>
+        order by jinchangshijian desc
+    </select>
+    <select id="getWzTz" resultType="java.util.Map">
+        select * from wztaizhang where 1=1
+        <if test="null != queryVo.cailiaono">
+            and w.cailiaoNo in (${queryVo.cailiaono})
+        </if>
+        <if test="null != queryVo.caiLiaoNos and queryVo.caiLiaoNos.size > 0">
+            and w.cailiaoNo in
+            <foreach collection="queryVo.caiLiaoNos" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <select id="getNoName" resultType="java.util.Map">
+        SELECT t.sys_org_code, t.guigexinghao, c.cailiaoNo, c.cailiaoName
+        FROM wztaizhang t
+                 join ycl_cailiaodict c on t.cailiaoNo = c.cailiaoNo
+        where t.LCbianhao = #{storageId}
+          and t.pici = #{inspectionLotNumber}
+    </select>
+    <select id="getNode" resultType="java.lang.String">
+        SELECT DISTINCT wt.nodetype
+        from ycl_usage_detail yud
+                 inner join wztaizhang wt
+                            on yud.inspection_lot_number = wt.pici
+    </select>
+    <select id="getUseageList" resultType="com.trtm.iot.yclud.entity.YclUsageDetail">
+        SELECT *
+        from ycl_usage_detail yud
+                 inner join wztaizhang wt
+                            on yud.inspection_lot_number = wt.pici
+        where wt.nodetype = #{nodeType}
+          and yud.treeid = #{wbsid}
+    </select>
+    <select id="selectBydict" resultType="java.lang.String">
+        SELECT item_text
+        FROM sys_dict_item s
+                 RIGHT JOIN (SELECT * FROM sys_dict WHERE dict_code = "nodeType") temp ON s.dict_id = temp.id
+        WHERE s.item_value = #{nodetype}
+    </select>
+    <select id="selectByDictValue" resultType="java.lang.String">
+        SELECT s.item_value
+        FROM sys_dict_item s
+                 RIGHT JOIN (SELECT * FROM sys_dict WHERE dict_code = "nodeType") temp ON s.dict_id = temp.id
+        WHERE s.item_text = #{cailiaoName}
+    </select>
+    <select id="selectDictList" resultType="java.util.Map">
+        SELECT
+        s.item_value as cailiaoNo,
+        s.item_text as cailiaoName
+        FROM
+        sys_dict_item s
+        RIGHT JOIN ( SELECT * FROM sys_dict WHERE dict_code = "nodeType" ) temp ON s.dict_id = temp.id
+        <if test="cprule!=0">
+            where
+            s.item_value > #{cprule}
+        </if>
+        <if test="ycrule!=0">
+            where
+            s.item_value &lt; #{ycrule}
+            and s.item_value != "11"
+        </if>
+    </select>
+    <select id="selectByGongyingshang" resultType="java.lang.String">
+        select gongyingshangName
+        from ycl_gongyingshang
+        where guid = #{gongyingshangdanweibianma}
+    </select>
+    <select id="getPiCiByCLNo" resultType="java.lang.String">
+        select pici from wztaizhang where cailiaoNo in
+        <foreach collection="noList" item="item" index="index" open="(" separator="," close=")">#{item}</foreach>
+    </select>
+    <select id="getByGuiGeXH" resultType="java.lang.String">
+        select pici
+        from wztaizhang
+        where guigexinghao = #{guiGeXingHao}
+    </select>
+    <select id="getByPici" resultType="com.trtm.iot.wztaizhang.entity.Wztaizhang">
+        select *
+        from wztaizhang
+        where pici = #{pici}
+        limit 1
+    </select>
+    <select id="SXListYCSD" resultType="com.trtm.iot.wztaizhang.entity.Wztaizhang" flushCache="true" useCache="false">
+        SELECT *
+        FROM wztaizhang w
+        WHERE w.nodeType in (${ycStr})
+          AND w.sys_org_code LIKE concat(#{sysOrgCode}, '%')
+          and EXISTS
+            (SELECT 1
+             FROM ycl_usage_detail ud
+             WHERE w.pici = ud.inspection_lot_number)
+    </select>
+    <select id="SXBhgListYCSD" resultType="com.trtm.iot.wztaizhang.entity.Wztaizhang" flushCache="true"
+            useCache="false">
+        SELECT *
+        FROM wztaizhang w
+        WHERE w.nodeType in (${ycStr})
+          AND w.sys_org_code LIKE concat(#{sysOrgCode}, '%')
+          AND (jianyanstate = 2 or choujianstate = 2)
+          AND EXISTS
+            (SELECT 1
+             FROM ycl_usage_detail ud
+             WHERE w.pici = ud.inspection_lot_number)
+    </select>
+    <select id="SXListCPSD" resultType="com.trtm.iot.wztaizhang.entity.Wztaizhang" flushCache="true" useCache="false">
+        SELECT *
+        FROM wztaizhang w
+        WHERE w.nodeType in (${cpStr})
+          AND w.sys_org_code LIKE concat(#{sysOrgCode}, '%')
+          and EXISTS
+            (SELECT 1
+             FROM ycl_usage_detail ud
+             WHERE w.pici = ud.inspection_lot_number)
+    </select>
+    <select id="SXBhgListCPSD" resultType="com.trtm.iot.wztaizhang.entity.Wztaizhang" flushCache="true"
+            useCache="false">
+        SELECT *
+        FROM wztaizhang w
+        WHERE w.nodeType in (${cpStr})
+          AND w.sys_org_code LIKE concat(#{sysOrgCode}, '%')
+          AND (jianyanstate = 2 or choujianstate = 2)
+          AND EXISTS
+            (SELECT 1
+             FROM ycl_usage_detail ud
+             WHERE w.pici = ud.inspection_lot_number)
+    </select>
+    <select id="SXListYCLC" resultType="com.trtm.iot.wztaizhang.entity.Wztaizhang" flushCache="true" useCache="false">
+        SELECT *
+        FROM wztaizhang w
+        WHERE w.nodeType in (${ycStr})
+          AND w.sys_org_code LIKE concat(#{sysOrgCode}, '%')
+          and EXISTS
+            (SELECT 1
+             FROM ycl_usage_detail ud
+             WHERE w.pici = ud.inspection_lot_number)
+    </select>
+    <select id="SXBhgListYCLC" resultType="com.trtm.iot.wztaizhang.entity.Wztaizhang" flushCache="true"
+            useCache="false">
+        SELECT *
+        FROM wztaizhang w
+        WHERE w.nodeType in (${ycStr})
+          AND w.sys_org_code LIKE concat(#{sysOrgCode}, '%')
+          AND (jianyanstate = 2 or choujianstate = 2)
+          AND EXISTS
+            (SELECT 1
+             FROM ycl_usage_detail ud
+             WHERE w.pici = ud.inspection_lot_number)
+    </select>
+    <select id="SXListCPLC" resultType="com.trtm.iot.wztaizhang.entity.Wztaizhang" flushCache="true" useCache="false">
+        SELECT *
+        FROM wztaizhang w
+        WHERE w.nodeType in (${cpStr})
+          AND w.sys_org_code LIKE concat(#{sysOrgCode}, '%')
+          and EXISTS
+            (SELECT 1
+             FROM ycl_usage_detail ud
+             WHERE w.pici = ud.inspection_lot_number)
+    </select>
+    <select id="SXBhgListCPLC" resultType="com.trtm.iot.wztaizhang.entity.Wztaizhang" flushCache="true"
+            useCache="false">
+        SELECT *
+        FROM wztaizhang w
+        WHERE w.nodeType in (${cpStr})
+          AND w.sys_org_code LIKE concat(#{sysOrgCode}, '%')
+          AND (jianyanstate = 2 or choujianstate = 2)
+          AND EXISTS
+            (SELECT 1
+             FROM ycl_usage_detail ud
+             WHERE w.pici = ud.inspection_lot_number)
+    </select>
+
+    <select id="getSyList" resultType="java.util.Map">
+        SELECT wt.id wtid,w.id
+        wztzid,w.cailiaoNo,w.guigexinghao,w.pici,w.jinchangshijian,wt.zhipairen,wt.zhipaishijian,w.delegate_state
+        delegateState,
+        wt.zhipaizhuangtai,wt.quyangren,wt.quyangshijian,wt.shouyangren,wt.shouyangshijian,wt.erweimabianhao,wt.quyangzhuangtai,wt.shouyangzhuangtai,
+        wt.shouyangzhuangtai,cd.cailiaoName,gy.gongyingshangName,wt.zhipaiquyangren,wt.shigongdanwei,wt.jianglidanwei,wt.weituoriqi,w.use_part
+        userPart,jl.chengxingriqi,
+        jl.quyangdidian,jl.yangpingshuliang,jl.yangpinmiaoshu,jl.chouyangrenyuan,wt.jiancexiangmu,w.jingzhongT,wt.jianzhengren,jl.id
+        quyangdanid
+        -- ,w.gongyingshangdanweibianma
+        FROM wztaizhang w
+        RIGHT JOIN sy_dps_yy_yuancaiquyangweituo wt ON w.id=wt.yuancaijinchangdengjiId
+        LEFT JOIN ycl_cailiaodict cd ON w.cailiaoNo=cd.cailiaoNo
+        LEFT JOIN ycl_gongyingshang gy ON w.gongyingshangdanweibianma=gy.guid
+        LEFT JOIN sy_dps_yy_quyangjiludan jl ON w.id=jl.yuancaijinchangdengjiId
+        WHERE 1=1
+        <if test="null != queryVo.guigexinghao">and w.guigexinghao like concat('%', #{queryVo.guigexinghao}, '%')</if>
+        <if test="null != queryVo.pici">and w.pici like concat('%', #{queryVo.pici}, '%')</if>
+        <if test="null != queryVo.jinchangshijian">and w.jinchangshijian like concat(#{queryVo.jinchangshijian}, '%')
+        </if>
+        <if test="null != queryVo.cailiaono">and w.cailiaoNo in (${queryVo.cailiaono})</if>
+        <!--<if test="null != orgCode">and wt.jianlidanweiorgcode=#{orgCode}</if>-->
+        <if test="null != queryVo.zhipaizhuangtai and queryVo.zhipaizhuangtai == 0">and wt.zhipaizhuangtai=0</if>
+        <if test="null != queryVo.zhipaizhuangtai and queryVo.zhipaizhuangtai == 1">and wt.zhipaizhuangtai=1</if>
+
+        <!--<if test="null != queryVo.zhipaizhuangtai">and wt.zhipaizhuangtai=#{queryVo.zhipaizhuangtai}</if>
+        <if test="null != queryVo.quyangren">and wt.quyangren=#{queryVo.quyangren}</if>
+        <if test="null != queryVo.quyangshijian">and wt.quyangshijian like concat(#{queryVo.quyangshijian},"%")</if>
+        <if test="null != queryVo.quyangzhuangtai">and wt.quyangzhuangtai=#{queryVo.quyangzhuangtai}</if>
+        <if test="null != queryVo.shouyangren">and wt.shouyangren=#{queryVo.shouyangren}</if>
+        <if test="null != queryVo.shouyangshijian">and wt.shouyangshijian like concat(#{queryVo.shouyangshijian},"%")</if>
+        <if test="null != queryVo.shouyangzhuangtai">and wt.shouyangzhuangtai=#{queryVo.shouyangzhuangtai}</if>-->
+        <if test="null != queryVo.caiLiaoNos and queryVo.caiLiaoNos.size() &gt; 0">
+            and w.cailiaoNo in
+            <foreach collection="queryVo.caiLiaoNos" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="queryVo.sys_depart_orgcode != null">and w.sys_org_code like concat(#{queryVo.sys_depart_orgcode},
+            '%')
+        </if>
+        order by w.id desc
+    </select>
+    <select id="selectJYL" resultType="java.lang.String">
+        SELECT sum(jingzhongT)
+        FROM wztaizhang
+        WHERE sys_org_code LIKE concat(#{sysOrgCode}, "%")
+          AND nodetype = #{nodetype}
+          AND jianyanstate != #{i}
+    </select>
+    <select id="selectJCL" resultType="java.lang.String">
+        SELECT sum(jingzhongT)
+        FROM wztaizhang
+        WHERE sys_org_code LIKE concat(#{sysOrgCode}, "%")
+          AND nodetype = #{nodetype}
+    </select>
+    <select id="selectUSES" resultType="java.lang.String">
+        SELECT sum(yud.uses)
+        FROM wztaizhang wt
+                 INNER JOIN ycl_usage_detail yud
+                            ON wt.pici = yud.inspection_lot_number
+        WHERE wt.sys_org_code LIKE concat(#{sysOrgCode}, "%")
+          AND wt.nodetype = #{nodetype};
+    </select>
+    <select id="getPiciByStateCailiaoLiaocangGongyingshangNo"
+            resultType="com.trtm.iot.wztaizhang.entity.Wztaizhang">
+        SELECT
+        *
+        FROM
+        wztaizhang
+        WHERE 1=1
+        <if test="jianyanstate!=null and jianyanstate!=''">
+            AND jianyanstate = #{jianyanstate}
+        </if>
+        <if test="cailiaono!=null and cailiaono!=''">
+            AND cailiaoNo = #{cailiaono}
+        </if>
+        <if test="lcbianhao!=null and lcbianhao!=''">
+            AND LCbianhao = #{lcbianhao}
+        </if>
+        <if test="gongyingshangdanweibianma!=null and gongyingshangdanweibianma!=''">
+            AND gongyingshangdanweibianma = #{gongyingshangdanweibianma}
+        </if>
+        AND sys_org_code LIKE CONCAT( #{orgCode} ,'%')
+    </select>
+
+</mapper>

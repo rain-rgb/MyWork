@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.bhzcementworkstatus.mapper.BhzCementWorkstatusMapper">
+
+    <select  id="queryone" resultType="com.trtm.iot.bhzcementworkstatus.entity.BhzCementWorkstatus" useCache="false" flushCache="true">
+        select * from bhz_cement_workstatus where shebei_no = #{shebeiNo} and sys_org_code =#{sysOrgCode}
+    </select>
+
+</mapper>

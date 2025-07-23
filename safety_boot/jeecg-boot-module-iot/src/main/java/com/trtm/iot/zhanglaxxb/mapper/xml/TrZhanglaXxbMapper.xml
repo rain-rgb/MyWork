@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.zhanglaxxb.mapper.TrZhanglaXxbMapper">
+    <select id="selectxxbListstatistics" flushCache="true" useCache="false" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxbMStatistics">
+        SELECT
+            id,
+            syjid,
+            gcmc,
+            yzlc,
+            gjbh,
+            shebeibianhao,
+            gjmc,
+            snsjqd,
+            sgsj,
+            statistics
+        FROM
+            tr_zhangla_xxb
+        WHERE
+            id>#{id} and statistics=#{statistics} limit 10
+    </select>
+
+    <select id="queryone" flushCache="true" useCache="false" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb">
+        select * from tr_zhangla_xxb where shebeibianhao=#{shebeiNo} order by sgsj desc limit 1
+    </select>
+
+    <select id="selectListsss" flushCache="true" useCache="false" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb">
+            SELECT
+                *
+            FROM
+                tr_zhangla_xxb
+            WHERE
+                shebeibianhao IN (${shebeibianhao})
+                AND iszl = '0'
+                AND over_level = 0
+    </select>
+
+    <select id="selectListm" flushCache="true" useCache="false" resultType="com.trtm.iot.zhanglam.entity.TrZhanglaM">
+            SELECT
+                *
+            FROM
+                tr_zhangla_m
+            WHERE
+                shebeibianhao IN (${shebeibianhao})
+                AND 2 > iszl
+    </select>
+
+    <select id="selectListbl" flushCache="true" useCache="false" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb">
+            SELECT
+                *
+            FROM
+                tr_zhangla_xxb
+            WHERE
+                shebeibianhao IN (${shebeibianhao})
+                AND 10 > ISZL
+                AND ISZL > 2
+                limit 500
+    </select>
+
+    <select id="selectListshyj" flushCache="true" useCache="false" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb">
+        select *
+        FROM tr_zhangla_xxb
+        WHERE  shebeibianhao IN (${shebeiNo})
+        AND ID > #{id}
+        LIMIT 100
+    </select>
+
+    <select id="selectListzjzl" flushCache="true" useCache="false" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb">
+        select *
+        FROM tr_zhangla_xxb
+        WHERE  shebeibianhao IN (${shebeiNo})
+        AND ID > #{id}
+        LIMIT 100
+    </select>
+<!--浙路品质-->
+    <select id="selectListzlpz" flushCache="true" useCache="false" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb">
+        select *
+        FROM tr_zhangla_xxb
+        WHERE over_level > 0
+        AND shebeibianhao IN (${shebeibianhao})
+        AND (iszlpz = 0 OR (iszlpz = 3 AND overproof_status >0))
+        LIMIT 100
+    </select>
+
+    <select id="selectzlList" flushCache="true" useCache="false" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb">
+        select *
+        FROM tr_zhangla_xxb
+        WHERE  shebeibianhao IN (${shebeiNo})
+        AND ID > #{id}
+        LIMIT 100
+    </select>
+
+    <select id="selectrczlList" flushCache="true" useCache="false" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb">
+        select *
+        FROM tr_zhangla_xxb
+        WHERE  shebeibianhao IN (${shebeiNo})
+        AND 0 = issend order by id desc
+        LIMIT 1000
+    </select>
+
+    <select id="selectytwzlList" flushCache="true" useCache="false" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb">
+        select *
+        FROM tr_zhangla_xxb
+        WHERE  shebeibianhao IN (${shebeiNo})
+        AND 0 = issend
+        LIMIT 1000
+    </select>
+
+    <select id="selectydzlList" flushCache="true" useCache="false" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb">
+        select *
+        FROM tr_zhangla_xxb
+        WHERE  shebeibianhao IN (${shebeiNo})
+        and islh = 0
+        LIMIT 100
+    </select>
+
+    <select id="selectzl47toyd" flushCache="true" useCache="false" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb">
+        select *
+        FROM tr_zhangla_xxb
+        WHERE  shebeibianhao IN (${shebeiNo})
+        AND ID > #{id}
+        LIMIT 100
+    </select>
+
+    <select id="findXiangMutime" parameterType="list" resultType="java.util.Map" flushCache="true" useCache="false">
+        select
+            count( 1 ) zongs,
+            count(CASE WHEN over_level > 0 THEN 1 END ) yujings ,
+            count(CASE WHEN over_level > 0 AND overproof_status = 20 THEN 1 END ) bihes
+        from tr_zhangla_xxb where shebeibianhao in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+        <if test="dateNowStr != null and dateNowStr != ''">
+            and sgsj like concat(#{dateNowStr},"%")
+        </if>
+    </select>
+
+
+
+    <select id="selectLists" useCache="false" flushCache="true" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb">
+         select * from tr_zhangla_xxb where uuid=#{uuid} and isruicang = 0
+    </select>
+    <select id="selectListdata" useCache="false" flushCache="true" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb">
+         select * from tr_zhangla_xxb where shebeibianhao=#{shebeibianh} and isruicang = 0
+    </select>
+
+    <select id="findYuJingS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_xxb where shebeibianhao in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and over_level > 0
+    </select>
+    <select id="findBiHeS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_xxb where shebeibianhao in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and overproof_status = 20
+    </select>
+    <select id="findXiangMuZS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_xxb where shebeibianhao in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+    </select>
+
+    <select id="findXiangMuZStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_xxb where shebeibianhao in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and sgsj like concat(#{dateNowStr},"%")
+    </select>
+    <select id="findYuJingStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_xxb where shebeibianhao in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and over_level > 0 and sgsj like concat(#{dateNowStr},"%")
+    </select>
+    <select id="findBiHeStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_xxb where shebeibianhao in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and overproof_status = 20 and sgsj like concat(#{dateNowStr},"%")
+    </select>
+
+    <select id="findXiangMuZStimes" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_xxb where shebeibianhao in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and sgsj between #{beginTime} and #{endTime}
+    </select>
+    <select id="findYuJingStimes" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_xxb where shebeibianhao in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and over_level > 0 and sgsj between #{beginTime} and #{endTime}
+    </select>
+    <select id="findBiHeStimes" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_xxb where shebeibianhao in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and overproof_status = 20 and sgsj between #{beginTime} and #{endTime}
+    </select>
+
+    <select id="findXiangMuZSs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_xxb where shebeibianhao in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and sgsj like concat(#{time},'%')
+    </select>
+    <select id="findYuJingSs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_xxb where shebeibianhao in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and over_level > 0 and sgsj like concat(#{time},'%')
+    </select>
+    <select id="findBiHeSs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_xxb where shebeibianhao in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and overproof_status = 20 and sgsj like concat(#{time},'%')
+    </select>
+
+    <select id="findRenwudanzs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_xxb where uuid in
+        <foreach collection="zhiliangrenwudanList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+    </select>
+    <select id="findRenwudanyjs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_xxb where uuid in
+        <foreach collection="zhiliangrenwudanList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and over_level > 0
+    </select>
+    <select id="findRenwudanbhs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_xxb where uuid in
+        <foreach collection="zhiliangrenwudanList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and overproof_status = 20
+    </select>
+    <select id="selectUnifiedProcess" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb" flushCache="true" useCache="false">
+        select *
+        from tr_zhangla_xxb
+        where id>#{curid}
+        and over_level > 0
+        AND statistics = 1
+        <if test="shebeiList != null">
+            AND shebeibianhao in
+            <foreach collection="shebeiList" item="item" index="index"  open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        limit 10
+    </select>
+
+    <select id="selectListss" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb" flushCache="true" useCache="false">
+        select * from tr_zhangla_xxb where shebeibianhao in
+        <foreach collection="shebeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and sgsj like concat(#{date},'%')
+    </select>
+
+    <select id="selectBYSBList" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb" flushCache="true" useCache="false">
+        select * from tr_zhangla_xxb where shebeibianhao in (${shebeilist})  and id>#{curid} limit 100
+    </select>
+
+    <select id="selectListst" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb" flushCache="true" useCache="false">
+        select *
+        from tr_zhangla_xxb
+        where shebeibianhao in (${shebeilist})
+        and iszl = 0
+        limit 100
+    </select>
+
+    <select id="selectlist" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb" flushCache="true" useCache="false">
+        SELECT
+            x.*
+        FROM
+            tr_zhangla_xxb x
+                LEFT JOIN
+            tr_zhangla_m m ON x.syjid = m.syjid
+                LEFT JOIN
+            tr_zhangla_s_s s ON m.holeid = s.holeid
+                JOIN shebei_info ON shebei_info.sbjno = x.shebeibianhao
+        WHERE
+            s.holeid IS NULL AND x.shebeibianhao LIKE 'rc%' AND x.shebeibianhao not LIKE '%cf' GROUP BY x.gjbh;
+
+    </select>
+
+    <select id="getrcwqxzhanglaList" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb" flushCache="true" useCache="false">
+        SELECT tr_zhangla_xxb.* FROM tr_zhangla_xxb WHERE syjid IN
+            (SELECT tr_zhangla_m.SYJID FROM tr_zhangla_m left JOIN tr_zhangla_s_s ON tr_zhangla_m.holeid
+                   = tr_zhangla_s_s.holeid AND tr_zhangla_m.shebeibianhao in
+                    ('rcgszl01_02','rcgszl01_01','rcgszl02_01','rcgszl02_02','rcgszl03_01','rcgszl03_03','rcgszl03_02','rcgszl04_01','rcgszl04_02')
+                        AND tr_zhangla_s_s.id is NULL GROUP BY tr_zhangla_m.SYJID) AND shebeibianhao in('rcgszl01_02','rcgszl01_01','rcgszl02_01','rcgszl02_02','rcgszl03_01','rcgszl03_03','rcgszl03_02','rcgszl04_01','rcgszl04_02')
+    </select>
+
+    <select id="selectListoJG" resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxb" flushCache="true" useCache="false">
+        select *
+        from tr_zhangla_xxb
+        where shebeibianhao in (${shebeilist})
+          and iszl = '0'
+            limit 100
+    </select>
+</mapper>

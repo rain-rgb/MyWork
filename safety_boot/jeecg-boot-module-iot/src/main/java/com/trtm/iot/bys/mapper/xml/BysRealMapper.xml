@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.bys.mapper.BysRealMapper">
+
+    <select id="stsPageLists3" resultType="java.util.Map">
+        select
+        IFNULL(count(*),0) sums,
+        IFNULL(sum(case when bys_real.status=1 then 1 else 0 end),0) as sumtrue,
+        IFNULL(sum(case when bys_real.status=2 then 1 else 0 end),0) as sumsfalse
+        FROM `bys_real` join shebei_info on bys_real.shebeiNo=shebei_info.sbjno
+        <if test="shebeis!=null">
+            and bys_real.shebeiNo in (${shebeis})
+        </if>
+    </select>
+
+    <select id="selectbysone" resultType="com.trtm.iot.bys.entity.BysReal" flushCache="true" useCache="false">
+        select * from `bys_real` where id >= #{curid} and alertstate =#{alertstate} limit 5000
+    </select>
+
+    <select id="queryone" resultType="com.trtm.iot.bys.entity.BysReal" flushCache="true" useCache="false">
+        select * from `bys_real` where shebeiNo=#{shebeiNo}  order by dataTime desc limit 1
+    </select>
+    <select id="selectListBySbno" flushCache="true" useCache="false" resultType="com.trtm.iot.bys.entity.BysReal">
+        SELECT id,gatherDate,shebeino,temperature,humidity,guid,forwardstatus,temstatus,humstatus,alertstate,status,max(dataTime) as dataTime
+        FROM bys_real
+        where shebeino in (${shebeino})
+        and alertstate = 1
+        GROUP BY shebeiNo
+    </select>
+    <select id="selectBysList" resultType="com.trtm.iot.bys.entity.BysReal" flushCache="true" useCache="false">
+        select * from `bys_real` where id > #{curid} and shebeino in (${shebeilist}) limit 100
+    </select>
+
+    <select id="selectBysListkz" resultType="com.trtm.iot.bys.entity.BysReal" flushCache="true" useCache="false">
+        select * from `bys_real`
+        where id > #{curid}
+        and shebeino in (${shebeilist}) limit 100
+    </select>
+
+    <select id="queryListbim" resultType="com.trtm.iot.bys.entity.BysReal" flushCache="true" useCache="false">
+        select * from bys_real
+        where id > #{curid}
+        and shebeino in (${shebei})
+        limit 1000
+    </select>
+
+    <select id="selectBysbno" resultType="com.trtm.iot.bys.entity.BysReal" flushCache="true" useCache="false">
+        SELECT
+            *
+        FROM
+            ( SELECT * FROM bys_real WHERE id > #{curid} ) t
+        WHERE
+            temperature BETWEEN 18 AND 21
+            AND shebeino = #{shebeino}
+        ORDER BY
+            gatherDate DESC
+            LIMIT 1
+    </select>
+
+    <select id="queryListBySheBeis" resultType="com.trtm.iot.bys.entity.BysReal" flushCache="true" useCache="false">
+        select r.id,r.dataTime,r.shebeiNo,r.temperature,r.humidity,r.guid,s.sys_org_code from bys_real r join shebei_info s on s.sbjno=r.shebeiNo where r.shebeiNo = (${shebei}) and r.id > #{curid} LIMIT 100
+    </select>
+
+    <select id="findXiangMuZStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bys_real where shebeiNo in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and (dataTime like concat(#{dateNowStr},"%"))
+    </select>
+    <select id="findYuJingStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bys_real where shebeiNo in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and alertstate='2' and (dataTime like concat(#{dateNowStr},"%"))
+    </select>
+    <select id="selectBysbnotwo" resultType="com.trtm.iot.bys.entity.BysReal" flushCache="true" useCache="false">
+        SELECT
+            *
+        FROM
+                ( SELECT * FROM bys_real WHERE id > #{curid} and dataTime > date_sub(CURDATE(), interval 7 DAY)) t
+        WHERE
+             shebeino = #{shebeino}
+        ORDER BY
+            gatherDate DESC
+            LIMIT 1
+    </select>
+    <!-- 处置条数，目前标养室没有处置   <select id="findBiHeStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">-->
+<!--        select count(*) from bys_real where shebeiNo in-->
+<!--        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and overproof_status=20 and (dataTime like concat(#{dateNowStr},"%"))-->
+<!--    </select>-->
+</mapper>

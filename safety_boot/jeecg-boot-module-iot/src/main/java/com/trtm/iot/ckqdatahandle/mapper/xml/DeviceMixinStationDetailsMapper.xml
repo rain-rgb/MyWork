@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.ckqdatahandle.mapper.DeviceMixinStationDetailsMapper">
+
+    <select id="selectMixinStationDetails" parameterType="String" resultType="String">
+     select  sid from device_mixin_station_details
+      where sid =#{sid}
+      and is_delete='1'
+    </select>
+    <!--注浆泵详情信息-->
+    <select id="selectSixMixinStationDetails" parameterType="String"
+            resultType="com.trtm.iot.ckqdatahandle.entity.DevicePulpingHistoryData">
+      select id, pulpingdate,liao3,liao4,shejiliao3,shejiliao4 from  device_pulping_historydata
+      where handle_status = '0'
+      and pulpingdate like concat('%',#{nowDate}, '%')
+    </select>
+
+    <select id="countSixTheoryCement" parameterType="String" resultType="String">
+         select  sum(shejiliao3) from device_pulping_historydata
+          where  handle_status = '0'
+          and pulpingdate like concat('%',#{nowData}, '%')
+    </select>
+
+    <select id="countSixRealityCement" parameterType="String" resultType="double">
+          select  sum(liao3) from device_pulping_historydata
+          where  handle_status = '0'
+          and pulpingdate like concat('%',#{nowData}, '%')
+    </select>
+
+    <select id="countSixTheoryFlyAsh" parameterType="String" resultType="String">
+           select  sum(shejiliao4) from device_pulping_historydata
+          where  handle_status = '0'
+          and pulpingdate like concat('%',#{nowData}, '%')
+    </select>
+
+    <select id="countSixRealityFlyAsh" parameterType="String" resultType="double">
+           select sum(liao4) from device_pulping_historydata
+          where  handle_status = '0'
+          and pulpingdate like concat('%',#{nowData}, '%')
+    </select>
+    <!--搅拌站详情-->
+    <update id="updateDevicePulpingHistoryData" parameterType="Integer">
+        update device_pulping_historydata set handle_status = '1' where id=#{id}
+    </update>
+    <!--搅拌站-->
+    <update id="updateDevicePulpingHistoryDataTwo" parameterType="Integer">
+        update device_pulping_historydata set handle_status_two = '1' where id=#{id}
+    </update>
+
+    <!--注浆泵信息-->
+    <select id="selectSixMixinStation" resultType="com.trtm.iot.ckqdatahandle.entity.DevicePulpingHistoryData">
+      select id, pulpingdate,liao3,liao4,shejiliao3,shejiliao4 from  device_pulping_historydata
+      where handle_status_two = '0'
+    </select>
+
+    <select id="countSixRealityCementTotle" resultType="Double">
+          select  sum(liao3) from device_pulping_historydata
+          where  handle_status_two = '0'
+    </select>
+
+    <select id="countSixRealityFlyAshTotle" resultType="Double">
+          select  sum(liao4) from device_pulping_historydata
+          where  handle_status_two = '0'
+    </select>
+
+    <select id="sumOneBidTwoMixinStationCFA" resultType="com.trtm.iot.ckqdatahandle.vo.CementFlyAsh">
+    select sum(reality_cement) as realityCement ,sum(reality_fly_ash) as realityFlyAsh from  device_mixin_station_details
+    where  sid ='/usr/plcnet/BP1_2_STA/edge/u'
+    and upload_time > '2021-07-11'
+    and is_delete = '1'
+    </select>
+
+    <select id="selectGarbageDateMixinStation" resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+        select id from device_traffic_historydata
+        where handle_status_two = '0'
+        and
+        (v= '0' or v like concat('%','-', '%') or v= ''
+        )
+        and
+        (pid like concat('%','CT', '%')
+        or  pid like concat('%','FL', '%')
+        )
+    </select>
+
+
+    <select id="selectGarbageDateBigMixinStationD"
+            resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+        select id ,v ,handle_status_two from device_traffic_historydata
+        where handle_status_two = '0'
+        and pid like concat('%','W', '%')
+        and v>2000
+    </select>
+
+
+    <select id="selectMSDTotalCement" parameterType="String" resultType="double">
+     select  sum(today_cement) from device_mixin_station_details
+     where sid =#{sid}
+     and is_delete='1'
+    </select>
+
+    <select id="selectMSDTotalFlyAsh" parameterType="String" resultType="double">
+     select  sum(today_fly_ash) from device_mixin_station_details
+     where sid =#{sid}
+     and is_delete='1'
+    </select>
+
+</mapper>

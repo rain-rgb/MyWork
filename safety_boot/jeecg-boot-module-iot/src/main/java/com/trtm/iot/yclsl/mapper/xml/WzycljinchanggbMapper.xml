@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.yclsl.mapper.WzycljinchanggbMapper">
+
+    <select id="selectLists1" resultType="com.trtm.iot.yclsl.entity.Wzycljinchanggb" flushCache="true" useCache="false">
+        select *
+        from wzycljinchanggb
+        where id &gt; #{curid}
+        and shebeibianhao in (${strsToList1})
+        AND jingzhong != 0
+        AND chuchangshijian is not null
+        limit 100
+    </select>
+
+    <select id="selectListsyjqs" resultType="com.trtm.iot.yclsl.entity.Wzycljinchanggb" flushCache="true" useCache="false">
+        select id, jinchuliaodanNo, cailiaoNo, pici, cheliangbianhao, qianchepai, houchepai, maozhong, pizhong, jingzhong,
+        kouzhong, koulv, chengzhongpiancha, liaocang, sibangyuan, remark, shebeibianhao, gongyingshangdanweibianma, guobangleibie,
+        cheliangleixing, guid, ts, isdel, status, maozhongT, pizhongT, candi, yunshudanwei, LCbianhao, isshouliao, jingzhongT,
+        istongji, LiaoCangId, serialNo, reason, file_upload, istaizhangtj, songhuodanPic, shifouhege, yuancaimiaoshu, beizhu,
+        jianlipic, sibanpic, JCGKPic, JCCPPic, JCHCPPic, JCBFPic, CCGKPic, CCCPPic, CCHCPPic, CCBFPic, taizhangtj, taizhangid,
+        jingzhongTtj,DATE_FORMAT(
+            STR_TO_DATE(CONCAT(jinchangshijian, ':00'), '%Y-%m-%d %H:%i:%s'),
+            '%Y-%m-%d %H:%i:%s'
+        ) AS jinchangshijian,DATE_FORMAT(
+            STR_TO_DATE(CONCAT(chuchangshijian, ':00'), '%Y-%m-%d %H:%i:%s'),
+            '%Y-%m-%d %H:%i:%s'
+        ) AS chuchangshijian
+        from wzycljinchanggb
+        where id &gt; #{curid}
+        and shebeibianhao in (${strsToList1})
+        AND jingzhong != 0
+        ORDER BY id
+        limit 1000
+    </select>
+
+    <select id="slistrqid" resultType="com.trtm.iot.yclsl.entity.Wzycljinchanggb" flushCache="true" useCache="false">
+        select * from wzycljinchanggb
+        where id &gt; #{curid}
+          and shebeibianhao in (${shebeilist})
+          and cailiaoNo = "A05A01A05A04A01A02A01A02-DB-1201"
+          and jinchangshijian > "2024-07-09 00:00:00"
+        limit 100
+    </select>
+
+    <select id="selectone" resultType="com.trtm.iot.yclsl.entity.Wzycljinchanggb" flushCache="true" useCache="false">
+        select * from wzycljinchanggb where jinchuliaodanNo =#{jinchuliaodanno}
+    </select>
+
+    <select id="selectycljinchangList" resultType="com.trtm.iot.yclsl.entity.Wzycljinchanggb" flushCache="true" useCache="false">
+        select * from wzycljinchanggb where id >=#{id} and taizhangtj =#{taizhangtj} limit 100
+    </select>
+
+    <select id="selecones" resultType="com.trtm.iot.yclsl.entity.Wzycljinchanggb" flushCache="true" useCache="false">
+        select * from wzycljinchanggb where istongji =#{istongji} and id >#{curid} limit 50
+    </select>
+
+    <select id="selectyclList" resultType="com.trtm.iot.yclsl.entity.Wzycljinchanggb" flushCache="true" useCache="false">
+        select * from wzycljinchanggb
+        where id > #{curid}
+        and shebeibianhao in (${shebeilist})
+        AND jinchangshijian >= '2023-02-01'
+        AND chuchangshijian >= '2023-02-01'
+        and jingzhong > 0
+        limit 100;
+    </select>
+
+    <select id="selectydyclList" resultType="com.trtm.iot.yclsl.entity.Wzycljinchanggb" flushCache="true" useCache="false">
+        select * from wzycljinchanggb
+        where id > #{curid}
+        and qianchepai in (${shebeilist})
+        limit 100;
+    </select>
+
+</mapper>

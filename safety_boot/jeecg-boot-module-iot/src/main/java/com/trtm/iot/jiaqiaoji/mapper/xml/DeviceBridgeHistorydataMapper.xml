@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.jiaqiaoji.mapper.DeviceBridgeHistorydataMapper">
+
+    <select id="selectJQJList" resultType="com.trtm.iot.jiaqiaoji.entity.DeviceBridgeHistorydata">
+      select *
+        from device_bridge_historydata
+        where id > #{curid}
+        and device_code in (${shebeilist})
+            limit 300
+    </select>
+
+    <select id="selectListbim" resultType="com.trtm.iot.jiaqiaoji.entity.DeviceBridgeHistorydata">
+      select *
+        from device_bridge_historydata
+        where id > #{curid}
+        and device_code in (${shebeilist})
+        limit 300
+    </select>
+
+    <select id="getYjList" resultType="map" flushCache="true" useCache="false">
+        SELECT
+	    	device_code, -- 设备编号
+	    	count( 1 ) sjl, -- 数据量
+	    	sum( hookstatus_1 ) hookSta1, --1#天车吊钩载荷状态
+	    	sum( hookstatus_2 ) hookSta2, --2#天车吊钩载荷状态
+	    	sum( overval1_height1 ) over1Height1, --1#超高预警
+	    	sum( overval2_height2 ) over2Height2, --2#超高预警
+	    	sum( overval3_speed1 ) over3Speed1, --1#超速预警
+	    	sum( overval4_speed2 ) over4Speed2, --2#超速预警
+	    	sum( overval5_wind ) over5Wind, --风速预警
+	    	sum( overval6_verticality ) over6Verticality --前支腿垂直度预警
+		FROM
+			device_bridge_historydata
+		WHERE
+			bridgedate > DATE_SUB( NOW(), INTERVAL 10 * 5 SECOND )
+		GROUP BY
+			device_code
+    </select>
+
+    <insert id="saveyjdx" parameterType="com.trtm.iot.message.entity.SysMessage">
+        insert into sys_sms(id,es_content,es_param,es_receiver,es_send_num,es_send_status,es_title,es_type,es_result,create_by,create_time,update_by,update_time,remark)
+        values(#{id},#{esContent},#{esParam},#{esReceiver},#{esSendNum},#{esSendStatus},#{esTitle},#{esType},#{esResult},#{createBy},#{createTime},#{updateBy},#{updateTime},#{remark})
+    </insert>
+</mapper>

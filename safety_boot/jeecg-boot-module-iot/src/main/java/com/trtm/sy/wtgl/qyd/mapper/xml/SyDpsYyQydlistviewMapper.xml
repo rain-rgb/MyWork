@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.sy.wtgl.qyd.mapper.SyDpsYyQydlistviewMapper">
+
+    <select id="queryQyPic" resultType="java.util.Map">
+        SELECT url FROM sy_dps_yy_QYPic WHERE qydid=#{id}
+    </select>
+    <select id="querySyPic" resultType="java.util.Map">
+        SELECT * FROM sy_dps_yy_SYPic WHERE qydid=#{id}
+    </select>
+    <select id="getQyXxById" resultType="com.trtm.sy.wtgl.qyd.entity.response.YpdEntity">
+        SELECT
+            qv.quyangdanid,
+            qv.yuancaijinchangdengjiId wztzid,
+            qv.tit_code titCode,
+            cd.cailiaoNo cailiaoNo,
+            cd.cailiaoName sampleName,
+            qv.yangpinmiaoshu sampleDescribe,
+            qv.quyangshijian sampleDate,
+            qv.yangpingshuliang sampleYangPinShuLiang,
+            qv.jingzhongT sampleDaiBiaoShuLiang,
+            qv.pici sampleShengChanPiHao,
+            qv.quyangdidian quyangdidian,
+            lc.NAME sampleQuYangDiDian,
+            qv.quyangren sampleQuYangRen,
+            qv.yangpinmiaoshu,
+            qv.sys_org_code orgCode,
+            qv.use_part usePart,
+            qv.pici
+        FROM
+            sy_dps_yy_qydlistview qv
+                LEFT JOIN ycl_cailiaodict cd ON qv.cailiaoNo = cd.cailiaoNo
+                LEFT JOIN wzliaocang lc ON qv.quyangdidian = lc.guid
+        WHERE
+            yuancaijinchangdengjiId = #{id}
+    </select>
+</mapper>

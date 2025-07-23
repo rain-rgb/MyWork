@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.syjoverhandler.mapper.SyjOverHandlerMapper">
+    <insert id="syjchuZhiAddById">
+          INSERT into syj_over_handler
+        (baseId,problem_reasons,handle_way,handle_result,handle_time,handle_person,file_path2,overproof_status)
+        VALUES (#{syjbatch},#{wtyy},#{clfs},#{cljg},sysdate(),#{chuzhiren},#{bizPath},#{status})
+    </insert>
+    <insert id="BhzShBoHuiAddById">
+         INSERT into syj_over_handler
+        (baseId,overproof_status,approval_person,remark,supervisor_handle_time)
+        VALUES (#{syjbatch},#{status},#{people},#{jlbh},sysdate())
+    </insert>
+    <insert id="BhzSHAddById">
+         INSERT into syj_over_handler
+        (baseId,supervisor_approval,supervisor_result,supervisor_handle_time,overproof_status,file_path,approval_person)
+        VALUES (#{syjbatch},#{spyj},#{spjg},sysdate(),#{status},#{bizPath},#{shenpiren})
+    </insert>
+    <insert id="BhzZHBSHAddById">
+        INSERT into syj_over_handler
+        (baseId,headquarters_approval,headquarters_result,headquarters_handle_time,overproof_status,file_path3,headquarters_person)
+        VALUES (#{syjbatch},#{zhbyj},#{zhbjg},sysdate(),#{status},#{bizPath},#{shenpiren})
+    </insert>
+    <insert id="BhzZHBBoHuiAddById">
+         INSERT into syj_over_handler
+        (baseId,overproof_status,headquarters_person,headquarters_remark,headquarters_handle_time)
+        VALUES (#{syjbatch},#{status},#{shenpiren},#{zhbbh},sysdate())
+    </insert>
+    <update id="syjchuZhiUpdateById">
+         UPDATE syj_over_handler SET
+        problem_reasons = #{wtyy},
+        handle_way = #{clfs},
+        handle_result = #{cljg},
+        handle_time = sysdate(),
+        handle_person = #{chuzhiren},
+        file_path2=#{bizPath},
+        overproof_status = #{status}
+        where 1=1
+        and baseId = #{syjbatch}
+    </update>
+    <update id="BhzShBoHuiUpdateById">
+        UPDATE syj_over_handler SET
+        overproof_status = #{status},
+        approval_person=#{people},
+        supervisor_handle_time = sysdate(),
+        remark = #{jlbh}
+        where baseId = #{syjbatch}
+    </update>
+    <update id="BhzSHUpdateById">
+          UPDATE syj_over_handler SET
+        supervisor_approval = #{spyj},
+        supervisor_result = #{spjg},
+        supervisor_handle_time = sysdate(),
+        overproof_status = #{status},
+        approval_person=#{shenpiren},
+        file_path = #{bizPath}
+        where baseId = #{syjbatch}
+    </update>
+    <update id="BhzZHBSHUpdateById">
+        UPDATE syj_over_handler SET
+        headquarters_approval = #{zhbyj},
+        headquarters_result = #{zhbjg},
+        headquarters_handle_time = sysdate(),
+        overproof_status = #{status},
+        headquarters_person=#{shenpiren},
+        file_path3 = #{bizPath}
+        where baseId = #{syjbatch}
+    </update>
+    <update id="BhzZHBBoHuiUpdateById">
+          UPDATE syj_over_handler SET
+        overproof_status = #{status},
+        headquarters_person=#{shenpiren},
+        headquarters_handle_time = sysdate(),
+        headquarters_remark = #{zhbbh}
+        where baseId = #{syjbatch}
+    </update>
+    <update id="updateTableField">
+        UPDATE ${tableName}
+        SET overproof_status = #{status}
+        where ${fieldName} = #{syjbatch}
+    </update>
+
+    <select id="dataById" resultType="java.lang.String">
+          SELECT id FROM `syj_over_handler` where 1 = 1
+        and baseId = #{batchno}
+    </select>
+</mapper>

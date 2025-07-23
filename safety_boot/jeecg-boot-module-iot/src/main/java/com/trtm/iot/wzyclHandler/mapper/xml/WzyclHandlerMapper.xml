@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.wzyclHandler.mapper.WzyclHandlerMapper">
+
+    <!--根据处置表的baseid查询原材检验批数据-->
+    <select id="selectByBaseId" resultType="String">
+        select id from wzycl_handler where 1=1 and baseId=#{baseid}
+    </select>
+
+    <!--根据id添加检验批的处置信息-->
+    <insert id="addCZInfoById">
+        INSERT into wzycl_handler
+        (baseId,problem_reasons,handle_way,handle_result,handle_time,handle_person,file_path2,overproof_status)
+        VALUES (#{baseid},#{wtyy},#{czfs},#{czjg},sysdate(),#{czperson},#{czfile},10)
+    </insert>
+
+    <!--根据id修改检验批的处置信息-->
+    <update id="updateCZInfoById">
+        update wzycl_handler
+        set problem_reasons=#{wtyy},
+        handle_way=#{czfs},
+        handle_result=#{czjg},
+        handle_time=sysdate(),
+        handle_person=#{czperson},
+        file_path2=#{czfile},
+        overproof_status=10
+        where 1=1
+        and baseId=#{baseid}
+    </update>
+
+    <!--根据id添加检验批的审批信息-->
+    <insert id="addSPInfoById">
+        INSERT into wzycl_handler
+        (baseId,supervisor_approval,supervisor_result,supervisor_handle_time,handle_person,file_path,overproof_status)
+        VALUES (#{baseid},#{spyj},#{spjg},sysdate(),#{spperson},#{spfile},20)
+    </insert>
+
+    <!--根据id修改检验批的审批信息-->
+    <update id="updateSPInfoById">
+        update wzycl_handler
+        set supervisor_approval=#{spyj},
+        supervisor_result=#{spjg},
+        supervisor_handle_time=sysdate(),
+        approval_person=#{spperson},
+        file_path=#{spfile},
+        overproof_status=20
+        where 1=1
+        and baseId=#{baseid}
+    </update>
+
+</mapper>

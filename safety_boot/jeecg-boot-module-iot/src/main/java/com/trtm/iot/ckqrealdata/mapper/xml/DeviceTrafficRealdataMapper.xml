@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.ckqrealdata.mapper.DeviceTrafficRealdataMapper">
+
+    <select id="selectMixinStationOrGroutingPump" parameterType="String" resultType="String">
+     select distinct topic from device_traffic_realdata where topic like concat('%', #{topic}, '%')
+    </select>
+
+    <select id="selectGroutingPumpBySid" parameterType="String" resultType="String">
+     select pid from device_traffic_realdata
+     where
+       topic =#{sid}
+       and pid like concat('%', #{pid}, '%')
+    </select>
+
+
+</mapper>

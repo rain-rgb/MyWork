@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.ckqdatahandle.mapper.DeviceGroutingPumpMapper">
+
+    <select id="selectDeviceGroutingPumpBySid" parameterType="String" resultType="String">
+     select  sid from device_grouting_pump where sid =#{sid} and is_delete = '1'
+    </select>
+
+    <select id="selectGroutingWellsNumber" parameterType="String" resultType="integer">
+           select COUNT(*) from  device_grouting_pump
+            where bid_code =#{bidCode}
+            and grouting_pump_name =#{groutingPumpName}
+            and grouting_total != ''
+    </select>
+
+    <select id="selectGroutingTotal" parameterType="String" resultType="double">
+          select sum(grouting_total) from  device_grouting_pump
+           where bid_code =#{bidCode}
+           and grouting_pump_name =#{groutingPumpName}
+    </select>
+
+
+    <select id="handleTrafficHistoryDataGarbageFM"
+            resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+         select id ,handle_status_two from device_traffic_historydata
+        where handle_status_two = '0'
+        and
+        (v like concat('%','-', '%') or v= '')
+        and pid like concat('%','FM', '%')
+    </select>
+
+    <select id="handleTrafficHistoryDataGarbagePG"
+            resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+        select id ,handle_status_two from device_traffic_historydata
+        where handle_status_two = '0'
+        and
+        (v like concat('%','-', '%') or v= ''or v= '0')
+        and (pid like concat('%','PG', '%') or pid like concat('%','PUMP', '%') )
+    </select>
+
+    <select id="handleSixTrafficHistoryDataGarbageFM"
+            resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+        select id ,handle_status_two from device_traffic_historydata
+        where handle_status_two = '0'
+        and  pid like concat('%','FM', '%')
+        and topic ='/usr/plcnet/BP6_1_PUMP/edge/u'
+    </select>
+
+
+    <select id="selectHistoryDataByPid" parameterType="String"
+            resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+        select id, topic, pid, v  from device_traffic_historydata
+        where pid like concat('%',#{pid},'%')
+        and topic !='6_1'
+        and v!=''
+        and v!='0'
+        and v not like concat('%','-', '%')
+        and handle_status_two = '0'
+        group by pid,topic
+    </select>
+
+
+</mapper>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.sy.wtgl.rwd.mapper.SyDpsYyRenwudanMapper">
+
+
+    <select id="getRwdSaveData" resultType="java.util.Map">
+        SELECT DISTINCT
+            b.id AS yuancaijinchangdengjiId,
+            a.depart_name_abbr AS gongcghengmingcheng,
+            a.construction_unit AS shigongdanwei,
+            t.cailiaoName AS yangpingmingcheng,
+            c.sampleNo,
+            d.yangpingshuliang,
+            d.yangpinmiaoshu,
+            b.use_part shiyongbuwei,
+            c.jiancexiangmu,
+            h.shiyanyiju jianceyiju,
+            h.pandingyiju,
+            b.jingzhongT jinchangshuliang
+        FROM
+            wztaizhang AS b
+                INNER JOIN sys_depart AS a ON b.sys_org_code = a.org_code
+                LEFT OUTER JOIN sy_dps_yy_yuancaiquyangweituo AS c ON b.id = c.yuancaijinchangdengjiId
+                LEFT OUTER JOIN sy_dps_yy_quyangjiludan AS d ON b.id = d.yuancaijinchangdengjiId
+                LEFT JOIN ycl_cailiaodict AS t ON b.cailiaoNo = t.cailiaoNo
+                LEFT JOIN sy_dps_sy_tableheader h ON h.sampleNo = c.sampleNo
+        WHERE ( b.delegate_state = '1' ) AND b.id=#{yuancaijinchangdengjiId}
+    </select>
+
+    <update id="updateSampleTable">
+        UPDATE sy_dps_sy_Sample set sampleCreatePerson=#{userid},syzt=2,ycjcwtdbh=#{renwudanbh} WHERE sampleNo=#{sampleno}
+    </update>
+
+    <update id="updateReportMTable">
+        UPDATE sy_dps_sy_report_m set reportEditPerson=#{userid} WHERE sampleNo=#{sampleno}
+    </update>
+
+    <update id="updateTableHeader">
+        UPDATE sy_dps_sy_tableheader set renwuNo=#{renwudanbh} WHERE sampleNo=#{sampleno}
+    </update>
+
+    <update id="updateQuYangJlTable">
+        UPDATE sy_dps_yy_quyangjiludan set quyangdanliushuihao=#{quyangdanliushuihao} WHERE yuancaijinchangdengjiId=#{yuancaijinchangdengjiid}
+    </update>
+
+    <select id="getXcwtRelation" resultType="java.util.Map">
+        select
+        w.id AS xcwtdId,
+        w.jianglidanwei,
+        w.weituodanwei,
+        w.weituoriqi,
+        w.cailiaomingcheng yangpingmingcheng,
+        w.cailiaochangjia,
+        w.guigexinghao,
+        w.sampleDate,
+        w.sampleShuLiang yangpingshuliang,
+        w.shiyongbuwei,
+        w.titCode,
+        w.daibiaoshuliang,
+        w.quyangdidian,
+        w.baogaofenshu,
+        w.yangpinchulifangshi,
+        w.jiancexiangmu,
+        w.beizhu,
+        w.fujian,
+        w.sampleNo,
+        b.supervision_unit AS jianglidanwei,
+        w.shigongdanwei,
+        w.weituodanbianhao,
+        w.sampleDescribe yangpinmiaoshu,
+        b.depart_name AS gongcghengmingcheng,
+        b.construction_unit AS sgdwmc,
+        w.jianceyiju,
+        w.pandingyiju,
+        w.shiyanwanchengqixian,
+        r.jiancerenyuan,
+        r.jilurenyuan,
+        r.fuherenyuan,
+        r.qianfarenyuan,
+        r.jiancerenyuandate,
+        r.fuherenyuandate,
+        r.qianfarenyuandate,
+        r.renwudanliushuihao
+        from sy_dps_yy_renwudan r
+        left join sy_dps_yy_xianchangjianceweituo w on r.xcwtdid = w.id
+        LEFT JOIN sys_depart b ON w.shigongdanwei= b.org_code
+        where r.xcwtdid=#{xcwtdId}
+    </select>
+</mapper>

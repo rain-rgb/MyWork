@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.devicemixpilestatic.mapper.DeviceMixpileStaticMapper">
+
+    <select id="selectOnes" resultType="com.trtm.iot.devicemixpilestatic.entity.DeviceMixpileStatic" flushCache="true" useCache="false">
+        select * from device_mixpile_static where 1=1
+        <if test="datanyr1!=null">
+            and stadate = #{datanyr1}
+        </if>
+        <if test="shebeino!=null">
+            and shebeino = #{shebeino}
+        </if>
+        <if test="pileMileage!=null || pileMileage != ''">
+            and mileage = #{pileMileage}
+        </if>
+    </select>
+
+</mapper>

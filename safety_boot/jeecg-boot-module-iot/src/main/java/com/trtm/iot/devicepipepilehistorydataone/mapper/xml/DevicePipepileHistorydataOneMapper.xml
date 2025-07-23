@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.devicepipepilehistorydataone.mapper.DevicePipepileHistorydataOneMapper">
+
+    <select id="selectLists" resultType="com.trtm.iot.devicepipepilehistorydataone.entity.DevicePipepileHistorydataOne" flushCache="true" useCache="false">
+        select *
+        from device_pipepile_historydata_one
+        where id &gt; #{id}
+        and shebeino in (${shebeino})
+        limit 100
+    </select>
+
+
+    <select id="findXiangMuZS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_pipepile_historydata_one where shebeino in
+       <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+    </select>
+
+
+    <select id="findYuJingS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_pipepile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and (chaobiaodengji='1' )
+    </select>
+
+    <select id="findBiHeS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_pipepile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and overproof_status=20
+    </select>
+
+
+    <select id="queryCount" resultType="integer" flushCache="true" useCache="false">
+        select count(*) from device_pipepile_historydata_one where shebeino=#{sheBeiNo}
+    </select>
+
+    <select id="queryBuhe" resultType="integer" flushCache="true" useCache="false">
+        select count(*) from device_pipepile_historydata_one where shebeino=#{sheBeiNo} and chaobiaodengji='1'
+    </select>
+
+    <select id="queryStatus" resultType="integer" flushCache="true" useCache="false">
+        select count(*) from device_pipepile_historydata_one where shebeino=#{sheBeiNo} and overproof_status=20
+    </select>
+
+    <select id="selectSheBeiNo" resultType="map" flushCache="true" useCache="false">
+        select id,depart_name,org_code from sys_depart where org_category=4 and org_code like concat(#{orgCode},'%')
+    </select>
+    <select id="selectSBNo" resultType="map" flushCache="true" useCache="false">
+        select id,depart_name,org_code from sys_depart where org_category=4 and org_code like concat('A','%')
+    </select>
+
+    <select id="fingAllSheBeiNo" resultType="string" flushCache="true" useCache="false">
+        select sbjno from shebei_info where sys_org_code like concat(#{orgCode},'%')
+    </select>
+    <select id="fingAllSheBeiNos" resultType="string" flushCache="true" useCache="false">
+        select sbjno from shebei_info where sys_org_code like concat(#{orgCode},'%') and sbtype = 0
+    </select>
+    <select id="findGsMc" resultType="string" flushCache="true" useCache="false">
+        select depart_name from sys_depart where #{orgCode} like concat(org_code,"%") and org_category =3
+    </select>
+
+    <select id="querySheBeiBHByOrgCode" resultType="string" flushCache="true" useCache="false">
+        select sbjno from shebei_info where sys_org_code like concat(#{orgCode},"%")
+    </select>
+
+    <select id="queryOrgCode" resultType="string" flushCache="true" useCache="false">
+        select org_code from sys_depart where org_category=7 group by org_code
+    </select>
+
+    <select id="queryCountZy" resultType="com.trtm.iot.devicepipepilehistorydataone.entity.GongYiVo" flushCache="true" useCache="false">
+        select count(b.id) allDish,count(if(chaobiaodengji='1' , TRUE, NULL)) allWarnDish,count(if(overproof_status=20, TRUE, NULL)) biheCount,s.depart_name sectionName,s.sys_org_code sysOrgCode
+        from device_pipepile_historydata_one b
+                 join  (select depart.depart_name,depart.org_code,sb.sys_org_code,sb.sbjno,sb.sbname from shebei_info sb right join(select * from `sys_depart` where org_category =#{orgCategory} ) depart on  sb. sys_org_code like concat(depart.org_code,"%")) s
+                            on b.shebeino = s.sbjno
+        where s.org_code like  concat(#{orgCode},"%")
+        GROUP BY s.org_code
+    </select>
+
+    <select id="queryCountBySheBei" resultType="com.trtm.iot.devicepipepilehistorydataone.entity.GongYiVo" flushCache="true" useCache="false">
+        select
+            count(b.id) allDish,count(if(chaobiaodengji='1' , TRUE, NULL)) allWarnDish,count(if(overproof_status=20, TRUE, NULL)) biheCount,
+            s.sbname shebeiName,
+            s.depart_name sectionName,
+            s.sbjno shebeiNo,
+            s.sys_org_code sysOrgCode
+        from `device_pipepile_historydata_one` b
+                join  (select depart.depart_name,depart.org_code,sb.sys_org_code,sb.sbjno,sb.sbname from `shebei_info` sb right join(select * from `sys_depart` where org_category =#{orgCategory} ) depart on  sb.sys_org_code like concat(depart.org_code,"%")) s
+                            on b.shebeino = s.sbjno
+        where s.org_code like  concat(#{orgCode},"%")
+
+        GROUP BY b.shebeino  ORDER BY allWarnDish desc limit 10
+    </select>
+
+    <select id="qyeryByXiangMu" resultType="com.trtm.iot.devicepipepilehistorydataone.entity.GongYiVo" flushCache="true" useCache="false">
+        select count(b.id) allDish,count(if(chaobiaodengji='1' , TRUE, NULL)) allWarnDish,s.depart_name sectionName,count(if(overproof_status=20, TRUE, NULL)) biheCount,
+               s.sys_org_code sysOrgCode
+        from `device_pipepile_historydata_one` b
+                 join  (select depart.depart_name,depart.org_code,sb.sys_org_code,sb.sbjno,sb.sbname from `shebei_info` sb right join(select * from `sys_depart` where org_category =4 ) depart on  sb. sys_org_code like concat(depart.org_code,"%")) s
+                            on b.shebeino = s.sbjno
+        where s.org_code like  concat(#{orgCode},"%")
+        GROUP BY s.org_code
+    </select>
+
+
+    <select id="queryDeatilss" resultType="com.trtm.iot.devicepipepilehistorydataone.entity.DevicePipepileDto" flushCache="true" useCache="false">
+        SELECT
+        o.id syjid,
+        s.depart_name,
+        o.pile_mileage,
+        o.pile_no,
+        o.pile_worktime,
+        o.pile_upress,
+        o.pile_dpress,
+        o.pile_speed,
+        (CASE WHEN o.overproof_status=0 THEN '未处置' WHEN o.overproof_status=10 THEN '已处置' WHEN o.overproof_status=20 THEN '已闭合' ELSE '已驳回' END) overproof_status,
+        h.approval_person,
+        s.sbname,
+        (CASE WHEN o.chaobiaodengji='1' THEN '否' ELSE '是' END) chaobiaodengji, o.pile_realdep, o.pile_y, o.pile_designdep, o.pile_starttime, o.pile_time
+        FROM device_pipepile_historydata_one o
+        join
+        (select depart.depart_name,sb.sbjno,sb.sbname from `shebei_info` sb right join(select * from `sys_depart` where org_category =4) depart on  sb.sys_org_code like concat(depart.org_code,"%")) s on s.sbjno=o.shebeino
+        left JOIN pippile_one_over_handler h ON o.id = h.baseId where o.chaobiaodengji='1' and o.shebeino=#{shebeiNo}
+        order by pile_starttime desc
+    </select>
+
+
+
+    <select id="findOverHandler" resultType="com.trtm.iot.zhangla.entity.OverHandler" flushCache="true" useCache="false">
+        select id,
+            baseId,
+            problem_reasons,
+            handle_way,
+            handle_result,
+            handle_time,
+            handle_person,
+            supervisor_approval,
+            supervisor_result,
+            supervisor_handle_time,
+            approval_person,
+            remark,
+            file_path,
+            file_path2,
+               (CASE WHEN overproof_status=0 THEN '未处置' WHEN overproof_status=10 THEN '已处置' WHEN overproof_status=20 THEN '已闭合' ELSE '已驳回' END) overproof_status
+        from pippile_one_over_handler where baseId=#{syjid}
+    </select>
+    <select id="count" resultType="java.lang.Integer" parameterType="list" flushCache="true" useCache="false">
+        select count(*) from device_pipepile_historydata_one where shebeino in <foreach collection="sheBs" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+    </select>
+
+    <select id="findXiangMuZStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_pipepile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and (pile_time like concat(#{dateNowStr},"%"))
+    </select>
+    <select id="findYuJingStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_pipepile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and (chaobiaodengji='1' ) and (pile_time like concat(#{dateNowStr},"%"))
+    </select>
+    <select id="findBiHeStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_pipepile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and (chaobiaodengji='1' ) and overproof_status=20 and (pile_time like concat(#{dateNowStr},"%"))
+    </select>
+
+    <select id="findXiangMuZStimes" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_pipepile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and pile_time between #{beginTime} and #{endTime}
+    </select>
+    <select id="findYuJingStimes" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_pipepile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and (chaobiaodengji='1' ) and pile_time between #{beginTime} and #{endTime}
+    </select>
+    <select id="findBiHeStimes" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_pipepile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and overproof_status=20 and pile_time between #{beginTime} and #{endTime}
+    </select>
+    <select id="selectorgcodebyid" resultType="map" flushCache="true" useCache="false">
+        select depart_name,org_code,depart_name_abbr from sys_depart where org_code like concat(#{orgCode1},"%") and org_category = 7 order by depart_name,depart_name_abbr asc
+    </select>
+
+    <select id="findXiangMuZSsb" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_pipepile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and pile_time like concat(#{time},'%')
+    </select>
+    <select id="findYuJingSsb" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_pipepile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and (chaobiaodengji='1' ) and pile_time like concat(#{time},'%')
+    </select>
+    <select id="findBiHeSsb" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_pipepile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and overproof_status=20 and pile_time like concat(#{time},'%')
+    </select>
+
+    <select id="findzzyc" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_pipepile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and ycyy like "%桩长异常%"
+    </select>
+    <select id="findqjyc" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_pipepile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and ycyy like "%倾角异常%"
+    </select>
+    <select id="selectUnifiedProcess"
+            resultType="com.trtm.iot.devicepipepilehistorydataone.entity.DevicePipepileHistorydataOne" flushCache="true" useCache="false">
+        select *
+        from device_pipepile_historydata_one
+        where id>#{curid}
+        and chaobiaodengji = #{overLevel}
+        AND istongji = #{alertstate}
+        <if test="shebeiList != null">
+            AND shebeino in
+            <foreach collection="shebeiList" item="item" index="index"  open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        limit 10
+    </select>
+
+    <select id="fingbhzSheBeiNo" resultType="string" flushCache="true" useCache="false">
+        select sbjno from shebei_info where sys_org_code like concat(#{orgCode},'%') and sbtype = #{sbtypes}
+    </select>
+
+    <select id="getrichaxun" resultType="java.util.Map" parameterType="java.util.List">
+        SELECT
+        date_format( pile_time, '%m-%d') AS daydate,
+        round( SUM( pile_realdep ), 0 ) AS deep
+        FROM
+        device_pipepile_historydata_one
+        WHERE
+        DATE_SUB( CURDATE( ), INTERVAL 7 DAY ) &lt;= date( pile_time )
+        <if test="shebeis != null ">
+            and shebeino in
+            <foreach collection="shebeis" index="index" item="item"
+                     open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        GROUP BY
+        date_format( pile_time, '%Y-%m-%d' );
+    </select>
+    <select id="getzhouchaxun" resultType="java.util.Map" parameterType="java.util.List">
+        SELECT
+        date_format( pile_time, '%u' ) AS daydate,
+        round( SUM( pile_realdep ), 0 ) AS deep
+        FROM
+        device_pipepile_historydata_one
+        WHERE
+        DATE_SUB( CURDATE( ), INTERVAL 7 WEEK) &lt;= date(pile_time)
+        <if test="shebeis != null ">
+            and shebeino in
+            <foreach collection="shebeis" index="index" item="item"
+                     open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        GROUP BY
+        date_format( pile_time, '%Y-%u' )
+    </select>
+    <select id="getyuechaxun" resultType="java.util.Map" parameterType="java.util.List">
+        SELECT
+        date_format( pile_time, '%Y-%m' ) AS daydate,
+        round( SUM( pile_realdep ), 0 ) AS deep
+        FROM
+        device_pipepile_historydata_one
+        WHERE
+        DATE_SUB( CURDATE( ), INTERVAL 7 MONTH ) &lt;= date(pile_time)
+        <if test="shebeis != null ">
+            and shebeino in
+            <foreach collection="shebeis" index="index" item="item"
+                     open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        GROUP BY
+        date_format( pile_time, '%Y-%m' )
+    </select>
+</mapper>

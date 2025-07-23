@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.ycltd.mapper.YclTestDetailMapper">
+
+    <update id="updateBySampleNumber">
+        update ycl_test_detail set
+            storage_id = #{storageId},
+            test_name = #{testName},
+            sampling_time = #{samplingTime},
+            test_time = #{testTime},
+            jianyan_type = #{jianyanType},
+            conclusion = #{conclusion},
+            test_status = #{testStatus},
+            tester = #{tester},
+            report = #{report},
+            create_by = #{createBy},
+            create_time = #{createTime},
+            update_time = #{updateTime}
+            where sample_number = #{sampleNumber}
+             and  inspection_lot_number = #{inspectionLotNumber}
+    </update>
+
+</mapper>

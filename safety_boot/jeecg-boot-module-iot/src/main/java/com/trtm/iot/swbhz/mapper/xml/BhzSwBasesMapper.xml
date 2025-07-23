@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.swbhz.mapper.BhzSwBasesMapper">
+
+    <select id="selectswbhzones" resultType="com.trtm.iot.swbhz.entity.BhzSwBases" flushCache="true" useCache="false">
+        select * from  `bhz_sw_bases` where  alertstate = #{alertstate} limit 300;
+    </select>
+    <select id="selectWranCount" resultType="com.trtm.iot.swbhz.entity.BhzSwWarnVO" flushCache="true"
+            useCache="false">
+
+        select
+        COUNT( * ) warnCount,
+        COUNT( if(chaobiaodengji = 1,true,null)) primaryCount,
+        COUNT( if(chaobiaodengji = 2,true,null)) middleCount,
+        COUNT( if(chaobiaodengji = 3,true,null)) advancedCount,
+        COUNT( if(timechaobiao = 1,true,null)) timeCount,
+        COUNT( if(timechaobiao = 1 and overproof_status = 20,true,null)) timeBiheCount,
+        COUNT( if(chaobiaodengji = 1 and overproof_status = 20 ,true,null)) primaryBiheCount,
+        COUNT( if(chaobiaodengji = 2 and overproof_status = 20 ,true,null)) middleBiheCount,
+        COUNT( if(chaobiaodengji = 3 and overproof_status = 20 ,true,null)) advancedBiheCount
+
+        from `bhz_sw_bases`
+        where exists (select sb.sbjno from `shebei_info` sb right join(select * from `sys_depart` where org_code like concat(#{orgCode},"%") ) depart on  sb.sys_org_code like concat(depart.org_code,"%") where sb.sbjno is not null GROUP BY sb.sbjno)
+        ;
+    </select>
+    <select id="selectWranCountByorgcde" resultType="com.trtm.iot.hntbhz.entity.BhzCementWarnVO" flushCache="true"
+            useCache="false">
+
+				     select COUNT( if(chaobiaodengji = 1,true,null)) primaryCount,
+        COUNT( if(chaobiaodengji = 2,true,null)) middleCount,
+        COUNT( if(chaobiaodengji = 3,true,null)) advancedCount,
+						count(id) allDish,
+						s.depart_name project_name,
+						s.org_code sys_org_code,
+						COUNT( if(chaobiaodengji != 0 and overproof_status = 20 ,true,null)) biheCount,
+						COUNT( if(chaobiaodengji = 3,true,null))/count(id) allWarnLv,
+						s.sbjno shebei_no
+						from `bhz_sw_bases` b
+						left join (select depart.depart_name,depart.org_code,sb.sys_org_code,sb.sbjno from `shebei_info` sb right join(select * from `sys_depart` where org_category =4 ) depart on  sb.sys_org_code like concat(depart.org_code,"%")) s
+						on b.shebeibianhao = s.sbjno
+						where s.org_code is not null
+						and  s.org_code  like concat(#{orgCode},"%")
+
+						GROUP BY s.org_code ORDER BY allWarnLv desc limit 10
+    </select>
+    <select id="selectWranCountByshebeino" resultType="com.trtm.iot.hntbhz.entity.BhzCementWarnVO" flushCache="true"
+            useCache="false">
+       	select
+			sum(result.primaryCount+result.middleCount+result.advancedCount) allWarnDish,
+			result.allDish,
+			result.biheCount,
+			result.shebei_name,
+			result.section_name,
+			result.shebei_no,
+			sum(result.primaryCount+result.middleCount+result.advancedCount)/result.allDish allWarnLv,
+			result.sys_org_code
+			from(select
+						   COUNT( b.id ) allDish,
+        COUNT( if(b.chaobiaodengji = 1,true,null)) primaryCount,
+        COUNT( if(b.chaobiaodengji = 2,true,null)) middleCount,
+        COUNT( if(b.chaobiaodengji = 3,true,null)) advancedCount,
+				COUNT( if(b.chaobiaodengji != 0 and b.overproof_status = 20,true,null)) biheCount,
+				s.sbjno shebei_no,
+				s.sbname shebei_name,
+						s.depart_name section_name,
+						s.sys_org_code sys_org_code
+						from `bhz_sw_bases` b
+						left join (select depart.depart_name,depart.org_code,sb.sys_org_code,sb.sbjno,sb.sbname from `shebei_info` sb right join(select * from `sys_depart` where org_category =#{i} ) depart on  sb.sys_org_code like concat(depart.org_code,"%")) s
+					on b.shebeibianhao = s.sbjno
+						where s.org_code like  concat(#{code},"%")
+						GROUP BY shebei_no) result
+						GROUP BY shebei_no  ORDER BY allWarnLv desc limit 10
+    </select>
+    <select id="selectBiaoduanByshebeino" resultType="com.trtm.iot.hntbhz.entity.BhzCementWarnVO" flushCache="true"
+            useCache="false">
+		        select
+						count(b.id) allDish, COUNT( if(b.chaobiaodengji != 0,true,null)) allWarnDish ,  s.depart_name sectionName,
+						s.sys_org_code
+						from `bhz_sw_bases` b
+						left join  (select depart.depart_name,depart.org_code,sb.sys_org_code,sb.sbjno,sb.sbname from `shebei_info` sb right join(select * from `sys_depart` where org_category =7 ) depart on  sb.sys_org_code like concat(depart.org_code,"%")) s
+						on b.shebeibianhao = s.sbjno
+						where s.org_code like  concat(#{sysOrgCode},"%")
+						GROUP BY s.org_code
+	</select>
+    <select id="selectBiheCount" resultType="java.lang.Integer" flushCache="true"
+			useCache="false">
+			select
+
+				  COUNT( if(chaobiaodengji != 0 and overproof_status = 20 ,true,null)) primaryBiheCount
+        from `bhz_sw_bases`
+				where exists (select sb.sbjno from `shebei_info` sb right join(select * from `sys_depart` where org_code like concat(#{orgCode},"%") ) depart on  sb.sys_org_code like concat(depart.org_code,"%") where sb.sbjno is not null GROUP BY sb.sbjno)
+
+	</select>
+
+<!--	浙路品质-->
+	<select id="selectList1" resultType="com.trtm.iot.swbhz.entity.BhzSwBases" flushCache="true" useCache="false">
+        select *
+        from  `bhz_sw_bases`
+        where shebeibianhao in (${shebeiNo})
+        AND chaobiaodengji > 1
+        AND  (iszlpz = 0 OR (iszlpz = 3 AND overproof_status >0))
+        AND chuliaoshijian >= '2023-01-01'
+        limit 100;
+    </select>
+<!--	义东水稳推送至交投集团-->
+	<select id="selectListToJTJT" resultType="com.trtm.iot.swbhz.entity.BhzSwBases" flushCache="true" useCache="false">
+        select *
+        from  `bhz_sw_bases`
+        where shebeibianhao in (${shebeilist})
+        AND id >#{curid}
+        limit 100;
+    </select>
+<!--	义东水稳推送至东交-->
+	<select id="selectListToDJ" resultType="com.trtm.iot.swbhz.entity.BhzSwBases" flushCache="true" useCache="false">
+        select *
+        from  `bhz_sw_bases`
+        where shebeibianhao in (${shebeilist})
+        AND id >#{curid}
+        limit 100;
+    </select>
+
+<!--	义东水稳推送至TCP-->
+	<select id="selectListToTCP" resultType="com.trtm.iot.swbhz.entity.BhzSwBases" flushCache="true" useCache="false">
+        select *
+        from  `bhz_sw_bases`
+        where shebeibianhao in (${shebeilist})
+        AND issend = 0 and chaobiaodengji = 0 AND alertstate = 1 AND formula_no LIKE '%层%';
+    </select>
+
+<!--	义东水稳推送至东交-->
+	<select id="selectkzlist" resultType="com.trtm.iot.swbhz.entity.BhzSwBases" flushCache="true" useCache="false">
+        select *
+        from  `bhz_sw_bases`
+        where shebeibianhao in (${shebeilist})
+        AND iszlpz = 0
+        AND chaobiaodengji = 0
+        limit 1000;
+    </select>
+
+	<select id="selectByGuid" resultType="com.trtm.iot.swbhz.entity.BhzSwBases" flushCache="true" useCache="false">
+        select *
+        from  `bhz_sw_bases`
+        where guid = #{guid}
+    </select>
+    <select id="selectBHZUnifiedProcess" resultType="com.trtm.iot.swbhz.entity.BhzSwBases"  flushCache="true" useCache="false">
+		select *
+		from bhz_sw_bases
+		where id>#{curid}
+		and chaobiaodengji > 0
+		AND alertstate = 1
+		<if test="shebeiList != null">
+			AND shebeibianhao in
+			<foreach collection="shebeiList" item="item" index="index"  open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		limit 10
+	</select>
+    <select id="selectcbList" resultType="com.trtm.iot.swbhz.entity.BhzSwBases"  flushCache="true" useCache="false">
+		select *
+        from bhz_sw_bases
+        where  shebeibianhao in (${shebeilist})
+        AND alertstate > 0
+        AND chaobiaodengji > 0
+        AND (SUBSTRING_INDEX(jtjtuuid, '-', -1) != overproof_status OR jtjtuuid IS NULL)
+	</select>
+
+	<update id="updateByGuid">
+		UPDATE bhz_sw_bases SET
+		<if test="chaobiaodengji != null and chaobiaodengji != ''">
+			chaobiaodengji =  #{chaobiaodengji},
+		</if>
+		<if test="istongji != null and istongji != ''">
+			istongji =  #{istongji},
+		</if>
+		<if test="alertstate != null and alertstate != ''">
+			alertstate =  #{alertstate},
+		</if>
+		<if test="overproofStatus != null and overproofStatus != ''">
+			overproof_status =  #{overproofStatus},
+		</if>
+		<if test="iszlpz != null and iszlpz != ''">
+			iszlpz =  #{iszlpz},
+		</if>
+		<if test="overReason != null and overReason != ''">
+			over_reason =  #{overReason},
+		</if>
+		<if test="jtjtuuid != null and jtjtuuid != ''">
+			jtjtuuid =  #{jtjtuuid},
+		</if>
+		ts =  UNIX_TIMESTAMP()
+		where guid = #{guid}
+	</update>
+
+</mapper>

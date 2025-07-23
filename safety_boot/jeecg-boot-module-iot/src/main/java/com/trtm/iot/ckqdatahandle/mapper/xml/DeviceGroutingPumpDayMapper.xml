@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.ckqdatahandle.mapper.DeviceGroutingPumpDayMapper">
+
+    <select id="selectDeviceGroutingPumpDayTotal" parameterType="String" resultType="double">
+          select sum(grouting_total) from  device_grouting_pump_day
+            where  grouting_total != '0.00'
+            and sid =#{sid}
+            and is_delete = '0'
+            and time > '2021-07-11'
+      </select>
+
+    <select id="selectDGPDTodayTotalByBidCode" parameterType="String" resultType="double">
+          select sum(grouting_total) from  device_grouting_pump_day
+            where sid =#{sid}
+            and is_delete = '0'
+            and time =#{time}
+      </select>
+
+    <select id="selectDGPDAllDayTotalByBidCode" parameterType="String" resultType="double">
+          select sum(grouting_total) from  device_grouting_pump_day
+            where sid =#{sid}
+            and is_delete = '0'
+            and time &lt;=#{time}
+      </select>
+
+    <select id="selectDGPDTodayTotal" parameterType="String" resultType="double">
+          select sum(grouting_total) from  device_grouting_pump_day
+            where bid_code =#{bidCode}
+            and grouting_pump_name =#{groutingPumpName}
+            and time =#{time}
+            and is_delete = '0'
+      </select>
+
+    <select id="selectDGPDAllDayTotal" parameterType="String" resultType="double">
+          select sum(grouting_total) from  device_grouting_pump_day
+            where  bid_code =#{bidCode}
+            and grouting_pump_name =#{groutingPumpName}
+            and time &lt;=#{time}
+            and is_delete = '0'
+      </select>
+
+    <select id="selectDTHYesterdayOneData" parameterType="String"
+            resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+          select id,v from  device_traffic_historydata
+          where topic =#{sid}
+          and pid =#{pid}
+          and dataTime like concat('%',#{nowData}, '%')
+          and v!='0'
+          and v!=''
+          and handle_status_three ='0'
+          order by dataTime desc
+          limit 1
+    </select>
+
+
+    <select id="selectDayTotalByTime" parameterType="String" resultType="String">
+          select time from  device_grouting_pump_day group by time
+      </select>
+
+    <select id="selectDeviceGroutingPumpDays" parameterType="String" resultType="com.trtm.iot.ckqdatahandle.entity.DeviceGroutingPumpDay">
+        select * from device_grouting_pump_day
+        where bid_code=#{bidCode}
+        and  grouting_pump_name =#{groutingPumpName}
+        and  time=#{time}
+        and  is_delete ='0'
+    </select>
+
+
+</mapper>

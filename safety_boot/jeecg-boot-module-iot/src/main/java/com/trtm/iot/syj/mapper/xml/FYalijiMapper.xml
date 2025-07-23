@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.syj.mapper.FYalijiMapper">
+
+    <select id="selectFsYalijiData" resultType="com.trtm.iot.syj.entity.FYaliji" flushCache="true" useCache="false">
+        select * from f_yaliji where SYJID =#{syjid}
+    </select>
+
+    <select id="selectFYalijiList" resultType="com.trtm.iot.syj.entity.FYaliji" flushCache="true" useCache="false">
+        select sjxh,kylz,kyqd,sysj,wcsj from f_yaliji where SYJID =#{syjid}  ORDER BY sjxh
+    </select>
+    <select id="selectMaxSysj" resultType="java.lang.String" flushCache="true" useCache="false" >
+          select max(SYSJ) sysj from f_yaliji where SYJID =#{syjid}
+    </select>
+
+    <select id="selectSyjylList" resultType="com.trtm.iot.syj.entity.FsYaliji" flushCache="true" useCache="false" >
+        SELECT *
+        FROM f_yaliji
+        WHERE issend = 0
+        Limit 1000
+    </select>
+
+    <select id="updateSbbh" resultType="java.lang.Integer" flushCache="true" useCache="false" >
+        UPDATE f_yaliji SET SBBH = (SELECT SBBH FROM t_syjzb WHERE syjid = f_yaliji.syjid AND sbbh IN (${shebeilist})) where sbbh is NULL
+    </select>
+
+
+</mapper>

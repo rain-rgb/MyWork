@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.skip_car.mapper.SkipCarMapper">
+    <select id="getTem" resultType="com.trtm.iot.skip_car.entity.SkipCarTem" flushCache="true" useCache="false">
+    SELECT
+        DATE(skip_car.collectionTime) as collectionTime,
+        skip_car_device.car_number as carnumber,
+        ROUND(AVG(skip_car.temperature), 2) as temperature
+    FROM
+        skip_car
+    JOIN skip_car_device ON skip_car.deviceId = skip_car_device.deviceNum
+    WHERE
+        CAST(temperature AS DECIMAL) > 100
+        <if test="carNumber!=null and carNumber!='' ">
+            AND skip_car_device.car_number=#{carNumber}
+        </if>
+        <if test="date!=null and date!='' ">
+            AND skip_car.collectionTime=#{date}
+        </if>
+    GROUP BY
+        DATE(skip_car.collectionTime),
+        skip_car_device.car_number
+        order by DATE(skip_car.collectionTime) desc
+    </select>
+</mapper>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.rebarTaskChecklist.mapper.RebarTaskChecklistMapper">
+
+    <update id="updateTaskById">
+        update rebar_task_checklist set is_deleted = 1 where id = #{id}
+    </update>
+    <update id="updateTaskStatus">
+        update rebar_task_checklist set status = 1 where task_id = #{taskId}
+    </update>
+    <select id="selectByTaskId" resultType="com.trtm.iot.rebarTaskChecklist.entity.RebarTaskChecklist">
+        select * from rebar_task_checklist where task_id = #{taskId}
+    </select>
+</mapper>

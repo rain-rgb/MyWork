@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.yajiangm.mapper.TrYajiangMMapper">
+
+    <select id="countList" resultType="java.util.Map">
+        SELECT
+            t3.depart_name AS departName,
+            case COUNT(0)
+                when 0 then null
+                else COUNT(0) end
+            AS sum,
+	sum( t1.hege ) AS over
+        FROM
+            (
+            SELECT
+            CASE
+            WHEN
+            sum(case b.hege
+            when '1' then '0'
+            else '1' end)!= '0' THEN
+            '1' ELSE '0'
+            END AS hege,
+            a.yjsbbh,
+            a.syjid,
+            a.yjsj
+            FROM
+            tr_yajiang_m a
+            JOIN tr_yajiang_s b ON a.syjid = b.syjid
+            GROUP BY
+            a.syjid
+            ) t1
+            JOIN shebei_info t2 ON t1.yjsbbh = t2.sbjno
+            JOIN sys_depart t3 ON t2.sys_org_code = t3.org_code
+        WHERE DATE_FORMAT(STR_TO_DATE(t1.yjsj, '%Y-%m-%d %H:%i:%s'), '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')
+          and t3.org_code LIKE #{orgCode}"%"
+        GROUP BY
+            t3.org_code
+    </select>
+
+    <select id="selectListstatistics" flushCache="true" useCache="false" resultType="com.trtm.iot.yajiangm.entity.TrYajiangSM">
+        SELECT
+            id,
+            syjid,
+            htbh,
+            gcmc,
+            yjsj,
+            zhbw,
+            sgbw,
+            gjjg,
+            gjbh,
+            yjsbbh,
+            lblx
+        FROM
+            tr_yajiang_m
+        WHERE
+            id>#{id} and statistics=#{statistics} limit 10
+    </select>
+
+    <select id="queryone" flushCache="true" useCache="false" resultType="com.trtm.iot.yajiangm.entity.TrYajiangM">
+        select * from tr_yajiang_m where yjsbbh=#{shebeiNo} order by yjsj desc limit 1
+    </select>
+
+    <select id="selectLists" resultType="com.trtm.iot.yajiangm.entity.TrYajiangM" flushCache="true" useCache="false">
+        select * from tr_yajiang_m where uuid =#{uuid} and isruicang = 0
+    </select>
+
+    <select id="selectListdata" resultType="com.trtm.iot.yajiangm.entity.TrYajiangM" flushCache="true" useCache="false">
+        select * from tr_yajiang_m where yjsbbh = #{shebeibianhao} and isruicang = 0
+    </select>
+
+    <select id="selectyjList" resultType="com.trtm.iot.yajiangm.entity.TrYajiangM" flushCache="true" useCache="false">
+
+            SELECT
+                *
+            FROM
+                tr_yajiang_m
+            WHERE
+                yjsbbh IN (${shebeiNo})
+                AND 3 > ismt
+
+    </select>
+
+    <select id="selectrcyjList" resultType="com.trtm.iot.yajiangm.entity.TrYajiangM" flushCache="true" useCache="false">
+
+            SELECT
+                *
+            FROM
+                tr_yajiang_m
+            WHERE
+                yjsbbh IN (${shebeiNo})
+                AND 0 = ismt order by id desc
+            limit 1000
+    </select>
+
+    <select id="selectyjblList" resultType="com.trtm.iot.yajiangm.entity.TrYajiangM" flushCache="true" useCache="false">
+
+            SELECT
+                *
+            FROM
+                tr_yajiang_m
+            WHERE
+                yjsbbh IN (${shebeiNo})
+                AND 10 > ismt
+                AND ismt > 2
+                limit 500
+    </select>
+
+    <select id="selectydyjList" resultType="com.trtm.iot.yajiangm.entity.TrYajiangM" flushCache="true" useCache="false">
+        SELECT *
+        FROM tr_yajiang_m
+        WHERE yjsbbh IN (${shebeiNo})
+        AND id>#{curid}
+        LIMIT 100
+    </select>
+
+    <select id="selectListoJG" resultType="com.trtm.iot.yajiangm.entity.TrYajiangM" flushCache="true" useCache="false">
+        SELECT *
+        FROM tr_yajiang_m
+        WHERE yjsbbh IN (${shebeiNo})
+        AND id>#{curid}
+        LIMIT 100
+    </select>
+
+    <select id="selectyj47toyd" resultType="com.trtm.iot.yajiangm.entity.TrYajiangM" flushCache="true" useCache="false">
+        SELECT *
+        FROM tr_yajiang_m
+        WHERE yjsbbh IN (${shebeiNo})
+        AND ID > #{id}
+        AND ismt = 0
+        LIMIT 100
+    </select>
+
+    <select id="selectListToSHYJ" resultType="com.trtm.iot.yajiangm.entity.TrYajiangM" flushCache="true" useCache="false">
+        SELECT *
+        FROM tr_yajiang_m
+        WHERE yjsbbh IN (${shebeiNo})
+        AND ID > #{id}
+        LIMIT 100
+    </select>
+
+    <select id="selectListzlpz" resultType="com.trtm.iot.yajiangm.entity.TrYajiangM" flushCache="true" useCache="false">
+        SELECT *
+        FROM tr_yajiang_m
+        WHERE is_over_level > 0
+        AND yjsbbh IN (${shebeibianhao})
+        AND (iszlpz = 0 OR (iszlpz = 3 AND overproof_status >0))
+        LIMIT 100
+    </select>
+    <select id="findRenwudanzs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_m where uuid in
+        <foreach collection="yajiangRenwudans" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+    </select>
+    <select id="findRenwudanyjs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_m where uuid in
+        <foreach collection="yajiangRenwudans" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and is_over_level > 0
+    </select>
+    <select id="findRenwudanbhs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_yajiang_m where uuid in
+        <foreach collection="yajiangRenwudans" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and overproof_status = 20
+    </select>
+    <select id="selectUnifiedProcess" resultType="com.trtm.iot.yajiangm.entity.TrYajiangM"  flushCache="true" useCache="false">
+        select *
+        from tr_yajiang_m
+        where id>#{curid}
+        and is_over_level = 1
+        AND statistics = 1
+        <if test="shebeiList != null">
+            AND yjsbbh in
+            <foreach collection="shebeiList" item="item" index="index"  open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        limit 10
+    </select>
+
+    <select id="selectBySBList" resultType="com.trtm.iot.yajiangm.entity.TrYajiangM"  flushCache="true" useCache="false">
+        select * from tr_yajiang_m where yjsbbh in (${shebeilist})  and id>#{curid} limit 100
+    </select>
+
+    <select id="selectListst" resultType="com.trtm.iot.yajiangm.entity.TrYajiangM"  flushCache="true" useCache="false">
+        select * from tr_yajiang_m where yjsbbh in (${shebeilist})  and id>#{curid} limit 100
+    </select>
+
+    <select id="selectlist" resultType="com.trtm.iot.yajiangm.entity.TrYajiangM"  flushCache="true" useCache="false">
+        SELECT
+            x.*
+        FROM
+            tr_yajiang_m x
+                LEFT JOIN
+            tr_yajiang_s m ON x.syjid = m.syjid
+                LEFT JOIN
+            tr_yajiang_s_s s ON m.holeid = s.holeid
+                JOIN shebei_info ON shebei_info.sbjno = x.yjsbbh
+        WHERE
+            s.holeid IS NULL AND x.yjsbbh LIKE 'rc%' AND x.yjsbbh not LIKE '%cf' GROUP BY x.lianghao;
+    </select>
+</mapper>

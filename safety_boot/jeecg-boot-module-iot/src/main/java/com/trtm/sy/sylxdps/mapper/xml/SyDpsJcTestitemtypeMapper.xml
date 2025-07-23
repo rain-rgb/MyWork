@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.sy.sylxdps.mapper.SyDpsJcTestitemtypeMapper">
+
+
+    <select id="queryItemByType" resultType="com.trtm.sy.sylxdps.entity.SyDpsJcTestitemtype">
+        select a.* from sy_dps_jc_testItemType a
+<!--        <if test="isAll != null">join sy_dps_yy_UserAsTestItemType b on a.titCode=b.titCode</if>-->
+        join sy_dps_yy_UserAsTestItemType b on a.titCode=b.titCode
+        where a.titIsDel = 0 and b.role_id in (<foreach collection="roleIds" item="item" index="index" separator=",">#{item}</foreach>)
+        <if test="types != null">and a.titType in ( <foreach collection="types" item="item" index="index" separator=",">#{item}</foreach> )</if>
+<!--        <if test="isAll != null">and b.userid=#{userId}</if>-->
+        group by b.titCode
+    </select>
+</mapper>

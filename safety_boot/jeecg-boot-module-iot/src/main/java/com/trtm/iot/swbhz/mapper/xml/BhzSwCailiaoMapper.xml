@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.swbhz.mapper.BhzSwCailiaoMapper">
+
+	<delete id="deleteByMainId" parameterType="java.lang.String">
+		DELETE 
+		FROM  bhz_sw_cailiao 
+		WHERE
+			 base_guid = #{mainId} 	</delete>
+	
+	<select id="selectByMainId" parameterType="java.lang.String" resultType="com.trtm.iot.swbhz.entity.BhzSwCailiao">
+		SELECT * 
+		FROM  bhz_sw_cailiao
+		WHERE
+			 base_guid = #{mainId} 	</select>
+    <select id="selectdetail" resultType="com.trtm.iot.hntbhz.entity.BhzCementDetail">
+		select
+		id,
+		cailiaoleixing materialeType,
+		cailiaono materialeId,
+		cailiaoming materialeName,
+		shijiyongliang realityNumber,
+		theory_number theoryNumber,
+		base_guid	batchNo,
+		chaobiao overValue,
+		wucha errorValue,
+		chaobiaodengji materialeOverLevel
+		from bhz_sw_cailiao
+		WHERE
+			 base_guid = #{id}
+	</select>
+</mapper>

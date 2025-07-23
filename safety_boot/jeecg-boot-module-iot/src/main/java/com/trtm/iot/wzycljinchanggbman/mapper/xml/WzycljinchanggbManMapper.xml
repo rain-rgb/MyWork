@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.wzycljinchanggbman.mapper.WzycljinchanggbManMapper">
+    <select id="selectycljinchangList" resultType="com.trtm.iot.wzycljinchanggbman.entity.WzycljinchanggbMan" flushCache="true" useCache="false">
+        select * from wzycljinchanggb_man where isdel <![CDATA[ <> ]]> 2  and taizhangtj =#{taizhangtj} limit 50
+    </select>
+</mapper>

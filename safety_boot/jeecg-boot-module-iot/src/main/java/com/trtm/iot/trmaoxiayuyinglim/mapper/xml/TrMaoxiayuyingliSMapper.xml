@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.trmaoxiayuyinglim.mapper.TrMaoxiayuyingliSMapper">
+
+	<delete id="deleteByMainId" parameterType="java.lang.String">
+		DELETE
+		FROM  tr_maoxiayuyingli_s
+		WHERE
+			 uuid = #{mainId} 	</delete>
+
+	<select id="selectByMainId" parameterType="java.lang.String" resultType="com.trtm.iot.trmaoxiayuyinglim.entity.TrMaoxiayuyingliS">
+		SELECT s.*
+		FROM  tr_maoxiayuyingli_s s
+		JOIN tr_maoxiayuyingli_M m ON m.UUID = s.UUID
+		WHERE
+			m.id = #{mainId} 	</select>
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.ckqdatahandle.mapper.DeviceMixinStationMapper">
+
+    <select id="selectMixinStation" parameterType="String" resultType="String">
+     select  sid from device_mixin_station where sid =#{sid}
+    </select>
+
+
+    <select id="selectDTHOneBidTwoMixinStationCT1STotal"
+            resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+        select  id ,v,dataTime, handle_status from  device_traffic_historydata
+        where handle_status = '0'
+        and topic ='/usr/plcnet/BP1_2_PUMP/edge/u'
+        and  pid ='CT1S'
+        ORDER BY dataTime desc
+    </select>
+
+    <select id="selectDTHOneBidTwoMixinStationFLY1STotal"
+            parameterType="String" resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+        select  id ,v,dataTime, handle_status from  device_traffic_historydata
+        where handle_status = '0'
+        and topic ='/usr/plcnet/BP1_2_PUMP/edge/u'
+        and  pid ='FLY1S'
+        ORDER BY dataTime desc
+    </select>
+
+
+</mapper>

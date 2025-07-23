@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.hc_machine_onlinerecord.mapper.HcMachineOnlinerecordMapper">
+<!--findByStarttimeAndEndtime-->
+    <select id="findByStarttimeAndEndtime" resultType="com.trtm.iot.hc_machine_onlinerecord.entity.HcMachineOnlinerecord"  flushCache="true" useCache="false">
+        SELECT *
+        FROM hc_machine_onlinerecord
+        WHERE ((loginTime >= #{starttime} AND #{endtime} >= logoffTime)
+                   OR  (#{starttime} >= loginTime AND logoffTime >= #{endtime}))
+          AND sectionId = #{sectionid}
+        GROUP BY machineId
+    </select>
+</mapper>

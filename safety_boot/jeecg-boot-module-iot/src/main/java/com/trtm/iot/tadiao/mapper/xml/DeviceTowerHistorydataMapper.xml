@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.tadiao.mapper.DeviceTowerHistorydataMapper">
+
+    <select id="getYjList" resultType="map" flushCache="true" useCache="false">
+        SELECT
+	    	device_code, -- 设备编号
+	    	count( 1 ) sjl, -- 数据量
+	    	sum( main_hookstatus ) mainHookSta1, -- 主钩吊钩载荷状态
+			sum( reserved_vicehookstatus ) viceHookSta1, -- 副钩吊钩载荷状态
+	    	sum( main_hookstatus2 ) mainHookSta2, -- 主钩吊钩载荷状态
+	    	sum( reserved_vicehookstatus2 ) viceHookSta2, -- 副钩吊钩载荷状态
+	    	sum( collision_hazard ) collision, -- 碰撞预警相邻塔相差10度预警
+	    	sum( overval1_wind1 ) over1Wind1, -- 风速预警
+	    	sum( overval3_vicemoment1 ) over3Vice1, -- 力矩预警额定力矩85%预警
+	        sum( overval4_vicemoment2 ) over4Vice2, -- 力矩预警额定力矩85%预警
+	        sum( overval5_wind2 ) over5Wind2, -- 风速预警
+	    	sum( overval6_tilt ) over6 -- 塔体垂直度预警(6度偏差预警)
+		FROM
+			device_tower_historydata
+		WHERE
+			towerdate > DATE_SUB( NOW(), INTERVAL 2 * 5 SECOND )
+		GROUP BY
+			device_code
+    </select>
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.TbhzcailiaoStatistics.mapper.BhzCementDetailStatisticsMapper">
+
+    <select id="selectShebeiDetail"
+            resultType="com.trtm.iot.TbhzcailiaoStatistics.entity.BhzCementDetailStatistics" flushCache="true"
+            useCache="false">
+        select * from (SELECT sum(primary_number) as primary_number,sum(middle_number) as middle_number,sum(advanced_number)as advanced_number,materiale_type,shebei_no,sum(primary_number+middle_number+advanced_number) as sumnum
+        from bhz_cement_detail_statistics where `statistics_time` between #{begin} and  #{end}
+        and shebei_no in
+        <foreach collection="shebeiNo" item="folderId" index="index" open="(" close=")" separator=",">
+            #{folderId}
+        </foreach>
+         GROUP BY shebei_no,materiale_type) detail where detail.sumnum!= 0
+    </select>
+</mapper>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.lqbhz.mapper.YouShiBiMapper">
+    <select id="getShiyoubi" resultType="com.trtm.iot.lqbhz.entity.YouShiBi" parameterType="String">
+       SELECT * FROM bhz_lq_bases WHERE shebeibianhao = #{sheBeiNo} ORDER by chuliaoshijian LIMIT 50;
+    </select>
+
+
+</mapper>

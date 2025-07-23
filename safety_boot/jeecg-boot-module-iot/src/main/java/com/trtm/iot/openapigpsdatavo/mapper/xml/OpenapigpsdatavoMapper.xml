@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.openapigpsdatavo.mapper.OpenapigpsdatavoMapper">
+    <select id="getList" resultType="com.trtm.iot.openapigpsdatavo.entity.Openapigpsdatavo" flushCache="true" useCache="false">
+        SELECT *
+        FROM OPENAPIGPSDATAVO
+        WHERE  MACHINE_ID IN (${shebeino})
+        AND ISDJ = 0
+        LIMIT 1000
+    </select>
+
+    <select id="getBLList" resultType="com.trtm.iot.openapigpsdatavo.entity.Openapigpsdatavo" flushCache="true" useCache="false">
+        SELECT *
+        FROM OPENAPIGPSDATAVO
+        WHERE  MACHINE_ID IN (${shebeino})
+        AND ISDJ = 0 ORDER BY ID
+        LIMIT 1000
+    </select>
+
+    <select id="getListjt" resultType="com.trtm.iot.openapigpsdatavo.entity.Openapigpsdatavo" flushCache="true" useCache="false">
+        SELECT *
+        FROM OPENAPIGPSDATAVO
+        WHERE  MACHINE_ID IN (${shebeino})
+        AND  SJID > #{id}
+        LIMIT 1000
+    </select>
+</mapper>

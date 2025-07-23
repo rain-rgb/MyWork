@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.yclcl.mapper.WzyclchuchanggbMapper">
+
+    <update id="updateWzliaocangljshiyongByGuid">
+        update wzliaocang set ljshiyong=ljshiyong+#{num} where guid=#{guid}
+    </update>
+
+    <select id="selecones" useCache="false" flushCache="true" resultType="com.trtm.iot.yclcl.entity.Wzyclchuchanggb">
+        select * from wzyclchuchanggb where istongji=#{istongji} and id >#{curid} limit 50
+    </select>
+
+    <select id="slistrqid" resultType="com.trtm.iot.yclcl.entity.Wzyclchuchanggb" flushCache="true" useCache="false">
+        select * from wzyclchuchanggb
+        where id &gt; #{curid}
+          and shebeibianhao in (${shebeilist})
+          and jinchangshijian > "2024-07-09 00:00:00"
+            limit 100
+    </select>
+</mapper>

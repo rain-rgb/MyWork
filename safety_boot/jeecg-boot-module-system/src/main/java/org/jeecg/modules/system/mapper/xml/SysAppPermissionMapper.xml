@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.system.mapper.SysAppPermissionMapper">
+    <resultMap id="SysAppPermissionTree" type="org.jeecg.modules.system.model.SysAppPermissionTree" >
+        <result column="id" property="key" jdbcType="VARCHAR"/>
+        <result column="name" property="title" jdbcType="VARCHAR"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="parent_id" property="parentId" jdbcType="VARCHAR"/>
+        <result column="leaf_flag" property="isLeaf" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- 通过<resultMap>映射实体类属性名和表的字段名对应关系 -->
+    <resultMap id="SysAppPermission" type="org.jeecg.modules.system.entity.SysAppPermission">
+        <!-- result属性映射非匹配字段 -->
+<!--        <result column="is_route" property="route"/>-->
+<!--        <result column="keep_alive" property="keepAlive"/>-->
+        <result column="is_leaf" property="isLeaf"/>
+    </resultMap>
+
+    <!-- 获取登录用户拥有的权限 -->
+    <select id="queryByUser" parameterType="Object"  resultMap="SysAppPermission">
+        SELECT * FROM (
+        SELECT p.*
+        FROM  sys_app_permission p
+        WHERE (exists(
+        select a.id from sys_role_app_permission a
+        join sys_role b on a.role_id = b.id
+        join sys_user_role c on c.role_id = b.id
+        join sys_user d on d.id = c.user_id
+        where p.id = a.permission_id AND d.username = #{username,jdbcType=VARCHAR}
+        ))
+        and p.del_flag = 0
+<!--        &lt;!&ndash;update begin Author:lvdandan  Date:20200213 for：加入部门权限 &ndash;&gt;-->
+<!--        UNION-->
+<!--        SELECT p.*-->
+<!--        FROM  sys_permission p-->
+<!--        WHERE exists(-->
+<!--        select a.id from sys_depart_role_permission a-->
+<!--        join sys_depart_role b on a.role_id = b.id-->
+<!--        join sys_depart_role_user c on c.drole_id = b.id-->
+<!--        join sys_user d on d.id = c.user_id-->
+<!--        where p.id = a.permission_id AND d.username = #{username,jdbcType=VARCHAR}-->
+<!--        )-->
+<!--        and p.del_flag = 0-->
+<!--        &lt;!&ndash;update end Author:lvdandan  Date:20200213 for：加入部门权限 &ndash;&gt;-->
+        ) h order by h.sort_no ASC
+    </select>
+
+
+    <!-- 获取登录用户首页拥有的权限 -->
+    <select id="queryByUserHead" parameterType="java.util.HashMap"  resultType="java.util.Map">
+        SELECT
+            *
+        FROM
+            (
+                SELECT
+                    id,
+                    CONCAT('background-image:url(',icon,')')	style ,
+                    `name` title,
+                    sort_no sort ,
+                    menu_perms url
+
+                FROM
+                    sys_app_permission p
+                WHERE
+                    (
+                        EXISTS (
+                                SELECT
+                                    a.id
+                                FROM
+                                    sys_role_app_permission a
+                                        JOIN sys_role b ON a.role_id = b.id
+                                        JOIN sys_user_role c ON c.role_id = b.id
+                                        JOIN sys_user d ON d.id = c.user_id
+                                WHERE
+                                    p.id = a.permission_id
+                                  AND d.username = #{username,jdbcType=VARCHAR}
+                                  AND `status` =1
+                                  AND p.menu_type = 1
+                                  AND p.icon IS NOT NULL
+                                  AND p.parent_id = #{parentId,jdbcType=VARCHAR}
+
+                            ))
+                  AND p.del_flag = 0
+            ) h order by h.sort ASC
+    </select>
+
+
+
+</mapper>

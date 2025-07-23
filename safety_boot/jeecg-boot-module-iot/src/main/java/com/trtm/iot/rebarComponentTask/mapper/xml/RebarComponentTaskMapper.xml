@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.rebarComponentTask.mapper.RebarComponentTaskMapper">
+    <delete id="deleteByComponentIdAndTaskId">
+        delete FROM rebar_component_task WHERE component_id = #{componentId} AND task_id = #{taskId}
+    </delete>
+    <delete id="deleteByTaskId">
+        delete FROM rebar_component_task WHERE task_id = #{taskId}
+    </delete>
+
+    <select id="queryComponentNumber" resultType="java.lang.String">
+        select component_number from rebar_component_task where 1=1
+        <if test="componentId !=null and componentId !=''">
+            and component_id = #{componentId}
+        </if>
+        <if test="taskId !=null and taskId !=''">
+            and task_id = #{taskId}
+        </if>
+    </select>
+    <select id="getComponentTask"
+            resultType="com.trtm.iot.rebarComponentTask.entity.RebarComponentTask">
+        select * from rebar_component_task where 1=1
+        <if test="componentId !=null and componentId !=''">
+            and component_id = #{componentId}
+        </if>
+        <if test="taskId !=null and taskId !=''">
+            and task_id = #{taskId}
+        </if>
+    </select>
+    <select id="getComponentNumberBycomponentId" resultType="java.lang.String">
+        select sum(component_number) from rebar_component_task where component_id = #{componentId}
+
+    </select>
+    <select id="getComponentMaterial" resultType="com.trtm.iot.rebarComponentTask.entity.RebarComponentTask">
+        select * from rebar_component_task where 1=1
+        <if test="componentId !=null and componentId !=''">
+            and component_id = #{componentId}
+        </if>
+        <if test="taskId !=null and taskId !=''">
+            and task_id = #{taskId}
+        </if>
+    </select>
+    <select id="getComponentTaskListByTaskId"
+            resultType="com.trtm.iot.rebarComponentTask.entity.RebarComponentTask">
+        select * from rebar_component_task where 1=1
+        <if test="taskId !=null and taskId !=''">
+            and task_id = #{taskId}
+        </if>
+    </select>
+</mapper>

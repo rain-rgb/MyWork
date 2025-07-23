@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.hntconsign.mapper.HntConsignMapper">
+
+    <select id="getbiaoduan" resultType="com.trtm.sy.sydpssysample.entity.SysDepart" flushCache="true" useCache="false">
+		SELECT
+            depart_name,
+            org_code,
+            org_type,
+            description
+        FROM
+            sys_depart
+        WHERE
+            org_code LIKE 'A05A01A12A12%'
+            AND org_type IN (7,6)
+        ORDER BY description
+	</select>
+
+    <select id="getsyj" resultType="com.trtm.iot.syj.entity.TSyjzb" flushCache="true" useCache="false">
+		SELECT
+            PDJG,
+            count( 1 ) lq
+        FROM
+            t_syjzb
+        WHERE
+            sbbh in (${arrayshebei})
+        GROUP BY
+            PDJG
+	</select>
+
+</mapper>

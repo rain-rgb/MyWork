@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.syj.mapper.FWangnjMapper">
+    <select id="selectFswannjData" resultType="com.trtm.iot.syj.entity.FWangnj" flushCache="true" useCache="false">
+        select * from f_wangnj where SYJID =#{syjid}
+    </select>
+    <select id="selectMaxSysj" resultType="java.lang.String">
+         select max(sysj) sysj from f_wangnj where SYJID =#{syjid}
+    </select>
+
+
+    <select id="updateSbbh" resultType="java.lang.Integer" flushCache="true" useCache="false" >
+        UPDATE f_wangnj SET SBBH = (SELECT SBBH FROM t_syjzb WHERE syjid = f_wangnj.syjid AND sbbh IN (${shebeilist})) where sbbh is NULL
+    </select>
+
+
+    <select id="selectSyjwnList" resultType="com.trtm.iot.syj.entity.FWangnj" flushCache="true" useCache="false" >
+        SELECT *
+        FROM f_wangnj
+        WHERE issend = 0
+            Limit 1000
+
+    </select>
+
+</mapper>

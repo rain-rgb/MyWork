@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.gualan.mapper.GualanBaseMapper">
+
+    <select id="getYjList" resultType="map" flushCache="true" useCache="false">
+        SELECT
+	    	shebeibanhao, -- 设备编号
+	    	count( 1 ) sjl, -- 数据量
+			sum( windspeedwarn ) windspeedwarn , -- 风速报警
+	    	sum( overweight1 ) overweight1, -- 1#螺纹钢是否超重
+	    	sum( overweight2 ) overweight2, -- 2#螺纹钢是否超重
+	    	sum( overweight3 ) overweight3, -- 3#螺纹钢是否超重
+	    	sum( overweight4 ) overweight4, -- 4#螺纹钢是否超重
+	    	sum( overval1 ) overval1, -- 螺纹钢承重预警额定拉力85%预警
+	    	sum( overval2 ) overval2, -- 超重预警额定重量100%预警
+	    	sum( overval3 ) overval3, -- 前横梁水平度预警偏差3度预警
+	    	sum( overval4 ) overval4, -- 横梁左右偏差3度预警倾斜预警偏差3度预警
+	    	sum( overval5 ) overval5  -- 纵梁变形预警偏差3度预警
+		FROM
+			gualan_base
+		WHERE
+			datatime > DATE_SUB( NOW(), INTERVAL 10 * 5 SECOND )
+		GROUP BY
+			shebeibanhao
+    </select>
+
+
+
+	<select id="getMap2Port" resultType="map" >
+		SELECT
+			a1 - a2 AS chazhi,
+			ida,
+			idb
+		FROM
+			(	SELECT	id AS ida,	tension1 + tension2 + tension3 + tension4 AS a1 FROM	`gualan_base` WHERE	id = ( SELECT MAX( ID ) FROM gualan_base WHERE shebeibanhao = 'rcgs2023091201' )) a
+				JOIN
+			(SELECT		id AS idb,	tension1 + tension2 + tension3 + tension4 AS a2 FROM	`gualan_base` WHERE	id = ( SELECT MAX( ID ) FROM gualan_base WHERE shebeibanhao = 'rcgs2023091202' )) b
+	</select>
+
+	<select id="selectGuaLanList" resultType="com.trtm.iot.gualan.entity.GualanBase">
+      	SELECT *
+        FROM gualan_base
+        WHERE id > #{curid}
+        AND shebeibanhao IN (${shebeilist})
+            limit 1000
+    </select>
+</mapper>

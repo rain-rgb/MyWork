@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.hc_tfysworkarea.mapper.HcTfysworkareaMapper">
+    <select id="listbytj" resultType="com.trtm.iot.hc_tfysworkarea.entity.HcTfysworkarea" flushCache="true"
+            useCache="false">
+        SELECT DATE_FORMAT(starttime, '%Y-%m') AS layername FROM hc_tfysworkarea GROUP BY DATE_FORMAT(starttime, '%Y-%m')
+    </select>
+</mapper>

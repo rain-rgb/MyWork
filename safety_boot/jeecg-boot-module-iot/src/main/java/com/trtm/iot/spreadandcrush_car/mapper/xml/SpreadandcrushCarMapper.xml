@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.spreadandcrush_car.mapper.SpreadandcrushCarMapper">
+    <select id="getList" resultType="com.trtm.iot.spreadandcrush_car.entity.SpreadandcrushCar" flushCache="true" useCache="false">
+        select *
+        from  `Spreadandcrush_car`
+        where truckId in (${shebeino})
+        AND isdj = 0
+        limit 1000;
+    </select>
+    <select id="getListjt" resultType="com.trtm.iot.spreadandcrush_car.entity.SpreadandcrushCar" flushCache="true" useCache="false">
+        select *
+        from  `Spreadandcrush_car`
+        where truckId in (${shebeino})
+        AND id > #{id}
+        limit 1000;
+    </select>
+</mapper>

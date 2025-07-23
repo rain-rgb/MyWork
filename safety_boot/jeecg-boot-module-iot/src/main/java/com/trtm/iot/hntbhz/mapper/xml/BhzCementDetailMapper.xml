@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.hntbhz.mapper.BhzCementDetailMapper">
+
+    <delete id="deleteByMainId" parameterType="java.lang.String">
+        DELETE
+        FROM bhz_cement_detail
+        WHERE batch_no = #{mainId}    </delete>
+
+    <select id="selectcementlist" resultType="com.trtm.iot.hntbhz.entity.BhzCementDetail" flushCache="true"
+            useCache="false">
+        select *
+        from bhz_cement_detail
+        where batch_no = #{batchNo}
+    </select>
+    <select id="selectcementlists" resultType="com.trtm.iot.hntbhz.vo.BhzCementDetailRC" flushCache="true"
+            useCache="false">
+        select *
+        from bhz_cement_detail
+        where batch_no = #{batchNo}
+    </select>
+
+    <select id="selectByBatchList" parameterType="java.util.List" resultType="map" flushCache="true" useCache="false">
+        SELECT
+        b.id AS taskdatailId,
+        a.batch_no AS useId,
+        a.shebei_no AS mixId,
+        b.materiale_name AS material,
+        b.theory_number AS theoreticalDosage,
+        b.reality_number AS actualDosage,
+        b.error_value AS errorValue,
+        b.over_value AS exceedanceValue,
+        b.materiale_over_level AS exceedanceLevel,
+        a.handlers AS createId
+        FROM
+        `bhz_cement_base` a
+        INNER JOIN `bhz_cement_detail` b ON a.batch_no = b.batch_no
+        where 1 = 1
+        <if test="list!=null and list.size()>0">
+           and  a.batch_no in
+            <foreach collection="list" item="code" open="(" separator="," close=")">
+                #{code,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>

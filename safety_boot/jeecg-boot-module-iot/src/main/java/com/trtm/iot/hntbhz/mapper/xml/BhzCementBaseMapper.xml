@@ -1,0 +1,877 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.hntbhz.mapper.BhzCementBaseMapper">
+
+    <select id="bulletin" resultType="java.util.Map">
+        SELECT t1.product_datetime as productDateTime,
+               t3.depart_name      as departName,
+               t2.sbname           as sbName,
+               t1.batch_no         as batchNo
+        FROM bhz_cement_base t1
+                 JOIN shebei_info t2 ON t1.shebei_no = t2.sbjno
+                 JOIN sys_depart t3 ON t2.sys_org_code = t3.org_code
+                 left join bhz_cement_over_handler t4 on t1.batch_no = t4.baseId
+        WHERE t1.over_level in (1, 2, 3)
+          AND t4.overproof_status = 0
+          AND t3.org_code LIKE concat(#{orgCode}, '%') LIMIT 3
+    </select>
+
+    <select id="selectwarnContent" resultType="java.util.Map" flushCache="true" useCache="false">
+        select shebei_no,collect_datetime,over_reason from ${tableName}  where over_level != 0 and DATEDIFF(collect_datetime,NOW())=0 and shebei_no = #{sbjno} order by collect_datetime desc limit 1
+    </select>
+    <select id="bhzcbv" resultType="java.util.Map">
+        SELECT
+        t2.sbname,
+        ROUND(sum( t1.all_overproof_dish )/ sum( t1.all_dish )* 100, 0 ) AS chaobiaolv
+        FROM
+        bhz_cement_statistics t1
+        JOIN shebei_info t2 ON t1.shebei_no = t2.sbjno
+        where 1=1
+        <if test="shebei!=null">
+            and t1.shebei_no in
+            <foreach collection="shebei" index="index" item="item"
+                     open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="result == 1">
+            and YEARWEEK(date_format(t1.statistics_time,'%Y-%m-%d')) = YEARWEEK(now())
+        </if>
+        <if test="result == 2">
+            and date_format(t1.statistics_time,'%Y-%m')=date_format(now(),'%Y-%m')
+        </if>
+        <if test="result == 3">
+            and QUARTER(statistics_time) = QUARTER(now()) AND
+            date_format(t1.statistics_time,'%Y')=date_format(now(),'%Y')
+
+        </if>
+        <if test="result == 4">
+            and date_format(t1.statistics_time,'%Y')=date_format(now(),'%Y')
+        </if>
+
+        GROUP BY
+        t2.sbname
+        ORDER BY
+        chaobiaolv DESC
+        LIMIT 7
+
+    </select>
+    <!--   砼拌合站材料 -->
+    <select id="bhzcailiaoCount" resultType="java.util.Map">
+        SELECT
+        a.materiale_name AS cailiaoming,
+        sum( a.primary_number ) AS chu,
+        sum( a.middle_number ) AS zhong,
+        sum( a.advanced_number ) AS gao
+        FROM
+        bhz_cement_detail_statistics a
+        JOIN bhz_cement_statistics b ON a.cs_id = b.id
+        where 1=1
+        <if test="shebei!=null">
+            and b.shebei_no in
+            <foreach collection="shebei" index="index" item="item"
+                     open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="result == 1">
+            and YEARWEEK(date_format(b.statistics_time,'%Y-%m-%d')) = YEARWEEK(now())
+        </if>
+        <if test="result == 2">
+            and date_format(b.statistics_time,'%Y-%m')=date_format(now(),'%Y-%m')
+        </if>
+        <if test="result == 3">
+            and QUARTER(statistics_time) = QUARTER(now()) AND
+            date_format(b.statistics_time,'%Y')=date_format(now(),'%Y')
+
+        </if>
+        <if test="result == 4">
+            and date_format(b.statistics_time,'%Y')=date_format(now(),'%Y')
+        </if>
+
+        GROUP BY
+        a.materiale_name
+
+    </select>
+
+    <select id="getDataToInitPM" resultType="map" flushCache="true" useCache="false">
+        SELECT a.id,
+               a.batch_no         AS useId,
+               a.work_no          AS taskId,
+               b.sys_org_code     AS mixId,
+               b.sbname           AS deviceName,
+               a.poure_location   AS posit1on,
+               a.estimate_number  AS capacity,
+               a.strength_rank    AS strength,
+               a.product_datetime AS dischargeTime,
+               a.handlers         AS createId
+        FROM `bhz_cement_base` a
+                 LEFT JOIN `shebei_info` b
+                           ON a.shebei_no = b.sbjno
+        WHERE a.id > #{lastId,jdbcType=INTEGER}
+          and b.sys_org_code LIKE #{code}
+          and b.sbtype in (0, 1, 2) limit 100
+    </select>
+
+    <select id="selecthntbhzonesstatistics" flushCache="true" useCache="false"
+            resultType="com.trtm.iot.hntbhz.entity.BhzCementBase">
+        select *
+        from bhz_cement_base
+        where id > #{id}
+          and statistics = #{statistics} limit 1000
+    </select>
+
+    <select id="selectcailiao" flushCache="true" useCache="false"
+            resultType="com.trtm.iot.hntbhz.entity.BhzCementBase">
+        select *
+        from bhz_cement_base
+        where id > #{id}
+          and statistics1 = #{statistics} limit 10
+    </select>
+
+    <select id="selecthntbhzonesstatistics1" flushCache="true" useCache="false"
+            resultType="com.trtm.iot.hntbhz.entity.BhzCementBase">
+        select *
+        from bhz_cement_base
+        where id > #{curid}
+          and statistics = #{statistics}
+          and id &lt;= #{curdate} limit 10
+    </select>
+
+    <select id="selecthntbhzones" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true"
+            useCache="false">
+        select *
+        from bhz_cement_base
+        where id &gt; #{id}
+          AND alertstate = 0 limit 30
+    </select>
+
+    <select id="selecthntbhzonesx" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true"
+            useCache="false">
+        select *
+        from bhz_cement_base
+        where id &gt; #{id}
+          AND alertstate = 0 limit 300
+    </select>
+
+    <select id="selectListstbim" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true" useCache="false">
+        select *
+        from bhz_cement_base
+        where id &gt; #{curid}
+        AND shebei_no in (${shebeilist})
+          AND alertstate = 1
+          limit 100
+    </select>
+
+    <select id="selectLists1" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true" useCache="false">
+        select *
+        from bhz_cement_base
+        where shebei_no in (${shebeiNo})
+          AND alertstate = 1
+          AND issend = 0 limit 100
+    </select>
+
+    <select id="selectLists2" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true" useCache="false">
+        select *
+        from bhz_cement_base
+        where shebei_no in (${shebeiNo})
+          AND alertstate = 1
+          AND issend = 0
+           limit 100
+    </select>
+
+    <select id="selectListskz4" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true"
+            useCache="false">
+        select *
+        from bhz_cement_base
+        where shebei_no in (${shebeiNo})
+          AND alertstate = 1
+          AND issend = 0
+          AND id &gt; #{id} limit 200
+    </select>
+
+    <select id="selectListsyb" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true" useCache="false">
+        select *
+        from bhz_cement_base
+        where shebei_no in (${shebeiNo})
+          AND alertstate > 0
+          AND issend = 0
+           limit 100
+    </select>
+
+    <select id="selectListsrcsms" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true"
+            useCache="false">
+        select *
+        from bhz_cement_base
+        where shebei_no in (${shebeiNo})
+        AND over_level > 1
+        AND overproof_status &lt; 20 AND ispanding = 0
+        limit 100
+    </select>
+
+    <select id="selectLists1b" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true" useCache="false">
+        select *
+        from bhz_cement_base
+        where shebei_no in (${shebeiNo})
+          AND alertstate = 1
+          and over_reason is null
+          AND issend = 0
+          AND id &gt; #{id} limit 200
+    </select>
+
+    <select id="selectListszt" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true" useCache="false">
+        select *
+        from bhz_cement_base
+        where shebei_no in (${shebeiNo})
+          AND alertstate = 1
+          AND id &gt; #{id} limit 100
+    </select>
+
+    <select id="selectListssutai" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true"
+            useCache="false">
+        select *
+        from bhz_cement_base
+        where id &gt; #{id}
+          AND shebei_no in (${shebeiNo})
+          AND alertstate = 1
+          AND project_name like '%一期%' limit 100
+    </select>
+
+    <!--浙路品质瑞仓专用-->
+    <select id="selectListsbhg" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true"
+            useCache="false">
+        select *
+        from bhz_cement_base
+        where shebei_no in (${shebeiNo})
+          AND over_level > 1
+          AND (issend = 0 OR (issend = 3 AND overproof_status >0))
+		AND 10 > overproof_status
+          AND now() > SUBDATE(product_datetime, interval -1 day) limit 100
+    </select>
+    <!--浙路品质疏港专用-->
+    <select id="selectListsbhgsg" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true"
+            useCache="false">
+        select *
+        from bhz_cement_base
+        where shebei_no in (${shebeiNo})
+          AND over_level > 1
+          AND (issend = 0 OR (issend = 3 AND overproof_status >0))
+          AND product_datetime >= '2022-06-01' limit 100
+    </select>
+    <!--浙路品质通用-->
+    <select id="selectListsbhgty" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true"
+            useCache="false">
+        select *
+        from bhz_cement_base
+        where shebei_no in (${shebeiNo})
+          AND over_level > 1
+          AND (issend = 0 OR (issend = 3 AND overproof_status >0))
+          AND product_datetime >= '2023-04-01' limit 100
+    </select>
+    <!--浙路品质闭合通用-->
+    <select id="selectListsbhgbhty" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true"
+            useCache="false">
+        select *
+        from bhz_cement_base
+        where shebei_no in (${shebeiNo})
+          AND over_level > 0
+          AND issend = 10
+          AND product_datetime >= '2022-06-01' limit 100
+    </select>
+
+    <select id="selecthntbhzlists" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true"
+            useCache="false">
+        select *
+        from bhz_cement_base
+        where id &gt;= #{curid}
+        and isfilter = #{i}
+        <if test="strsToList!=null">
+            and shebei_no in (${strsToList})
+        </if>
+        limit 100
+    </select>
+
+    <select id="queryones" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true" useCache="false">
+        select *
+        from bhz_cement_base
+        where shebei_no = #{shebeiNo}
+        order by save_datetime desc limit 1
+    </select>
+
+    <select id="selectListdata" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true"
+            useCache="false">
+        select *
+        from bhz_cement_base
+        where id &gt; #{curid}
+          and shebei_no in (${shebeilist}) limit 100
+    </select>
+
+    <select id="selectListyjqs" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true" useCache="false">
+        select *
+        from bhz_cement_base
+        where id &gt; #{id}
+        and shebei_no in (${shebeiNo})
+            order by id
+    </select>
+
+    <select id="selectListToSHYJ" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true"
+            useCache="false">
+        select *
+        from bhz_cement_base
+        where id &gt; #{curid}
+        AND alertstate = 1
+          and shebei_no in (${shebeilist}) order by id limit 100
+    </select>
+
+    <select id="selectHntbhzList" flushCache="true" useCache="false"
+            resultType="com.trtm.iot.hntbhz.entity.BhzCementBase">
+        select *
+        from bhz_cement_base
+        where id > #{curid}
+          and alertstate = #{i}
+          and shebei_no in (${strsToList1})
+        AND (project_name like '%二期%' or job_location like '%二期%' or project_name like '%2期%' or job_location like '%2期%' or handlers like '%2期%' or handlers like '%二期%')
+        and product_datetime > date_sub(CURDATE(), interval 7 DAY)
+        order by product_datetime asc limit 100
+
+    </select>
+    <select id="selectWranCount" resultType="com.trtm.iot.hntbhz.entity.BhzCementWarnVO" flushCache="true"
+            useCache="false">
+        select COUNT(*)                                                             warnCount,
+               COUNT(if(over_level = 1, true, null))                                primaryCount,
+               COUNT(if(over_level = 2, true, null))                                middleCount,
+               COUNT(if(over_level = 3, true, null))                                advancedCount,
+               COUNT(if(time_over_level = 1, true, null))                           timeCount,
+               COUNT(if(time_over_level = 1 and overproof_status = 20, true, null)) timeBiheCount,
+               COUNT(if(over_level = 1 and overproof_status = 20, true, null))      primaryBiheCount,
+               COUNT(if(over_level = 2 and overproof_status = 20, true, null))      middleBiheCount,
+               COUNT(if(over_level = 3 and overproof_status = 20, true, null))      advancedBiheCount
+        from `bhz_cement_base`
+        where exists(
+                      select sb.sbjno
+                      from `shebei_info` sb
+                               right join(select * from `sys_depart` where org_code like concat(#{orgCode}, "%")) depart
+                                         on sb.sys_org_code like concat(depart.org_code, "%")
+                      GROUP BY sb.sbjno)
+        ;
+    </select>
+
+
+    <select id="selectbyorgcode" resultType="java.lang.String" flushCache="true"
+            useCache="false">
+        select depart_name
+        from `sys_depart`
+        where `org_code` like concat(#{sysOrgCode}, "%")
+          and org_category = #{i}
+    </select>
+
+    <select id="selectbyorgcode2" resultType="java.lang.String" flushCache="true"
+            useCache="false">
+        select depart_name
+        from `sys_depart`
+        where #{sysOrgCode} like concat(`org_code`, "%")
+          and org_category = #{i}
+    </select>
+
+    <select id="selectWranCountByorgcde" resultType="com.trtm.iot.hntbhz.entity.BhzCementWarnVO" flushCache="true"
+            useCache="false">
+        select COUNT(if(b.over_level = 1, true, null))                              primaryCount,
+               COUNT(if(b.over_level = 2, true, null))                              middleCount,
+               COUNT(if(b.over_level = 3, true, null))                              advancedCount,
+               COUNT(if(b.over_level != 0 and b.overproof_status = 20, true, null)) biheCount,
+               COUNT(b.id)                                                          allDish,
+               s.org_code                                                           sys_org_code,
+               s.depart_name                                                        project_name,
+               (COUNT(if(b.over_level = 3, true, null))) / COUNT(b.id)              allWarnLv,
+               s.sbjno                                                              shebei_no
+        from `bhz_cement_base` b
+                 left join (select depart.depart_name, depart.org_code, sb.sys_org_code, sb.sbjno
+                            from `shebei_info` sb
+                                     right join(select * from `sys_depart` where org_category = 4) depart
+                                               on sb.sys_org_code like concat(depart.org_code, "%")) s
+                           on b.shebei_no = s.sbjno
+        where s.org_code is not null
+          and s.org_code like concat(#{orgCode}, "%")
+
+        GROUP BY s.org_code
+        ORDER BY allWarnLv desc limit 10
+    </select>
+    <select id="selectWranCountByshebeino" resultType="com.trtm.iot.hntbhz.entity.BhzCementWarnVO" flushCache="true"
+            useCache="false">
+        select sum(primaryCount + middleCount + advancedCount)           allWarnDish,
+               allDish,
+               biheCount,
+               shebei_name,
+               section_name,
+               shebei_no,
+               sum(primaryCount + middleCount + advancedCount) / allDish allWarnLv,
+               sys_org_code
+        from (select COUNT(b.id)                                                          allDish,
+                     COUNT(if(b.over_level = 1, true, null))                              primaryCount,
+                     COUNT(if(b.over_level = 2, true, null))                              middleCount,
+                     COUNT(if(b.over_level = 3, true, null))                              advancedCount,
+                     COUNT(if(b.over_level != 0 and b.overproof_status = 20, true, null)) biheCount,
+                     s.sbjno                                                              shebei_no,
+                     s.sbname                                                             shebei_name,
+                     s.depart_name                                                        section_name,
+                     s.sys_org_code                                                       sys_org_code
+              from `bhz_cement_base` b
+                       left join (select depart.depart_name, depart.org_code, sb.sys_org_code, sb.sbjno, sb.sbname
+                                  from `shebei_info` sb
+                                           right join(select * from `sys_depart` where org_category = #{i}) depart
+                                                     on sb.sys_org_code like concat(depart.org_code, "%")) s
+                                 on b.shebei_no = s.sbjno
+              where s.org_code like concat(#{sysOrgCode}, "%")
+              GROUP BY shebei_no) result
+        GROUP BY shebei_no
+        ORDER BY allWarnLv desc limit 10
+    </select>
+    <select id="selectbysysorgcode" resultType="java.lang.String" flushCache="true"
+            useCache="false">
+        select depart_name
+        from `sys_depart`
+        where org_code = #{sysOrgCode}
+
+    </select>
+    <select id="selectBiaoduanByshebeino" resultType="com.trtm.iot.hntbhz.entity.BhzCementWarnVO" flushCache="true"
+            useCache="false">
+        select count(b.id)                              allDish,
+               COUNT(if(b.over_level != 0, true, null)) allWarnDish,
+               s.depart_name                            sectionName,
+               s.sys_org_code
+        from `bhz_cement_base` b
+                 left join (select depart.depart_name, depart.org_code, sb.sys_org_code, sb.sbjno, sb.sbname
+                            from `shebei_info` sb
+                                     right join(select * from `sys_depart` where org_category = 7) depart
+                                               on sb.sys_org_code like concat(depart.org_code, "%")) s
+                           on b.shebei_no = s.sbjno
+        where s.org_code like concat(#{sysOrgCode}, "%")
+        GROUP BY s.org_code
+    </select>
+    <select id="selectByCode" resultType="java.lang.String" flushCache="true"
+            useCache="false">
+        select sb.sbjno
+        from `shebei_info` sb
+                 right join(select * from `sys_depart` where org_code like concat(#{orgCode}, "%")) depart
+                           on sb.sys_org_code like concat(depart.org_code, "%")
+        where sb.sbjno is not null
+        GROUP BY sb.sbjno
+
+    </select>
+    <select id="selectBiheCount" resultType="java.lang.Integer" flushCache="true"
+            useCache="false">
+        select COUNT(if(over_level != 0 and overproof_status = 20, true, null)) primaryBiheCount
+        from `bhz_cement_base`
+        where exists(select sb.sbjno
+                     from `shebei_info` sb
+                              right join(select * from `sys_depart` where org_code like concat(#{orgCode}, "%")) depart
+                                        on sb.sys_org_code like concat(depart.org_code, "%")
+                     where sb.sbjno is not null
+                     GROUP BY sb.sbjno)
+
+    </select>
+    <select id="selectTongjiData" resultType="com.trtm.iot.hntbhz.vo.BhzCementBaseRC" flushCache="true"
+            useCache="false">
+        SELECT
+        COUNT( * ) as allDish,
+        COUNT( if(over_level = 1,true,null)) as primaryCount,
+        COUNT( if(over_level = 2,true,null)) as middleCount,
+        COUNT( if(over_level = 3,true,null)) as advancedCount,
+        COUNT( if(overproof_status = 0 ,true,null) and if(over_level != 0,true,null)) as allNotHandleDish,
+        COUNT( if(overproof_status > 0 ,true,null) and if(over_level != 0,true,null)) as allHandleDish,
+        COUNT( if(overproof_status = 0 ,true,null) and if(over_level = 1,true,null)) as primaryNotHandle,
+        COUNT( if(overproof_status = 0 ,true,null) and if(over_level = 2,true,null)) as middleNotHandle,
+        COUNT( if(overproof_status = 0 ,true,null) and if(over_level = 3,true,null)) as advanceNotHandle
+        FROM bhz_cement_base
+
+        <if test="shebeiList != null">
+            WHERE shebei_no IN (${shebeiList})
+        </if>
+    </select>
+    <select id="selectCbTongji" resultType="com.trtm.iot.hntbhz.vo.BhzCementBaseCbTongji" flushCache="true"
+            useCache="false">
+        select COUNT(if(over_level = 1, true, null))                                              primaryCount,
+               COUNT(if(over_level = 2, true, null))                                              middleCount,
+               COUNT(if(over_level = 3, true, null))                                              advancedCount,
+               count(*),
+               sum(estimate_number)                                                               zongchangliang,
+               COUNT(if(overproof_status = 10, true, null) and if(over_level = 1, true, null)) as primaryHandleCount,
+               COUNT(if(overproof_status = 10, true, null) and if(over_level = 2, true, null)) as middleHandleCount,
+               COUNT(if(overproof_status = 10, true, null) and if(over_level = 3, true, null)) as advanceHandleCount
+        from (select * from bhz_cement_base where shebei_no in (#{shebeilist})) s
+    </select>
+    <select id="selectshebeiBybiaoduan" resultType="com.trtm.iot.hntbhz.vo.BhzCementBaseCbTongji">
+        select depart.depart_name name, depart.org_code orgCode, group_concat(sb.sbjno) as shebeiNo
+        from `shebei_info` sb
+                 right join(select * from `sys_depart` where org_category = 7) depart
+                           on sb.sys_org_code like concat(depart.org_code, "%")
+        where depart.org_code like concat(#{orgcode}, "%")
+          and sb.sbjno is not null
+        group by depart.org_code
+
+    </select>
+    <select id="selectshebeiByCode" resultType="java.lang.String">
+        select sb.sbjno as shebeiNo
+        from (select sb.sbjno
+              from `shebei_info` sb
+                       right join(select * from `sys_depart` where org_code like concat(#{orgcode}, "%")) depart
+                                 on sb.sys_org_code like concat(depart.org_code, "%")
+              GROUP BY sb.sbjno) sb
+
+    </select>
+    <select id="selectHntbhzList2" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true"
+            useCache="false">
+        select *
+        from bhz_cement_base
+        where id > #{curid}
+          and alertstate = #{i}
+          and shebei_no in (${shebeilist})
+        and product_datetime > date_sub(CURDATE(), interval 7 DAY)
+         limit 100
+    </select>
+    <select id="selecthntbhzRC" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true"
+            useCache="false">
+        select *
+        from bhz_cement_base
+        where id > #{curid}
+        AND alertstate !=0
+          AND cb_statistics = #{i} limit 1000
+    </select>
+    <select id="selecthntbhzbhRC" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true"
+            useCache="false">
+        select *
+        from bhz_cement_base
+        where bh_status = #{bhStatus}
+          AND cb_statistics = #{cbStatistics}
+        order by rand() limit 100
+    </select>
+
+    <select id="selectNameByCode" resultType="java.lang.String" flushCache="true"
+            useCache="false">
+        select depart_name
+        from `sys_depart`
+        where org_category = 4
+          and #{orgCode} like concat(org_code, "%")
+    </select>
+
+
+    <select id="selectBatchNoByOrgCode" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true"
+            useCache="false">
+        select a.id, a.batch_no
+        from `bhz_cement_base` a
+                 left join `shebei_info` b on a.shebei_no = b.sbjno
+        where a.id > #{id}
+          and b.sys_org_code like #{code}
+          and b.sbtype in (0,1,2)
+          limit 300
+    </select>
+
+    <select id="findXiangMutimes" parameterType="list" resultType="java.util.Map" flushCache="true" useCache="false">
+        SELECT
+        count( 1 ) zongs,
+        count(CASE WHEN over_level > 0 THEN 1 END ) yujings ,
+        count(CASE WHEN over_level > 0 AND overproof_status = 20 THEN 1 END ) bihes
+        from bhz_cement_base where shebei_no in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and isdel = 0
+        <if test="dateNowStr != null and dateNowStr != ''">
+            and product_datetime like concat(#{dateNowStr},"%")
+        </if>
+    </select>
+
+    <select id="findYuJingS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_cement_base where shebei_no in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and over_level > 0
+    </select>
+
+    <select id="findBiHeS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_cement_base where shebei_no in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and overproof_status = 20
+    </select>
+    <select id="findXiangMuZS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_cement_base where shebei_no in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+    </select>
+
+    <select id="findXiangMuZStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_cement_base where shebei_no in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and isdel = 0
+        and product_datetime like concat(#{dateNowStr},"%")
+    </select>
+
+    <select id="findYuJingStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_cement_base where shebei_no in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and isdel = 0
+        and over_level > 0 and product_datetime like concat(#{dateNowStr},"%")
+    </select>
+    <select id="findBiHeStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_cement_base where shebei_no in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and isdel = 0
+        and over_level > 0 and overproof_status = 20 and product_datetime like concat(#{dateNowStr},"%")
+    </select>
+
+    <select id="findXiangMuZStimes" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_cement_base where shebei_no in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and isdel = 0
+        and product_datetime between #{beginTime} and #{endTime}
+    </select>
+    <select id="findzsyjsbhs" resultType="com.trtm.iot.bhzStatistics.entity.BhzCementStatistics" flushCache="true"
+            useCache="false">
+        select sum(all_dish) all_dish,sum(all_overproof_dish) all_overproof_dish,sum(all_handle_dish) all_handle_dish
+        from bhz_cement_statistics where shebei_no in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and statistics_time between #{beginTime} and #{endTime}
+    </select>
+    <select id="findYuJingStimes" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_cement_base where shebei_no in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and isdel = 0
+        and over_level > 0 and product_datetime between #{beginTime} and #{endTime}
+    </select>
+    <select id="findBiHeStimes" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_cement_base where shebei_no in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and isdel = 0
+        and overproof_status = 20 and product_datetime between #{beginTime} and #{endTime}
+    </select>
+    <select id="selectSBByCode" resultType="java.lang.String">
+        select group_concat(sbjno) from shebei_info where sys_org_code  like concat(#{sys_org_code}, "%")
+    </select>
+
+    <select id="findXiangMuZSs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_cement_base where shebei_no in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and product_datetime like concat(#{time},'%')
+    </select>
+
+    <select id="findYuJingSs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_cement_base where shebei_no in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and over_level > 0 and product_datetime like concat(#{time},'%')
+    </select>
+    <select id="findBiHeSs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_cement_base where shebei_no in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and overproof_status = 20 and product_datetime like concat(#{time},'%')
+    </select>
+    <select id="selectByCheFlag" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true"
+            useCache="false">
+        select * from bhz_cement_base where shebei_no in (${shebeilist}) and cheflag = #{cheflag} and alertstate = #{alertstate}
+        and id>#{curid} and  ( project_name LIKE "%6号线二期%" OR cement_variety LIKE "%6号线二期%" OR poure_location LIKE "%6号线二期%" OR job_location LIKE "%6号线二期%" OR project_name LIKE "%6号线2期%" OR cement_variety LIKE "%6号线2期%" OR poure_location LIKE "%6号线2期%" OR job_location LIKE "%6号线2期%")order by id asc  limit 200
+    </select>
+
+    <select id="findYuJingSxmtime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_cement_base where shebei_no in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and over_level = #{i} and product_datetime like concat(#{dateNowStr},"%")
+    </select>
+    <select id="findBiHeSxmtime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from bhz_cement_base where shebei_no in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and over_level = #{i} and overproof_status = 20 and product_datetime like concat(#{dateNowStr},"%")
+    </select>
+
+    <select id="findXiangMuZSzy" resultType="Integer" flushCache="true" useCache="false">
+        SELECT count(*) FROM bhz_cement_base WHERE shebei_no = #{sb} and YEARWEEK(date_format(product_datetime,'%Y-%m-%d'),1) = YEARWEEK(now(),7);
+    </select>
+    <select id="findYuJingSzy" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        SELECT count(*) FROM bhz_cement_base WHERE shebei_no = #{sb} and over_level > #{grade} and YEARWEEK(date_format(product_datetime,'%Y-%m-%d'),1) = YEARWEEK(now(),7);
+    </select>
+    <select id="findBiHeSzy" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        SELECT count(*) FROM bhz_cement_base WHERE shebei_no = #{sb} and over_level > #{grade} and overproof_status = 20 and YEARWEEK(date_format(product_datetime,'%Y-%m-%d'),1) = YEARWEEK(now(),7);
+    </select>
+
+    <select id="findXiangMuZSyz" resultType="Integer" flushCache="true" useCache="false">
+        SELECT count(*) FROM bhz_cement_base WHERE shebei_no = #{sb} and DATE_FORMAT(product_datetime, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m');
+    </select>
+    <select id="findYuJingSyz" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        SELECT count(*) FROM bhz_cement_base WHERE shebei_no = #{sb} and over_level > #{grade} and DATE_FORMAT(product_datetime, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m');
+    </select>
+    <select id="findBiHeSyz" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        SELECT count(*) FROM bhz_cement_base WHERE shebei_no = #{sb} and over_level > #{grade} and overproof_status = 20 and DATE_FORMAT(product_datetime, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m');
+    </select>
+
+    <select id="findbyshebeilistzy" parameterType="list" resultType="java.lang.String" flushCache="true"
+            useCache="false">
+        select shebei_no from bhz_cement_base WHERE over_level > 0 and shebei_no in
+        <foreach collection="sbs" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+        and YEARWEEK(date_format(product_datetime,'%Y-%m-%d'),1) = YEARWEEK(now(),7) GROUP BY shebei_no ORDER BY
+        count(*) desc limit 5;
+    </select>
+    <select id="findbyshebeilistyz" parameterType="list" resultType="java.lang.String" flushCache="true"
+            useCache="false">
+        select shebei_no from bhz_cement_base WHERE over_level > 0 and shebei_no in
+        <foreach collection="sbs" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+        and DATE_FORMAT(product_datetime, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') GROUP BY shebei_no ORDER BY
+        count(*) desc limit 5;
+    </select>
+    <select id="selectRCJHJD" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true" useCache="false">
+        select * from bhz_cement_base where id>#{curid} and shebei_no in (${shebeilist}) and project_name like "%曹宅互通%" limit 30
+    </select>
+    <select id="selectBHZUnifiedProcess" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true"
+            useCache="false">
+        select *
+        from bhz_cement_base
+        where id>#{curid}
+        and over_level > 0
+        AND alertstate = 1
+        <if test="shebeilist != null">
+            AND shebei_no in
+            <foreach collection="shebeilist" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        limit 10
+    </select>
+    <select id="selectSYSdepartId" resultType="java.util.Map">
+         select sectionid,projectid
+        from `sys_depart`
+        where org_code = #{sysOrgCode}
+    </select>
+    <select id="selectHntbhzListBySTFour" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true"
+            useCache="false">
+        select *
+        from bhz_cement_base
+        where id > #{curid}
+          and alertstate = #{i}
+          and  project_name like "%苏台四标%"
+          and shebei_no in (${shebeilist})
+        and product_datetime > date_sub(CURDATE(), interval 7 DAY)  limit 100
+
+    </select>
+    <select id="selectSCData" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true" useCache="false">
+        select *
+        from bhz_cement_base
+        where id > #{curid}
+        and shebei_no in (${shebeilist})
+        order by id asc limit 50
+    </select>
+    <select id="selectCaiLiaoUse" resultType="com.trtm.iot.hntbhz.vo.BhzCementTongJi" flushCache="true"
+            useCache="false">
+        select si.sbname as shebeiName,cd.materiale_name as cailiaoName,SUM(cd.reality_number) realUse,SUM(cd.theory_number) lilunUse
+        from bhz_cement_detail cd
+        inner join bhz_cement_base cb
+        on cb.batch_no=cd.batch_no
+		inner join shebei_info si
+		on cb.shebei_no = si.sbjno
+        where cb.shebei_no = #{shebeiNo}
+        and cb.product_datetime between #{start} and #{end}
+        group by cb.shebei_no,cd.materiale_name
+    </select>
+    <select id="getQddj" resultType="map" flushCache="true" useCache="false">
+        SELECT DISTINCT bc.strength_rank AS strengthRank
+        FROM bhz_cement_base bc
+        INNER JOIN shebei_info si
+        ON bc.shebei_no = si.sbjno
+        WHERE si.sys_org_code LIKE concat(#{sysDepartOrgcode},"%")
+    </select>
+
+    <select id="selecerenwudanpsgx" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true" useCache="false">
+        SELECT
+        shebei_no,sum(estimate_number) estimate_number
+        FROM
+        bhz_cement_base
+        where
+        <if test="productDatetime_begin!=null">
+            product_datetime between #{productDatetime_begin}
+        </if>
+        <if test="productDatetime_end!=null">
+            and #{productDatetime_end}
+        </if>
+        <if test="strings!=null">
+           and shebei_no in
+            <foreach collection="strings" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        GROUP BY
+        shebei_no
+        ORDER BY
+        product_datetime DESC
+    </select>
+
+    <select id="selecerenw" resultType="java.lang.String" flushCache="true" useCache="false">
+        SELECT
+        batch_no
+        FROM
+        bhz_cement_base
+        where
+        <if test="shebeiNo!=null">
+            shebei_no = #{shebeiNo}
+        </if>
+        <if test="productDatetime_begin!=null">
+            and product_datetime between #{productDatetime_begin}
+        </if>
+        <if test="productDatetime_end!=null">
+            and #{productDatetime_end}
+        </if>
+
+    </select>
+
+    <select id="selecerenws" resultType="java.lang.String" flushCache="true" useCache="false">
+        SELECT
+        batch_no
+        FROM
+        bhz_cement_base
+        where
+        <if test="shebeiNolist!=null">
+            shebei_no in
+            <foreach collection="shebeiNolist" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="productDatetime_begin!=null">
+            and product_datetime between #{productDatetime_begin}
+        </if>
+        <if test="productDatetime_end!=null">
+            and #{productDatetime_end}
+        </if>
+
+    </select>
+
+    <select id="getLastPhb" resultType="java.lang.String" flushCache="true" useCache="false">
+        SELECT
+        formula_no
+        FROM
+        bhz_cement_base
+        where `formula_no` LIKE 'SPHB%'
+        <if test="shebeiNolist!=null">
+          and  shebei_no in
+            <foreach collection="shebeiNolist" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ORDER BY id DESC LIMIT 1
+
+    </select>
+
+    <select id="selectListjhjd" resultType="com.trtm.iot.hntbhz.entity.BhzCementBase" flushCache="true" useCache="false">
+        select *
+        from bhz_cement_base
+        where shebei_no in (${shebeiNo})
+          And (project_name like '%甬金衢上%' or poure_location like '%甬金衢上%')
+        AND issend = 0 limit 100
+    </select>
+</mapper>

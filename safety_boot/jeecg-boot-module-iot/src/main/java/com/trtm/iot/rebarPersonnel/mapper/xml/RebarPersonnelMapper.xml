@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.rebarPersonnel.mapper.RebarPersonnelMapper">
+
+    <select id="getLeadTeamByFactory" resultType="com.trtm.iot.rebarPersonnel.entity.RebarPersonnel">
+        SELECT * FROM rebar_personnel WHERE is_deleted = 0 AND team_leader_id in(
+            SELECT team_leader_id FROM rebar_factory_personnel WHERE factory_id = #{factoryId}
+        )
+    </select>
+</mapper>

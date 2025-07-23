@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.deviceTunnelEnvironmentdataReal.mapper.DeviceTunnelEnvironmentdataRealMapper">
+
+    <select id="selectList1"
+            resultType="com.trtm.iot.deviceTunnelEnvironmentdataReal.entity.DeviceTunnelEnvironmentdataReal">
+        select * from `device_tunnel_environmentdata_real` where id>#{curid} and shebeino in (${shebeilist}) limit 100;
+    </select>
+</mapper>

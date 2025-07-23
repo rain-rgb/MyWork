@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.tsyjzbStatistics.mapper.TSyjzbStatisticsMapper">
+
+    <select id="selectLimit" resultType="com.trtm.iot.tsyjzbStatistics.entity.TSyjzbStatistics" flushCache="true" useCache="false">
+        select * from t_syjzb_statistics
+        where syrq=#{stringnyr}
+        <if test="sbbh!=null and sbbh!='' ">
+            AND sbbh=#{sbbh}
+        </if>
+        <if test="sylx!=null and sylx!='' ">
+            AND sylx=#{sylx}
+        </if>
+        <if test="wtbh!=null and wtbh!='' ">
+            AND wtbh=#{wtbh}
+        </if>
+        <if test="sjqd!=null and sjqd!='' ">
+            AND sjqd=#{sjqd}
+        </if>
+
+    </select>
+</mapper>

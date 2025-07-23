@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.weiyan.mapper.WeiyanBaseMapper">
+
+    <resultMap id="BaseResultMap" type="com.trtm.iot.weiyan.vo.IotWallRock">
+        <result column="SECTION_NUM" jdbcType="VARCHAR" property="sectionNum"/>
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="BATCH_NO" property="batchNo" jdbcType="VARCHAR"/>
+        <result column="UNIT_NAME" property="unitName" jdbcType="VARCHAR"/>
+        <result column="SECTION_ID" property="sectionId" jdbcType="VARCHAR"/>
+        <result column="SHEBEI_NO" property="shebeiNo" jdbcType="VARCHAR"/>
+        <result column="JOB_LOCATION" property="jobLocation" jdbcType="VARCHAR"/>
+        <result column="SECTION_NAME" property="sectionName" jdbcType="VARCHAR"/>
+        <result column="SECTION_LENGTH" property="sectionLength" jdbcType="VARCHAR"/>
+        <result column="SECTION_WIDTH" property="sectionWidth" jdbcType="VARCHAR"/>
+        <result column="EXCAVATION_TYPE" property="excavationType" jdbcType="VARCHAR"/>
+        <result column="WALL_ROCK_LEVEL" property="wallRockLevel" jdbcType="VARCHAR"/>
+        <result column="MEASURING_POINT" property="measuringPoint" jdbcType="VARCHAR"/>
+        <result column="MEASURING_NUMBER" property="measuringNumber" jdbcType="VARCHAR"/>
+        <result column="ONCE_DEFORMATION" property="onceDeformation" jdbcType="INTEGER"/>
+        <result column="INTERVAL_TIME" property="intervalTime" jdbcType="INTEGER"/>
+        <result column="DEFORMATION_RATE" property="deformationRate" jdbcType="INTEGER"/>
+        <result column="ONCE_STATUS" property="onceStatus" jdbcType="INTEGER"/>
+        <result column="ACCUMULATED_STATUS" property="accumulatedStatus" jdbcType="INTEGER"/>
+        <result column="ACCUMULATED_DEFORMATION" property="accumulatedDeformation" jdbcType="INTEGER"/>
+        <result column="INTERVAL_FIRST_TIME" property="intervalFirstTime" jdbcType="INTEGER"/>
+        <result column="MEASURING_STATUS" property="measuringStatus" jdbcType="VARCHAR"/>
+
+
+        <result column="ALERTSTATE" property="alertstate" jdbcType="INTEGER"/>
+        <result column="IS_USE" property="isUse" jdbcType="INTEGER"/>
+        <result column="BIRTH_TIME" property="birthTime" jdbcType="TIMESTAMP"/>
+        <result column="UPLOAD_TIME" property="uploadTime" jdbcType="TIMESTAMP"/>
+        <result column="CALL_LEVEL" property="callLevel" jdbcType="INTEGER"/>
+        <result column="SUPERVISE_TYPE" property="superviseType" jdbcType="INTEGER"/>
+        <result column="PROBLEM_RECORD" property="problemRecord" jdbcType="VARCHAR" />
+        <result column="LONGNAME" property="longName" jdbcType="VARCHAR" />
+
+
+
+        <result column="HID" jdbcType="VARCHAR" property="hId"/>
+        <result column="PROBLEM_REASONS" jdbcType="VARCHAR" property="problemReasons"/>
+        <result column="HANDLE_WAY" jdbcType="VARCHAR" property="handleWay"/>
+        <result column="HANDLE_RESULT" jdbcType="VARCHAR" property="handleResult"/>
+        <result column="HANDLE_TIME" jdbcType="TIMESTAMP" property="handleTime"/>
+        <result column="HANDLE_PERSON" jdbcType="VARCHAR" property="handlePerson"/>
+        <result column="SUPERVISOR_APPROVAL" jdbcType="VARCHAR" property="supervisorApproval"/>
+        <result column="SUPERVISOR_RESULT" jdbcType="VARCHAR" property="supercisorResult"/>
+        <result column="SUPERVISOR_HANDLE_TIME" jdbcType="TIMESTAMP" property="supervisorHandleTime"/>
+        <result column="APPROVAL_PERSON" jdbcType="VARCHAR" property="approvalPerson"/>
+
+
+        <result column="ZHB_APPROVAL" property="zhbApproval" jdbcType="VARCHAR" />
+        <result column="ZHB_RESULT" property="zhbResult" jdbcType="VARCHAR" />
+        <result column="ZHB_HANDLE_TIME" property="zhbHandleTime" jdbcType="TIMESTAMP" />
+        <result column="ZHB_PERSON" property="zhbPerson" jdbcType="VARCHAR" />
+        <result column="ZHB_OPINION" property="zhbOpinion" jdbcType="VARCHAR" />
+        <result column="REMARK" jdbcType="VARCHAR" property="remark"/>
+        <result column="FILE_PATH" jdbcType="VARCHAR" property="filePath"/>
+        <result column="DETECTION_REASONS" jdbcType="VARCHAR" property="detectionReasons"/>
+        <result column="DETECTION_TIME" jdbcType="TIMESTAMP" property="detectionTime"/>
+        <result column="DETECTION_PERSON" jdbcType="VARCHAR" property="detectionPerson"/>
+
+        <result column="OVERPROOF_STATUS" jdbcType="INTEGER" property="overProofStatus"/>
+        <result column="QUANTITYALL" property="quantityall" jdbcType="INTEGER"/>
+        <result column="QUANTITY" property="quantity" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="BaseResultMap2" type="com.trtm.iot.weiyan.vo.IotWeiYanNormCfg" >
+        <id column="ID" property="id" jdbcType="INTEGER" />
+        <result column="WALL_ROCK_LEVEL" property="wallRockLevel" jdbcType="INTEGER" />
+        <result column="SUPERVISE_TYPE" property="superviseType" jdbcType="VARCHAR" />
+        <result column="DETECTION_TYPE" property="detectionType" jdbcType="INTEGER" />
+        <result column="CALL_LEVEL" property="callLevel" jdbcType="INTEGER" />
+        <result column="UP_NORM" property="upNorm" jdbcType="DECIMAL" />
+        <result column="DOWN_NORM" property="downNorm" jdbcType="DECIMAL" />
+        <result column="SUCCESSION_DAY" property="successionDay" jdbcType="INTEGER" />
+        <result column="IS_SUCCESSION_CALL" property="isSuccessionCall" jdbcType="INTEGER" />
+        <result column="BIRTH_TIME" property="birthTime" jdbcType="VARCHAR" />
+        <result column="UPLOAD_TIME" property="uploadTime" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="BaseResultMap3" type="com.trtm.iot.weiyan.vo.IotWallRockTemporary" >
+        <result column="SHEBEI_NO" property="shebeiNo" jdbcType="VARCHAR" />
+        <result column="JOB_LOCATION" property="jobLocation" jdbcType="VARCHAR" />
+        <result column="SECTION_NAME" property="sectionName" jdbcType="VARCHAR" />
+        <result column="SECTION_LENGTH" property="sectionLength" jdbcType="VARCHAR" />
+        <result column="SECTION_WIDTH" property="sectionWidth" jdbcType="VARCHAR" />
+        <result column="EXCAVATION_TYPE" property="excavationType" jdbcType="VARCHAR" />
+        <result column="WALL_ROCK_LEVEL" property="wallRockLevel" jdbcType="VARCHAR" />
+        <result column="MEASURING_POINT" property="measuringPoint" jdbcType="VARCHAR" />
+        <result column="SUCCESSION_DAY" property="successionDay" jdbcType="INTEGER" />
+    </resultMap>
+    <sql id="Base_WallRock_List">
+        SELECT  a.*
+        FROM weiyan_base a  WHERE 1=1
+    </sql>
+    <select id="selectWallRockOne" resultMap="BaseResultMap" parameterType="com.trtm.iot.weiyan.vo.IotWallRock">
+        <include refid="Base_WallRock_List"/>
+        <if test="jobLocation != null and  jobLocation !=''"> and a.JOB_LOCATION=#{jobLocation,jdbcType=VARCHAR}</if>
+        <if test="sectionName != null and  sectionName !=''">and a.SECTION_NAME=#{sectionName,jdbcType=VARCHAR}</if>
+        <if test="measuringPoint != null and  measuringPoint !=''">
+            and a.MEASURING_POINT=#{measuringPoint,jdbcType=VARCHAR}
+        </if>
+        <if test="shebeiNo != null and  shebeiNo !=''">
+            and a.SHEBEI_NO=#{shebeiNo,jdbcType=VARCHAR}
+        </if>
+        <if test="alertstate != null ">
+            and  a.ALERTSTATE=#{alertstate,jdbcType=INTEGER}
+        </if>
+
+        <if test="birthTime != null and lastOrNextData==0 ">
+            and   <![CDATA[a.BIRTH_TIME =( SELECT MAX(a.BIRTH_TIME )
+        FROM weiyan_base a  WHERE
+          a.BIRTH_TIME<#{birthTime,jdbcType=TIMESTAMP} and a.JOB_LOCATION=#{jobLocation,jdbcType=VARCHAR}
+         and a.SECTION_NAME=#{sectionName,jdbcType=VARCHAR}
+         and a.MEASURING_POINT=#{measuringPoint,jdbcType=VARCHAR}  )
+         ]]>
+        </if>
+        <if test="birthTime != null and lastOrNextData==1 ">
+            and   <![CDATA[a.BIRTH_TIME =( SELECT MIN(a.BIRTH_TIME )
+        FROM weiyan_base a  WHERE
+      a.BIRTH_TIME<#{birthTime,jdbcType=TIMESTAMP} and a.JOB_LOCATION=#{jobLocation,jdbcType=VARCHAR}
+         and a.SECTION_NAME=#{sectionName,jdbcType=VARCHAR}
+         and a.MEASURING_POINT=#{measuringPoint,jdbcType=VARCHAR}  )
+             ]]>
+        </if>
+        <if test="order==0">
+            ORDER BY a.BIRTH_TIME  asc
+        </if>
+        <if test="order==1">
+            ORDER BY a.BIRTH_TIME  DESC
+        </if>
+
+    </select>
+    <update id="updateById" parameterType="com.trtm.iot.weiyan.vo.IotWallRock"  >
+        update weiyan_base
+        <set >
+
+
+            <if test="onceDeformation != null" >
+                ONCE_DEFORMATION = #{onceDeformation,jdbcType=INTEGER},
+            </if>
+            <if test="intervalTime != null" >
+                INTERVAL_TIME = #{intervalTime,jdbcType=INTEGER},
+            </if>
+            <if test="deformationRate != null" >
+                DEFORMATION_RATE = #{deformationRate,jdbcType=INTEGER},
+            </if>
+            <if test="onceStatus != null" >
+                ONCE_STATUS = #{onceStatus,jdbcType=INTEGER},
+            </if>
+            <if test="accumulatedStatus != null" >
+                ACCUMULATED_STATUS = #{accumulatedStatus,jdbcType=INTEGER},
+            </if>
+            <if test="accumulatedDeformation != null" >
+                ACCUMULATED_DEFORMATION = #{accumulatedDeformation,jdbcType=INTEGER},
+            </if>
+            <if test="alertstate != null" >
+                ALERTSTATE = #{alertstate,jdbcType=INTEGER},
+            </if>
+            <if test="birthTime != null" >
+                BIRTH_TIME = #{birthTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="uploadTime != null" >
+                UPLOAD_TIME = #{uploadTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isUse != null" >
+                IS_USE = #{isUse,jdbcType=INTEGER},
+            </if>
+            <if test="callLevel != null" >
+                CALL_LEVEL = #{callLevel,jdbcType=INTEGER},
+            </if>
+            <if test="callSum != null" >
+                CALL_SUM = #{callSum,jdbcType=INTEGER},
+            </if>
+            <if test="superviseType != null" >
+                SUPERVISE_TYPE = #{superviseType,jdbcType=INTEGER},
+            </if>
+            <if test="problemRecord != null" >
+                PROBLEM_RECORD = #{problemRecord,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <where>
+            <trim prefixOverrides="and">
+                <if test="id != null" >
+                    and   ID = #{id,jdbcType=VARCHAR}
+                </if>
+                <if test=" batchNo != null" >
+                    and   BATCH_NO=#{batchNo,jdbcType=VARCHAR}
+                </if>
+            </trim>
+
+        </where>
+    </update>
+    <sql id="Base_Column_List" >
+        ID, WALL_ROCK_LEVEL, SUPERVISE_TYPE, DETECTION_TYPE, CALL_LEVEL, UP_NORM, DOWN_NORM,
+    SUCCESSION_DAY, IS_SUCCESSION_CALL, BIRTH_TIME, UPLOAD_TIME
+    </sql>
+    <select id="select" resultMap="BaseResultMap2" parameterType="com.trtm.iot.weiyan.vo.IotWeiYanNormCfg" >
+        select
+        <include refid="Base_Column_List" />
+        from IOT_WEIYAN_NORM_CFG
+        <where>
+            <trim suffixOverrides="and">
+                <if test="id!=null and id !=''">
+                    "ID" = #{id,jdbcType=INTEGER}  and
+                </if>
+                <if test="wallRockLevel!=null and wallRockLevel !=''">
+                    "WALL_ROCK_LEVEL" = #{wallRockLevel,jdbcType=INTEGER}  and
+                </if>
+                <if test="superviseType!=null and superviseType !=''">
+                    "SUPERVISE_TYPE" = #{superviseType,jdbcType=VARCHAR}  and
+                </if>
+                <if test="detectionType!=null and detectionType !=''">
+                    "DETECTION_TYPE" = #{detectionType,jdbcType=INTEGER}  and
+                </if>
+                <if test="callLevel!=null and callLevel !=''">
+                    "CALL_LEVEL" = #{callLevel,jdbcType=INTEGER}  and
+                </if>
+            </trim>
+        </where>
+        order by "WALL_ROCK_LEVEL","SUPERVISE_TYPE","DETECTION_TYPE"  asc
+    </select>
+    <sql id="Base_Column_List2" >
+        select  SHEBEI_NO, JOB_LOCATION, SECTION_NAME, SECTION_LENGTH, SECTION_WIDTH, EXCAVATION_TYPE,
+                WALL_ROCK_LEVEL, MEASURING_POINT, SUCCESSION_DAY
+        from IOT_WEIYAN_BASE_TEMPORARY
+    </sql>
+    <select id="select2" resultMap="BaseResultMap3" parameterType="com.trtm.iot.weiyan.vo.IotWallRockTemporary">
+        <include refid="Base_Column_List2"/>
+        <where>
+            <trim prefixOverrides="and ">
+                <if test="shebeiNo != null "> and  SHEBEI_NO = #{shebeiNo,jdbcType=VARCHAR} </if>
+                <if test="jobLocation != null "> and JOB_LOCATION = #{jobLocation,jdbcType=VARCHAR} </if>
+                <if test="sectionName != null "> and SECTION_NAME = #{sectionName,jdbcType=VARCHAR} </if>
+                <if test="sectionLength != null "> and SECTION_LENGTH = #{sectionLength,jdbcType=VARCHAR} </if>
+                <if test="sectionWidth != null ">and SECTION_WIDTH = #{sectionWidth,jdbcType=VARCHAR} </if>
+                <if test="excavationType != null ">  and EXCAVATION_TYPE = #{excavationType,jdbcType=VARCHAR} </if>
+                <if test="wallRockLevel != null "> and WALL_ROCK_LEVEL = #{wallRockLevel,jdbcType=VARCHAR} </if>
+                <if test="measuringPoint != null ">and  MEASURING_POINT = #{measuringPoint,jdbcType=VARCHAR}</if>
+            </trim>
+        </where>
+
+    </select>
+    <insert id="insert1" parameterType="com.trtm.iot.weiyan.vo.IotWallRockTemporary" >
+        insert into IOT_WEIYAN_BASE_TEMPORARY (SHEBEI_NO, JOB_LOCATION, SECTION_NAME,
+                                               SECTION_LENGTH, SECTION_WIDTH, EXCAVATION_TYPE,
+                                               WALL_ROCK_LEVEL, MEASURING_POINT, SUCCESSION_DAY
+        )
+        values (#{shebeiNo,jdbcType=VARCHAR}, #{jobLocation,jdbcType=VARCHAR}, #{sectionName,jdbcType=VARCHAR},
+                #{sectionLength,jdbcType=VARCHAR}, #{sectionWidth,jdbcType=VARCHAR}, #{excavationType,jdbcType=VARCHAR},
+                #{wallRockLevel,jdbcType=VARCHAR}, #{measuringPoint,jdbcType=VARCHAR}, #{successionDay,jdbcType=INTEGER}
+               )
+    </insert>
+
+    <update id="update" parameterType="map" >
+        update IOT_WEIYAN_BASE_TEMPORARY
+        set
+            SUCCESSION_DAY = #{successionDay,jdbcType=INTEGER}
+        where SHEBEI_NO = #{shebeiNo,jdbcType=VARCHAR}
+          and JOB_LOCATION = #{jobLocation,jdbcType=VARCHAR}
+          and SECTION_NAME = #{sectionName,jdbcType=VARCHAR}
+          and SECTION_LENGTH = #{sectionLength,jdbcType=VARCHAR}
+          and SECTION_WIDTH = #{sectionWidth,jdbcType=VARCHAR}
+          and EXCAVATION_TYPE = #{excavationType,jdbcType=VARCHAR}
+          and WALL_ROCK_LEVEL = #{wallRockLevel,jdbcType=VARCHAR}
+          and  MEASURING_POINT = #{measuringPoint,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.yclud.mapper.YclUsageDetailMapper">
+
+    <select id="getDepartProject" resultType="java.util.Map">
+        select * from sys_depart_project where org_code=#{sysOrgCode}
+    </select>
+    <select id="getYclUsa" resultType="java.util.Map">
+        SELECT t.jinchangshijian,t.guigexinghao,t.pici,ROUND(u.uses,2) uses,u.storage_name name,
+               (CASE WHEN t.jianyanstate=0 THEN '未检验' WHEN t.jianyanstate=1 THEN '合格' WHEN t.jianyanstate=2 THEN '不合格' ELSE '检验中' END) jianyanstate
+        FROM ycl_usage_detail u
+        JOIN wztaizhang t ON u.inspection_lot_number=t.pici
+        WHERE u.treeid = #{treeId} <if test="cLs != null and cLs.size() &gt; 0">and u.cailiaono in
+        <foreach collection="cLs" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach></if>
+    </select>
+    <select id="getInspection" resultType="java.lang.String">
+        select DISTINCT inspection_lot_number from ycl_usage_detail where inspection_lot_number is not null <if test="treeId != null">and treeid=#{treeId}</if>
+        <if test="orgCode != null">and sys_org_code like concat(#{orgCode},'%')</if>
+        <if test="cLs != null and cLs.size() &gt; 0">and cailiaono in
+            <foreach collection="cLs" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach></if>
+    </select>
+
+    <select id="getYclSy" resultType="java.util.Map">
+        SELECT u.storage_name cailiaoName, u.guigexinghao,u.inspection_lot_number pici, ROUND(u.uses,2) uses, m.guobangleibie,
+            a.jinchangshijian, a.gongyingshangName, a.test_time jianyanshijian, a.conclusion, a.test_status teststatus, a.report
+        FROM ycl_usage_detail u JOIN ( SELECT w.cailiaoNo, w.guigexinghao, w.pici, w.jinchangshijian, w.gongyingshangdanweibianma, g.gongyingshangName,
+                    w.LCbianhao, y.test_time, y.conclusion, y.test_status, y.report
+                FROM wztaizhang w
+                       left JOIN ycl_gongyingshang g ON w.gongyingshangdanweibianma = g.guid
+                       left JOIN ycl_test_detail y ON w.pici = y.inspection_lot_number
+                ) a ON u.inspection_lot_number = a.pici LEFT JOIN wzyclchuchanggb_man m ON u.dosing_order_number = m.guid WHERE 1=1
+        <if test="treeId != null">and u.treeid = #{treeId}</if>
+        <if test="cailiaoNo != null and cailiaoNo.size() &gt; 0">and a.cailiaoNo in <foreach collection="cailiaoNos" item="item" index="index" open="(" separator="," close=")">#{item}</foreach></if>
+        <if test="guigexinghao != null">and u.guigexinghao=#{guigexinghao}</if>
+        <if test="pici != null">and u.inspection_lot_number=#{pici}</if>
+    </select>
+    <select id="getWbsIdByPiCi" resultType="java.lang.String">
+        select treeid from ycl_usage_detail where 1=1 <if test="pici != null">and inspection_lot_number=#{pici}</if>
+        <if test="orgCode != null">and sys_org_code like concat(#{orgCode}, '%')</if>
+    </select>
+
+    <select id="getYclSys" resultType="java.util.Map">
+        SELECT u.storage_name cailiaoName,u.guigexinghao,u.inspection_lot_number pici,ROUND(SUM(u.uses),2) uses,a.jinchangshijian,a.gongyingshangName, m.guobangleibie,
+            date_format(a.test_time, '%Y-%m-%d %h:%m:%s') jianyanshijian,a.conclusion,
+            (CASE WHEN a.test_status=0 THEN '未检验' WHEN a.test_status=1 THEN '合格' WHEN a.test_status=2 THEN '不合格' ELSE '检验中' END) teststatus, a.report
+        FROM ycl_usage_detail u
+                left	JOIN (
+                SELECT w.guigexinghao,w.pici,w.jinchangshijian,w.gongyingshangdanweibianma,g.gongyingshangName,w.LCbianhao,y.test_time,y.conclusion,y.test_status,y.report
+                FROM wztaizhang w
+                        left	JOIN ycl_gongyingshang g ON w.gongyingshangdanweibianma = g.guid
+                        left	JOIN ycl_test_detail y ON w.pici = y.inspection_lot_number
+            ) a ON u.inspection_lot_number = a.pici LEFT JOIN wzyclchuchanggb_man m ON u.dosing_order_number = m.guid WHERE 1=1
+        <if test="treeId != null">and u.treeid = #{treeId}</if>
+        <if test="list != null and list.size() &gt; 0">and u.cailiaono in <foreach collection="list" item="item" index="index" open="(" separator="," close=")">#{item}</foreach></if>
+        <if test="guigexinghao != null">and u.guigexinghao=#{guigexinghao}</if>
+        <if test="pici != null">and u.inspection_lot_number=#{pici}</if>
+        <if test="orgCode != null and orgCode !='' ">and u.sys_org_code like concat(#{orgCode}, '%')</if>
+        <if test="startTime != null and  startTime !='' ">and a.jinchangshijian &gt;= #{startTime}</if>
+        <if test="endTime != null and  endTime !=''">and a.jinchangshijian &lt;= #{endTime}</if>
+        GROUP BY u.inspection_lot_number
+    </select>
+
+    <select id="getDetailswbs" resultType="com.trtm.iot.yclud.entity.DetailVo">
+        SELECT w.guigexinghao,w.cailiaoNo,w.jingzhongT,w.danwei,w.pici,w.jinchangshijian,w.gongyingshangdanweibianma,w.nodetype nodeType,s.item_text nodeTypeName,
+        date_format(y.test_time, '%Y-%m-%d %h:%m:%s') jianyanshijian,y.conclusion,
+        (CASE WHEN y.test_status=0 THEN '未检验' WHEN y.test_status=1 THEN '合格' WHEN y.test_status=2 THEN '不合格' ELSE '检验中' END) teststatus,y.report
+        FROM wztaizhang w LEFT JOIN (select * from  ycl_test_detail  group by inspection_lot_number) y ON w.pici = y.inspection_lot_number
+        LEFT JOIN (select * from sys_dict_item where dict_id='1390572018679844865') s ON w.nodetype = s.item_value
+        WHERE  CONVERT(w.nodeType, UNSIGNED) &lt; 100
+        <!--<if test="treeId != null">and u.treeid = #{treeId}</if>-->
+        <if test="list != null and list.size() &gt; 0">and w.cailiaono in <foreach collection="list" item="item" index="index" open="(" separator="," close=")">#{item}</foreach></if>
+        <if test="guigexinghao != null">and w.guigexinghao=#{guigexinghao}</if>
+        <if test="pici != null">and w.pici=#{pici}</if>
+        <if test="startTime != null and  startTime !='' ">and w.jinchangshijian &gt;= #{startTime}</if>
+        <if test="endTime != null and  endTime !=''">and w.jinchangshijian &lt;= #{endTime}</if>
+        <if test="nodeType != null">and w.nodetype=#{nodeType}</if>  AND EXISTS (  SELECT 1 FROM ycl_usage_detail ud  WHERE w.pici = ud.inspection_lot_number <if test="orgCode != null and orgCode !='' "> and ud.code like concat(#{orgCode}, '%') </if> )
+    </select>
+    <select id="getDetails" resultType="com.trtm.iot.yclud.entity.DetailVo">
+        SELECT w.guigexinghao,w.cailiaoNo,w.jingzhongT,w.danwei,w.pici,w.jinchangshijian,w.gongyingshangdanweibianma,w.nodetype nodeType,s.item_text nodeTypeName,
+             date_format(y.test_time, '%Y-%m-%d %h:%m:%s') jianyanshijian,y.conclusion,
+               (CASE WHEN y.test_status=0 THEN '未检验' WHEN y.test_status=1 THEN '合格' WHEN y.test_status=2 THEN '不合格' ELSE '检验中' END) teststatus,y.report
+        FROM wztaizhang w LEFT JOIN (select * from  ycl_test_detail  group by inspection_lot_number) y ON w.pici = y.inspection_lot_number
+        LEFT JOIN (select * from sys_dict_item where dict_id='1390572018679844865') s ON w.nodetype = s.item_value
+        WHERE  CONVERT(w.nodeType, UNSIGNED) &lt; 100
+        <!--<if test="treeId != null">and u.treeid = #{treeId}</if>-->
+        <if test="list != null and list.size() &gt; 0">and w.cailiaono in <foreach collection="list" item="item" index="index" open="(" separator="," close=")">#{item}</foreach></if>
+        <if test="guigexinghao != null">and w.guigexinghao=#{guigexinghao}</if>
+        <if test="pici != null">and w.pici=#{pici}</if>
+        <if test="orgCode != null and orgCode !='' ">and w.sys_org_code like concat(#{orgCode}, '%')</if>
+        <if test="startTime != null and  startTime !='' ">and w.jinchangshijian &gt;= #{startTime}</if>
+        <if test="endTime != null and  endTime !=''">and w.jinchangshijian &lt;= #{endTime}</if>
+        <if test="nodeType != null">and w.nodetype=#{nodeType}</if>  AND EXISTS (  SELECT 1 FROM ycl_usage_detail ud  WHERE w.pici = ud.inspection_lot_number)
+    </select>
+    <select id="getDetailsLc" resultType="com.trtm.iot.yclud.entity.DetailVo">
+        SELECT w.guigexinghao,w.cailiaoNo,w.jingzhongT,w.danwei,w.pici,w.jinchangshijian,w.gongyingshangdanweibianma,w.nodetype nodeType,s.item_text nodeTypeName,
+        date_format(y.test_time, '%Y-%m-%d %h:%m:%s') jianyanshijian,y.conclusion,
+        (CASE WHEN y.test_status=0 THEN '未检验' WHEN y.test_status=1 THEN '合格' WHEN y.test_status=2 THEN '不合格' ELSE '检验中' END) teststatus,y.report
+        FROM wztaizhang w LEFT JOIN (select * from  ycl_test_detail  group by inspection_lot_number) y ON w.pici = y.inspection_lot_number
+        LEFT JOIN (select * from sys_dict_item where dict_id='1390572018679844865') s ON w.nodetype = s.item_value
+        WHERE  CONVERT(w.nodeType, UNSIGNED) &lt; 100
+        <!--<if test="treeId != null">and u.treeid = #{treeId}</if>-->
+        <if test="list != null and list.size() &gt; 0">and w.cailiaono in <foreach collection="list" item="item" index="index" open="(" separator="," close=")">#{item}</foreach></if>
+        <if test="guigexinghao != null">and w.guigexinghao=#{guigexinghao}</if>
+        <if test="pici != null">and w.pici=#{pici}</if>
+        <if test="orgCode != null and orgCode !='' ">and w.sys_org_code like concat(#{orgCode}, '%')</if>
+        <if test="startTime != null and  startTime !='' ">and w.jinchangshijian &gt;= #{startTime}</if>
+        <if test="endTime != null and  endTime !=''">and w.jinchangshijian &lt;= #{endTime}</if>
+        <if test="nodeType != null">and w.nodetype=#{nodeType}</if>
+        AND EXISTS ( SELECT 1 FROM ycl_usage_detail ud
+        WHERE w.pici = ud.inspection_lot_number
+        )
+    </select>
+
+    <select id="getNodeType" resultType="com.trtm.iot.yclud.entity.NodeTypePc">
+        select m.item_text nodeTypeName, item_value nodeType from sys_dict_item m join sys_dict t on m.dict_id=t.id where t.dict_code='nodeType' and m.item_value &lt;= 100
+    </select>
+    <select id="getNodeType1" resultType="com.trtm.iot.yclud.entity.NodeTypePc">
+        select m.item_text nodeTypeName, item_value nodeType from sys_dict_item m join sys_dict t on m.dict_id=t.id where t.dict_code='nodeType' and m.item_value &gt; 100
+    </select>
+    <select id="getNodeTypePG" resultType="com.trtm.iot.yclud.entity.NodeTypePcGg">
+        select m.item_text nodeTypeName, item_value nodeType from sys_dict_item m join sys_dict t on m.dict_id=t.id where t.dict_code='nodeType' and m.item_value &lt;= 100
+    </select>
+    <select id="getNodeType1PG" resultType="com.trtm.iot.yclud.entity.NodeTypePcGg">
+        select m.item_text nodeTypeName, item_value nodeType from sys_dict_item m join sys_dict t on m.dict_id=t.id where t.dict_code='nodeType' and m.item_value &gt; 100
+    </select>
+    <select id="getOrgCode" resultType="java.util.Map">
+        select id,org_code orgCode from sys_depart_project where treeid=#{treeId}
+    </select>
+    <select id="getPc" resultType="java.lang.String">
+        select inspection_lot_number from ycl_usage_detail where code like concat(#{orgCode},'%')
+    </select>
+    <select id="getByGuiGeXH" resultType="java.lang.String">
+        select inspection_lot_number from ycl_usage_detail where guigexinghao=#{guiGeXingHao} and code like concat(#{orgCode},'%')
+    </select>
+    <select id="getcailiaono" resultType="java.lang.String">
+        select cailiaoNo from ycl_cailiaodict where nodeType=#{nodeType}
+    </select>
+    <select id="getPiCi" resultType="java.util.Map">
+        select inspection_lot_number pici, treeid pcindexId from ycl_usage_detail where cailiaono in <foreach collection="cailiaonos" item="item" index="index" open="(" separator="," close=")">
+        #{item}
+    </foreach> and code like concat(#{orgCode},'%')
+    </select>
+    <select id="getDetails1" resultType="com.trtm.iot.yclud.entity.DetailVo">
+        SELECT w.guigexinghao,w.cailiaoNo,w.jingzhongT,w.danwei,w.pici,w.jinchangshijian,w.gongyingshangdanweibianma,w.nodetype nodeType,s.item_text nodeTypeName,
+        date_format(y.test_time, '%Y-%m-%d %h:%m:%s') jianyanshijian,y.conclusion,
+        (CASE WHEN y.test_status=0 THEN '未检验' WHEN y.test_status=1 THEN '合格' WHEN y.test_status=2 THEN '不合格' ELSE '检验中' END) teststatus,y.report
+        FROM wztaizhang w LEFT JOIN (select * from  ycl_test_detail  group by inspection_lot_number) y ON w.pici = y.inspection_lot_number
+        LEFT JOIN (select * from sys_dict_item where dict_id='1390572018679844865') s ON w.nodetype = s.item_value
+        WHERE CONVERT(w.nodeType, UNSIGNED) &gt;= 100
+        <!--<if test="treeId != null">and u.treeid = #{treeId}</if>-->
+        <if test="list != null and list.size() &gt; 0">and w.cailiaono in <foreach collection="list" item="item" index="index" open="(" separator="," close=")">#{item}</foreach></if>
+        <if test="guigexinghao != null">and w.guigexinghao=#{guigexinghao}</if>
+        <if test="pici != null">and w.pici=#{pici}</if>
+        <if test="orgCode != null and orgCode !='' ">and w.sys_org_code like concat(#{orgCode}, '%')</if>
+        <if test="startTime != null and  startTime !='' ">and w.jinchangshijian &gt;= #{startTime}</if>
+        <if test="endTime != null and  endTime !=''">and w.jinchangshijian &lt;= #{endTime}</if>
+        <if test="nodeType != null">and w.nodetype=#{nodeType}</if> AND EXISTS (  SELECT 1 FROM ycl_usage_detail ud  WHERE w.pici = ud.inspection_lot_number)
+    </select>
+
+    <select id="getDetails1wbs" resultType="com.trtm.iot.yclud.entity.DetailVo">
+        SELECT w.guigexinghao,w.cailiaoNo,w.jingzhongT,w.danwei,w.pici,w.jinchangshijian,w.gongyingshangdanweibianma,w.nodetype nodeType,s.item_text nodeTypeName,
+        date_format(y.test_time, '%Y-%m-%d %h:%m:%s') jianyanshijian,y.conclusion,
+        (CASE WHEN y.test_status=0 THEN '未检验' WHEN y.test_status=1 THEN '合格' WHEN y.test_status=2 THEN '不合格' ELSE '检验中' END) teststatus,y.report
+        FROM wztaizhang w LEFT JOIN (select * from  ycl_test_detail  group by inspection_lot_number) y ON w.pici = y.inspection_lot_number
+        LEFT JOIN (select * from sys_dict_item where dict_id='1390572018679844865') s ON w.nodetype = s.item_value
+        WHERE CONVERT(w.nodeType, UNSIGNED) &gt;= 100
+        <!--<if test="treeId != null">and u.treeid = #{treeId}</if>-->
+        <if test="list != null and list.size() &gt; 0">and w.cailiaono in <foreach collection="list" item="item" index="index" open="(" separator="," close=")">#{item}</foreach></if>
+        <if test="guigexinghao != null">and w.guigexinghao=#{guigexinghao}</if>
+        <if test="pici != null">and w.pici=#{pici}</if>
+        <if test="startTime != null and  startTime !='' ">and w.jinchangshijian &gt;= #{startTime}</if>
+        <if test="endTime != null and  endTime !=''">and w.jinchangshijian &lt;= #{endTime}</if>
+        <if test="nodeType != null">and w.nodetype=#{nodeType}</if> AND EXISTS (  SELECT 1 FROM ycl_usage_detail ud  WHERE w.pici = ud.inspection_lot_number  <if test="orgCode != null and orgCode !='' ">and ud.code like concat(#{orgCode}, '%')</if> )
+    </select>
+
+    <select id="getDetails1Lc" resultType="com.trtm.iot.yclud.entity.DetailVo">
+        SELECT w.guigexinghao,w.cailiaoNo,w.jingzhongT,w.danwei,w.pici,w.jinchangshijian,w.gongyingshangdanweibianma,w.nodetype nodeType,s.item_text nodeTypeName,
+        date_format(y.test_time, '%Y-%m-%d %h:%m:%s') jianyanshijian,y.conclusion,
+        (CASE WHEN y.test_status=0 THEN '未检验' WHEN y.test_status=1 THEN '合格' WHEN y.test_status=2 THEN '不合格' ELSE '检验中' END) teststatus,y.report
+        FROM wztaizhang w LEFT JOIN (select * from  ycl_test_detail  group by inspection_lot_number) y ON w.pici = y.inspection_lot_number
+        LEFT JOIN (select * from sys_dict_item where dict_id='1390572018679844865') s ON w.nodetype = s.item_value
+        WHERE CONVERT(w.nodeType, UNSIGNED) &gt;= 100
+        <!--<if test="treeId != null">and u.treeid = #{treeId}</if>-->
+        <if test="list != null and list.size() &gt; 0">and w.cailiaono in <foreach collection="list" item="item" index="index" open="(" separator="," close=")">#{item}</foreach></if>
+        <if test="guigexinghao != null">and w.guigexinghao=#{guigexinghao}</if>
+        <if test="pici != null">and w.pici=#{pici}</if>
+        <if test="orgCode != null and orgCode !='' ">and w.sys_org_code like concat(#{orgCode}, '%')</if>
+        <if test="startTime != null and  startTime !='' ">and w.jinchangshijian &gt;= #{startTime}</if>
+        <if test="endTime != null and  endTime !=''">and w.jinchangshijian &lt;= #{endTime}</if>
+        <if test="nodeType != null">and w.nodetype=#{nodeType}</if> AND EXISTS (  SELECT 1 FROM ycl_usage_detail ud  WHERE w.pici = ud.inspection_lot_number)
+    </select>
+
+
+
+    <select id="queryPiCi" resultType="java.util.Map">
+        select pici from wztaizhang where nodetype = #{nodeType} and sys_org_code like concat(#{orgCode}, '%')
+    </select>
+
+    <select id="queryNodeTypeLt100Gg" resultType="com.trtm.iot.yclud.entity.NodeTypePcGg">
+        select w.nodetype nodeType, s.item_text nodeTypeName
+        from wztaizhang w
+        join (select * from sys_dict_item where dict_id='1390572018679844865') s
+        on w.nodetype=s.item_value where sys_org_code like concat(#{orgCode}, '%') and CONVERT(w.nodeType, UNSIGNED) &lt;= 100 group by w.nodetype
+    </select>
+    <select id="queryNodeTypeGt100Gg" resultType="com.trtm.iot.yclud.entity.NodeTypePcGg">
+        select w.nodetype nodeType, s.item_text nodeTypeName
+        from wztaizhang w
+        join (select * from sys_dict_item where dict_id='1390572018679844865') s
+        on w.nodetype=s.item_value where sys_org_code like concat(#{orgCode}, '%') and CONVERT(w.nodeType, UNSIGNED) &gt;= 100 group by w.nodetype
+    </select>
+
+    <select id="queryNodeTypeLt100Ggwbs" resultType="com.trtm.iot.yclud.entity.NodeTypePcGg">
+        select w.nodetype nodeType, s.item_text nodeTypeName
+        from wztaizhang w
+                 join (select * from sys_dict_item where dict_id='1390572018679844865') s
+                      on w.nodetype=s.item_value where  pici IN ( SELECT DISTINCT inspection_lot_number FROM `ycl_usage_detail` WHERE inspection_lot_number != '' AND `code` LIKE concat(#{orgCode}, '%')  )  and CONVERT(w.nodeType, UNSIGNED) &lt;= 100 group by w.nodetype
+    </select>
+    <select id="queryNodeTypeGt100Ggwbs" resultType="com.trtm.iot.yclud.entity.NodeTypePcGg">
+        select w.nodetype nodeType, s.item_text nodeTypeName
+        from wztaizhang w
+                 join (select * from sys_dict_item where dict_id='1390572018679844865') s
+                      on w.nodetype=s.item_value where  pici IN ( SELECT DISTINCT inspection_lot_number FROM `ycl_usage_detail` WHERE inspection_lot_number != '' AND `code` LIKE concat(#{orgCode}, '%')  )  and CONVERT(w.nodeType, UNSIGNED) &gt;= 100 group by w.nodetype
+    </select>
+
+    <select id="queryGg" resultType="com.trtm.iot.yclud.entity.GuiGeXingHao">
+        select DISTINCT guigexinghao GuiGeXingHao from wztaizhang where nodetype = #{nodeType} and sys_org_code like concat(#{orgCode}, '%')
+    </select>
+    <select id="queryPiCiGe" resultType="java.lang.String">
+        select DISTINCT pici from wztaizhang where nodetype = #{nodeType} and sys_org_code like concat(#{orgCode}, '%') and guigexinghao=#{xingHao}
+    </select>
+    <select id="queryGgwbs" resultType="com.trtm.iot.yclud.entity.GuiGeXingHao">
+        select DISTINCT guigexinghao GuiGeXingHao from wztaizhang where nodetype = #{nodeType} and pici IN ( SELECT DISTINCT inspection_lot_number FROM `ycl_usage_detail` WHERE inspection_lot_number != '' AND `code` LIKE concat(#{orgCode}, '%')  )
+    </select>
+    <select id="queryPiCiGewbs" resultType="java.lang.String">
+        select DISTINCT pici from wztaizhang where nodetype = #{nodeType} and pici IN ( SELECT DISTINCT inspection_lot_number FROM `ycl_usage_detail` WHERE inspection_lot_number != '' AND `code` LIKE concat(#{orgCode}, '%')  )  and guigexinghao=#{xingHao}
+    </select>
+    <select id="queryNodeType" resultType="com.trtm.iot.yclud.entity.NodeTypePc">
+        SELECT b.item_text nodeTypeName, b.nodeType FROM ycl_usage_detail d
+        JOIN (SELECT c.cailiaono, a.item_text, c.nodeType FROM ycl_cailiaodict c JOIN
+        ( SELECT item_text, item_value FROM sys_dict_item WHERE dict_id = '1390572018679844865' ) a ON c.nodeType = a.item_value ) b
+        ON d.cailiaono = b.cailiaono <where><if test="orgCode != null">d.sys_org_code LIKE concat( #{orgCode}, '%' )</if></where>  GROUP BY b.nodeType
+    </select>
+    <select id="queryNodeType1" resultType="com.trtm.iot.yclud.entity.NodeTypePcGg">
+        select w.nodetype nodeType, s.item_text nodeTypeName
+        from wztaizhang w
+                 join (select * from sys_dict_item where dict_id='1390572018679844865') s
+                      on w.nodetype=s.item_value where sys_org_code like concat(#{orgCode}, '%')  AND EXISTS (  SELECT 1 FROM ycl_usage_detail ud  WHERE w.pici = ud.inspection_lot_number) group by w.nodetype
+    </select>
+    <select id="queryNodeTypewbs" resultType="com.trtm.iot.yclud.entity.NodeTypePcGg">
+        select w.nodetype nodeType, s.item_text nodeTypeName
+        from wztaizhang w
+                 join (select * from sys_dict_item where dict_id='1390572018679844865') s
+                      on w.nodetype=s.item_value where  EXISTS (  SELECT 1 FROM ycl_usage_detail ud  WHERE  `code` like concat(#{orgCode}, '%')  AND w.pici = ud.inspection_lot_number) group by w.nodetype
+    </select>
+    <select id="getNodeTypeByUsa" resultType="java.util.Map">
+        SELECT b.item_text nodeTypeName, b.nodeType FROM ycl_usage_detail d
+           JOIN (SELECT c.cailiaono, a.item_text, c.nodeType FROM ycl_cailiaodict c JOIN
+               ( SELECT item_text, item_value FROM sys_dict_item WHERE dict_id = '1390572018679844865' ) a ON c.nodeType = a.item_value ) b
+               ON d.cailiaono = b.cailiaono <where><if test="orgCode != null">d.sys_org_code LIKE concat( #{orgCode}, '%' )</if></where>  GROUP BY b.nodeType
+    </select>
+
+</mapper>

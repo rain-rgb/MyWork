@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.deviceMixpileHistorydataOne.mapper.DeviceMixpileHistorydataOneMapper">
+
+    <select id="getrichaxun" resultType="java.util.Map" parameterType="java.util.List">
+        SELECT
+        date_format( pile_time, '%m-%d') AS daydate,
+        round( SUM( pile_realdep ), 0 ) AS deep
+        FROM
+        device_mixpile_historydata_one
+        WHERE
+        DATE_SUB( CURDATE( ), INTERVAL 7 DAY ) &lt;= date( pile_time )
+        <if test="shebeis != null ">
+            and shebeino in
+            <foreach collection="shebeis" index="index" item="item"
+                     open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        GROUP BY
+        date_format( pile_time, '%Y-%m-%d' );
+    </select>
+    <select id="getzhouchaxun" resultType="java.util.Map" parameterType="java.util.List">
+        SELECT
+        date_format( pile_time, '%u' ) AS daydate,
+        round( SUM( pile_realdep ), 0 ) AS deep
+        FROM
+        device_mixpile_historydata_one
+        WHERE
+        DATE_SUB( CURDATE( ), INTERVAL 7 WEEK) &lt;= date(pile_time)
+        <if test="shebeis != null ">
+            and shebeino in
+            <foreach collection="shebeis" index="index" item="item"
+                     open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        GROUP BY
+        date_format( pile_time, '%Y-%u' )
+    </select>
+    <select id="getyuechaxun" resultType="java.util.Map" parameterType="java.util.List">
+        SELECT
+        date_format( pile_time, '%Y-%m' ) AS daydate,
+        round( SUM( pile_realdep ), 0 ) AS deep
+        FROM
+        device_mixpile_historydata_one
+        WHERE
+        DATE_SUB( CURDATE( ), INTERVAL 7 MONTH ) &lt;= date(pile_time)
+        <if test="shebeis != null ">
+            and shebeino in
+            <foreach collection="shebeis" index="index" item="item"
+                     open="(" separator="," close=")">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        GROUP BY
+        date_format( pile_time, '%Y-%m' )
+    </select>
+    <select id="countList" resultType="java.util.Map" parameterType="java.lang.String">
+       	SELECT
+	d.depart_name,
+  IFNULL(sum(m.jbzcount),0) jbzcount,
+	IFNULL(sum(m.over),0) chaobiao,
+	(case WHEN sum(m.jbzcount) is null THEN 100 ELSE  ROUND( sum(m.over)/sum(m.jbzcount)*100,1) END ) chaobiaolv
+
+FROM
+	(select shebeino, count(1) jbzcount,SUM(case WHEN chaobiaodengji > 0 THEN 1 ELSE 0	END ) AS over from  device_mixpile_historydata_one  GROUP BY shebeino ) m
+	INNER JOIN shebei_info s ON m.shebeino = s.sbjno
+	RIGHT JOIN (	select depart_name,org_code from sys_depart  WHERE org_code  LIKE #{orgCode} AND org_category=6) d ON LEFT( s.sys_org_code,	18) = d.org_code
+ GROUP BY d.org_code
+ ORDER BY chaobiaolv DESC
+    </select>
+    <select id="selecthandlerecodes"
+            resultType="com.trtm.iot.deviceMixpileHistorydataOne.vo.DeviceMixpileOneHandler"></select>
+    <select id="selectjbzzones" resultType="com.trtm.iot.deviceMixpileHistorydataOne.entity.DeviceMixpileHistorydataOne" flushCache="true" useCache="false" >
+        select * from device_mixpile_historydata_one where id >=#{curid} and istongji = #{i} limit 10
+    </select>
+
+    <select id="selectLists" resultType="com.trtm.iot.deviceMixpileHistorydataOne.entity.DeviceMixpileHistorydataOne" flushCache="true" useCache="false">
+        select * from device_mixpile_historydata_one where id >#{curid} and shebeino in (${shebeilist}) and taicangpush=0 group by pile_time order by id asc limit 5
+    </select>
+    <select id="selectListss" resultType="com.trtm.iot.deviceMixpileHistorydataOne.entity.DeviceMixpileHistorydataOne" flushCache="true" useCache="false">
+        select * from device_mixpile_historydata_one where id >#{curid} and shebeino in (${shebeilist}) order by id asc limit 100
+    </select>
+
+    <select id="selectOnes" resultType="com.trtm.iot.deviceMixpileHistorydataOne.entity.DeviceMixpileHistorydataOne" flushCache="true" useCache="false">
+        select * from device_mixpile_historydata_one where shebeino =#{shebeino} and pile_no &lt;&gt;#{pileno} and pile_time =#{piletime}
+    </select>
+    <select id="findYuJingS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and chaobiaodengji='1' and ( piletype = 0 or piletype = 2 )
+    </select>
+    <select id="findBiHeS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and handlestate = 20 and ( piletype = 0 or piletype = 2 )
+    </select>
+
+    <select id="findYuJingSs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and chaobiaodengji='1' and ( piletype = 1 or piletype = 3 )
+    </select>
+    <select id="findBiHeSs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and handlestate = 20 and ( piletype = 1 or piletype = 3 )
+    </select>
+    <select id="findXiangMuZS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and ( piletype = 0 or piletype = 2 )
+    </select>
+    <select id="findXiangMuZSs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and ( piletype = 1 or piletype = 3 )
+    </select>
+
+    <select id="findXiangMuZStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and ( piletype = 0 or piletype = 2 )  and (pile_time like concat(#{dateNowStr},"%"))
+    </select>
+    <select id="findYuJingStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and chaobiaodengji='1' and ( piletype = 0 or piletype = 2 )  and (pile_time like concat(#{dateNowStr},"%"))
+    </select>
+    <select id="findBiHeStime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and handlestate = 20 and ( piletype = 0 or piletype = 2 ) and (pile_time like concat(#{dateNowStr},"%"))
+    </select>
+
+    <select id="findXiangMuZStimes" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and (piletype = 0 or piletype = 2) and pile_time between #{beginTime} and #{endTime}
+    </select>
+    <select id="findYuJingStimes" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and (piletype = 0 or piletype = 2) and chaobiaodengji='1'  and pile_time between #{beginTime} and #{endTime}
+    </select>
+    <select id="findBiHeStimes" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and (piletype = 0 or piletype = 2) and handlestate = 20 and pile_time between #{beginTime} and #{endTime}
+    </select>
+
+    <select id="findXiangMuZSstime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and ( piletype = 1 or piletype = 3 )  and (pile_time like concat(#{dateNowStr},"%"))
+    </select>
+    <select id="findYuJingSstime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and chaobiaodengji='1' and ( piletype = 1 or piletype = 3 )and (pile_time like concat(#{dateNowStr},"%"))
+    </select>
+    <select id="findBiHeSstime" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and handlestate = 20 and ( piletype = 1 or piletype = 3 ) and (pile_time like concat(#{dateNowStr},"%"))
+    </select>
+
+    <select id="findXiangMuZSstimes" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and ( piletype = 1 or piletype = 3 ) and pile_time between #{beginTime} and #{endTime}
+    </select>
+    <select id="findYuJingSstimes" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and chaobiaodengji='1' and ( piletype = 1 or piletype = 3 ) and pile_time between #{beginTime} and #{endTime}
+    </select>
+    <select id="findBiHeSstimes" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and handlestate = 20 and ( piletype = 1 or piletype = 3 ) and pile_time between #{beginTime} and #{endTime}
+    </select>
+
+    <select id="findXiangMuZSsb" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and (piletype = 0 or piletype = 2) and pile_time like concat(#{time},'%')
+    </select>
+    <select id="findYuJingSsb" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and chaobiaodengji='1' and (piletype = 0 or piletype = 2) and pile_time like concat(#{time},'%')
+    </select>
+    <select id="findBiHeSsb" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and handlestate = 20 and (piletype = 0 or piletype = 2) and pile_time like concat(#{time},'%')
+    </select>
+
+    <select id="findXiangMuZSsbs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and ( piletype = 1 or piletype = 3 ) and pile_time like concat(#{time},'%')
+    </select>
+    <select id="findYuJingSsbs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and chaobiaodengji='1' and ( piletype = 1 or piletype = 3 ) and pile_time like concat(#{time},'%')
+    </select>
+    <select id="findBiHeSsbs" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from device_mixpile_historydata_one where shebeino in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and handlestate = 20 and ( piletype = 1 or piletype = 3 ) and pile_time like concat(#{time},'%')
+    </select>
+<!--    浙路品质-->
+    <select id="selectListzlpz" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select *
+        from device_mixpile_historydata_one
+        where shebeino in (${shebeilist})
+        AND chaobiaodengji = 1
+        AND (issend = 0 OR (issend = 3 AND handlestate >0))
+        LIMIT 100
+     </select>
+</mapper>

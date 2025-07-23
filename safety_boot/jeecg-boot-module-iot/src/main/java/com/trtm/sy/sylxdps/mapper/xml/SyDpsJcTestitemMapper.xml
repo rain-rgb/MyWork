@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.sy.sylxdps.mapper.SyDpsJcTestitemMapper">
+
+    <select id="getPList" resultType="java.util.Map" flushCache="true" useCache="false">
+        select tiNo, tiName
+        from sy_dps_jc_testItem
+        where tiType = 1
+          and tiIsDel = 0
+          and titCode = #{titCode}
+        order by tiSort
+    </select>
+
+    <select id="getList" resultType="java.util.Map" flushCache="true" useCache="false">
+        SELECT a.tiNo,
+               a.tiName,
+               c.tiNo            tiParentNo,
+               a.tiParameterNum,
+               ifnull(a.tip, '') tip
+        FROM sy_dps_jc_testItem a
+          LEFT JOIN sy_dps_jc_testItemUnion b ON a.tiNo = b.tiNo
+          LEFT JOIN sy_dps_jc_testItem c ON b.tiReportNo = c.tiNo
+        WHERE c.tiType = 1
+          AND c.tiIsDel = 0
+          AND a.tiType != 1
+	      AND a.tiIsDel = 0
+	      AND b.titCode = #{titCode}
+          AND a.tiNo in <foreach collection="tiNoList" item="item" index="index" open="(" separator="," close=")">#{item}</foreach>
+        ORDER BY
+            a.tiType DESC,
+            a.tiSort
+    </select>
+    <select id="findById" resultType="java.util.Map" flushCache="true" useCache="false">
+        SELECT a.uuid id,a.tiNo,d.tiTableName,b.sampleNo,b.sampleNoNew,b.tableNumberNew,b.tableNumber,b.reportNo,b.reportNoNew,b.WtRwNo,b.WtSgDw,b.jianliyijian,
+        b.baogaoriqi,b.departfullname,e.depart_name,b.renwuNo,b.sampleGcbw ,b.shiyanyiju,b.shigongdanwei,b.pandingyiju,
+						b.sampleDescribe,b.sampleName,b.shiyantiaojian,b.shiyanriqi ,b.yiqishebei,b.remark,a.tiNoTemp,b.gongchengmingcheng,
+						d.tiCustomTableNum tiCustomTableNum,b.hetonghao,b.jianlidanwei,b.zonbaodanwei zbdw,
+						b.sampleQuYangDiDian,b.sampleDaiBiaoShuLiang,b.sampleShengChanChangJia,b.samplePihao,b.sampleYangHuTiaoJian,b.sampleDate,b.sampleChanDi,
+						b.sampleShengChanPiHao,b.samplePinZhongDengJi,b.sampleSheJiJiLiang,
+						b.sampleJieHeLiaoZhongLei,b.sampleLiQingBiaoHao,b.sampleLiQingZhongLei,
+						b.sampleJiPeiLeiXing,b.sampleShiYanCengWei,b.sampleLiQingHunHeLiaoLeiXing,
+						b.sampleGangJinZhiJing,b.sampleGangJinZhongLei,b.sampleLingQi,
+						b.sampleWaiJiaJiChanLiang,b.sampleShengChanRIQi,b.sampleGuiGeXingHao,
+						b.sampleQuYangRen,b.sampleChuChangBianHao,b.sampleQiangDuDengJi,
+						b.sampleJiaoBanFangShi,b.sampleHunNingTuZhongLei,b.sampleShaJiangZhongLei,
+						b.reportingSheetNoNew,b.approvalTableNoNew,b.ypxx,b.jlyj,e.org_type,b.sampleShiYanZuShu,
+						b.sampleChanDi2,b.sampleChanDi3,b.sampleQuYangDiDian2,b.sampleQuYangDiDian3,b.sampleDate2,b.sampleDate3,
+						b.sampleDaiBiaoShuLiang2,b.sampleDaiBiaoShuLiang3,b.sampleDaiBiaoShuLiang4,b.sampleDaiBiaoShuLiang5,b.sampleGuiGeXingHao2,
+						b.sampleGuiGeXingHao3,b.sampleGuiGeXingHao4,b.sampleGuiGeXingHao5,b.sampleGongChengBiHou,b.ycjcwtdbh,b.sampleYangPinShuLiang,
+						b.sampleYangPinShuLiang2,b.sampleYangPinShuLiang3,b.sampleYangPinShuLiang4,b.sampleYangPinShuLiang5,b.sampleChangDu,b.sampleZhiJianRiQi
+						FROM sy_dps_sy_Report_S a LEFT JOIN sy_dps_sy_tableHeader b
+						ON (a.sampleNo = b.sampleNo AND a.tiNo = b.tiNo AND a.tiNoTemp = b.tiNoTemp)
+						LEFT JOIN sy_dps_jc_testItem d ON a.tiNo = d.tiNo
+						LEFT JOIN sys_depart e on b.departId=e.id  WHERE a.uuid = #{id}
+    </select>
+
+    <select id="findSampById" resultType="java.util.Map" flushCache="true" useCache="false">
+        SELECT a.id,a.sampleNoNew,a.tableNumberNew,a.reportNoNew,a.sampleNo,
+        a.sampleName,a.sampleGcbw,a.sampleDescribe,a.sampleDate,a.sampleChanDi,
+        a.sampleDaiBiaoShuLiang,a.sampleGuiGeXingHao,a.sampleQuYangDiDian,a.sampleQuYangRen,
+        a.sampleShengChanChangJia,a.sampleChuChangBianHao,a.sampleQiangDuDengJi,a.sampleJiaoBanFangShi,
+        a.sampleHunNingTuZhongLei,a.sampleYangHuTiaoJian,a.sampleShaJiangZhongLei,a.sampleRemark,
+        a.sampleShengChanRIQi,a.sampleShengChanPiHao,a.samplePinZhongDengJi,a.sampleSheJiJiLiang,
+        a.sampleJieHeLiaoZhongLei,a.sampleLiQingBiaoHao,a.sampleLiQingZhongLei,a.sampleJiPeiLeiXing,
+        a.sampleShiYanCengWei,a.sampleLiQingHunHeLiaoLeiXing,a.sampleGangJinZhiJing,
+        a.sampleGangJinZhongLei,a.sampleLingQi,a.sampleWaiJiaJiChanLiang,a.titCode,a.sampleShiYanZuShu,
+        b.projectCode,c.depart_name,c.id as departId,d.titName,d.titRemark,b.projectName,
+        a.shifouliuyang,a.liuyangriqi,a.liuyangqixian,a.liuyangchuli,a.projectId,
+        a.sampleChanDi2,a.sampleChanDi3,a.sampleQuYangDiDian2,a.sampleQuYangDiDian3,a.sampleDate2,a.sampleDate3,
+        a.sampleDaiBiaoShuLiang2,a.sampleDaiBiaoShuLiang3,a.sampleDaiBiaoShuLiang4,a.sampleDaiBiaoShuLiang5,a.sampleGuiGeXingHao2,
+        a.sampleGuiGeXingHao3,a.sampleGuiGeXingHao4,a.sampleGuiGeXingHao5,a.sampleGongChengBiHou,a.ycjcwtdbh,a.sampleYangPinShuLiang,
+        a.sampleYangPinShuLiang2,a.sampleYangPinShuLiang3,a.sampleYangPinShuLiang4,a.sampleYangPinShuLiang5,a.sampleChangDu,a.shikuaichicun,
+        a.sampleLiuYangShuLiang,a.sampleZhiJianRiQi,a.RigidrReboundshebeiNo
+        FROM sy_dps_sy_Sample a
+        LEFT JOIN sy_dps_sy_Report_M b ON a.sampleNo = b.sampleNo
+        LEFT JOIN sys_depart c ON a.sampleDepartId = c.id
+        LEFT JOIN sy_dps_jc_testItemType d ON a.titCode = d.titCode
+        where a.id= #{id}
+    </select>
+    <select id="findReportSBySampleNo" resultType="java.util.Map" flushCache="true" useCache="false">
+        select tiNo,max(editState) editState from sy_dps_sy_Report_S where sampleNo=#{sampleNo} group by tiNo,sampleNo,tiType order by case when tiType=1 then 9 else tiType end desc
+    </select>
+    <select id="findQRCodeBySampleNo" resultType="java.util.Map" flushCache="true" useCache="false">
+        select a.qrcode,a.beginImage,b.CSTATUS,b.huojianame,b.huojiacenshu from sy_dps_sy_SampleQRCode a LEFT join sy_T_consign_code b on a.qrcode=b.CODE where a.sampleNo=#{sampleNo}
+    </select>
+    <select id="findPicBySampleNo" resultType="java.util.Map" flushCache="true" useCache="false">
+        select pic1,pic2,pic3,pic4 from sy_dps_sy_SamplePic where sampleNo=#{sampleNo}
+    </select>
+    <select id="findYjBySampleNo" resultType="java.util.Map" flushCache="true" useCache="false">
+        select shiyanyiju,pandingyiju from sy_dps_sy_tableHeader where sampleNo=#{sampleNo}
+    </select>
+    <select id="findColumnName" resultType="java.lang.String" flushCache="true" useCache="false">
+        SELECT
+            column_name
+        FROM
+            information_schema.COLUMNS
+        WHERE
+            table_name = #{tiNo}
+          AND column_name != 'id'
+    </select>
+    <select id="findByTiNos" resultType="java.util.Map" flushCache="true" useCache="false">
+        select <foreach collection="columnName" item="item" index="index" open=" " close=" " separator=",">${item}</foreach>, id jlbid from ${tiNo} where sampleNo = #{sampleNo} and tiNoTemp = #{tiNoTemp}
+    </select>
+
+
+
+    <select id="findSql" resultType="java.util.Map">
+        select a.titCode value,a.titName name,a.titParentCode pvalue,a.titRemark remark from sy_dps_jc_testItemType a inner join
+            sy_dps_yy_UserAsTestItemType b on a.titCode=b.titCode where titIsDel = 0 and b.userid=#{id} <if test="type != null">and a.titType = #{type}</if> order by a.titCode asc
+    </select>
+    <select id="findSql1" resultType="java.util.Map">
+        select a.titCode value,a.titName name,a.titParentCode pvalue,a.titRemark remark from sy_dps_jc_testItemType a where a.titIsDel = 0 <if test="type != null">and a.titType = #{type}</if> order by a.titCode asc
+    </select>
+    <select id="findSql2" resultType="java.util.Map">
+        select tiNo value,tiName name,titCode pvalue,'bg' bg from dps_jc_testItem where titCode=#{value} and tiType =1 and tiIsDel = 0
+    </select>
+
+    <select id="selectTiNoByUserId" resultType="java.lang.String">
+        select ti_nos from sy_dps_yy_userastestitemtype
+        where titCode=#{titCode}
+        and role_id in (<foreach collection="roleIds" item="item" index="index" separator=",">#{item}</foreach>)
+        group by titCode
+    </select>
+
+
+</mapper>

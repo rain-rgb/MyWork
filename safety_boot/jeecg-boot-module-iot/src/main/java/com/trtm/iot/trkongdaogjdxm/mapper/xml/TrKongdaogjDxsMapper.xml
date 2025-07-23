@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.trkongdaogjdxm.mapper.TrKongdaogjDxsMapper">
+
+	<delete id="deleteByMainId" parameterType="java.lang.String">
+		DELETE 
+		FROM  tr_kongdaogj_dxs 
+		WHERE
+			 basicinfoid = #{mainId} 	</delete>
+	
+	<select id="selectByMainId" parameterType="java.lang.String" resultType="com.trtm.iot.trkongdaogjdxm.entity.TrKongdaogjDxs">
+		SELECT * 
+		FROM  tr_kongdaogj_dxs
+		WHERE
+			 basicinfoid = #{mainId} 	</select>
+</mapper>

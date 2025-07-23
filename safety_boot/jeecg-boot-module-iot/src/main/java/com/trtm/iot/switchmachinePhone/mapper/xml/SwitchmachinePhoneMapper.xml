@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.switchmachinePhone.mapper.SwitchmachinePhoneMapper">
+
+    <select id="getons" resultType="com.trtm.iot.switchmachinePhone.entity.SwitchmachinePhone" flushCache="true" useCache="false">
+        select * from switchmachine_phone where shebei =#{shebeibianhao}
+    </select>
+
+</mapper>

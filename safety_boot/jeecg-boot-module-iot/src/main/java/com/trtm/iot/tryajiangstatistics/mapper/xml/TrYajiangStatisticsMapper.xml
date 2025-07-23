@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.tryajiangstatistics.mapper.TrYajiangStatisticsMapper">
+    <!--flushCache默认为false，表示任何时候语句被调用，都不会去清空本地缓存和二级缓存。
+      useCache默认为true，表示会将本条语句的结果进行二级缓存。-->
+    <select id="selectlimit" resultType="com.trtm.iot.tryajiangstatistics.entity.TrYajiangStatistics" flushCache="true" useCache="false">
+        select * from tr_yajiang_statistics
+        where yjsj=#{datanyr1} and yjsbbh=#{yjsbbh}
+        <if test="gcmc!=null and gcmc!='' ">
+            AND gcmc=#{gcmc}
+        </if>
+        <if test="zhbw!=null and zhbw!='' ">
+            AND zhbw=#{zhbw}
+        </if>
+        <if test="sgbw!=null and sgbw!='' ">
+            AND sgbw=#{sgbw}
+        </if>
+        <if test="gjjg!=null and gjjg!='' ">
+            AND gjjg=#{gjjg}
+        </if>
+        <if test="gjbh!=null and gjbh!='' ">
+            AND gjbh=#{gjbh}
+        </if>
+        <if test="htbh!=null and htbh!='' ">
+            AND htbh=#{htbh}
+        </if>
+        <if test="lblx!=null and lblx!='' ">
+            AND lblx=#{lblx}
+        </if>
+        <if test="infoSbjno!=null and infoSbjno!='' ">
+            AND sys_org_code=#{infoSbjno}
+        </if>
+    </select>
+</mapper>

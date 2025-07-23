@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.devicemixpilerealdata.mapper.DeviceMixpileRealdataMapper">
+
+
+    <select id="countOnline" parameterType="String" resultType="java.util.Map">
+        SELECT   count( 1 ) onlinecount    FROM   device_mixpile_realdata r  INNER JOIN shebei_info s ON r.shebeino = s.sbjno   WHERE   s.sys_org_code  LIKE concat( #{sysOrgCode}, '%')    AND r.datatime BETWEEN date_add( now(), INTERVAL - 5 MINUTE )   AND now()
+    </select>
+
+    <select id="queryone" resultType="com.trtm.iot.devicemixpilerealdata.entity.DeviceMixpileRealdata" useCache="false" flushCache="true">
+        select * from device_mixpile_realdata where shebeino =#{shebeiNo}  order by datatime desc limit 1
+    </select>
+    <select id="queryones" resultType="com.trtm.iot.devicemixpilerealdata.entity.DeviceMixpileRealdata" useCache="false" flushCache="true">
+        select * from device_mixpile_realdata where shebeino =#{shebeiNo}
+    </select>
+    <select id="listByshebei" resultType="com.trtm.iot.devicemixpilerealdata.entity.DeviceMixpileRealdata" >
+        select * from device_mixpile_realdata where shebei_no in (${shebeilist})
+    </select>
+</mapper>

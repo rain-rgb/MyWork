@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.sy.syshrwd.mapper.SyshrwdMapper">
+
+    <select id="sendMsg" flushCache="true" useCache="false" resultType="com.trtm.sy.syshrwd.entity.Syshrwd">
+        select * from sy_shrwd
+        where DATE_FORMAT( caeatetime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+        and  now() >SUBDATE(caeatetime,interval -1 day)
+        and status = 0
+        and ismsg = 1;
+    </select>
+</mapper>

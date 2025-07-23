@@ -1,0 +1,438 @@
+Tue Oct 10 09:12:45 CST 2023 远程开门
+Tue Oct 10 09:12:47 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 09:12:47 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 09:14:06 CST 2023 远程开门
+Tue Oct 10 09:14:12 CST 2023 通信失败!
+Tue Oct 10 09:15:19 CST 2023 远程开门
+Tue Oct 10 09:15:25 CST 2023 通信失败!
+Tue Oct 10 09:20:50 CST 2023 远程开门
+Tue Oct 10 09:21:05 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 09:21:11 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 09:23:40 CST 2023 远程开门
+Tue Oct 10 09:23:42 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 09:23:42 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 09:24:47 CST 2023 远程开门
+Tue Oct 10 09:25:57 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 09:26:08 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 09:27:20 CST 2023 远程开门
+Tue Oct 10 09:27:22 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 09:27:22 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 09:40:27 CST 2023 远程开门
+Tue Oct 10 09:40:27 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 09:40:27 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 09:43:16 CST 2023 远程开门
+Tue Oct 10 09:43:21 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : true,
+    "msg" : "控制器指令执行成功ok",
+    "code" : 1,
+    "设备序列号" : 253118302
+  },
+  "id" : 1001
+}
+Tue Oct 10 09:43:25 CST 2023 253118302 远程开门  成功. 
+Tue Oct 10 10:32:42 CST 2023 远程开门
+Tue Oct 10 10:32:48 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 10:32:50 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 10:36:50 CST 2023 远程开门
+Tue Oct 10 10:36:55 CST 2023 通信失败!
+Tue Oct 10 10:37:18 CST 2023 远程开门
+Tue Oct 10 10:37:24 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 10:37:24 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 10:41:34 CST 2023 远程开门
+Tue Oct 10 10:41:45 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 10:41:45 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 10:47:50 CST 2023 远程开门
+Tue Oct 10 10:48:06 CST 2023 通信失败!
+Tue Oct 10 10:51:11 CST 2023 远程开门
+Tue Oct 10 10:51:20 CST 2023 通信失败!
+Tue Oct 10 10:52:48 CST 2023 远程开门
+Tue Oct 10 10:52:56 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 10:52:56 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 10:59:46 CST 2023 远程开门
+Tue Oct 10 10:59:52 CST 2023 通信失败!
+Tue Oct 10 11:03:20 CST 2023 远程开门
+Tue Oct 10 11:03:25 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 11:03:25 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 11:03:33 CST 2023 远程开门
+Tue Oct 10 11:03:38 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 11:03:38 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 11:04:22 CST 2023 远程开门
+Tue Oct 10 11:04:24 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 11:04:50 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 11:08:18 CST 2023 远程开门
+Tue Oct 10 11:08:22 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 11:08:22 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 11:09:18 CST 2023 远程开门
+Tue Oct 10 11:09:18 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 11:09:18 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 12:00:26 CST 2023 远程开门
+Tue Oct 10 12:00:26 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 12:00:26 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 12:00:50 CST 2023 远程开门
+Tue Oct 10 12:00:50 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 12:00:50 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 13:50:21 CST 2023 远程开门
+Tue Oct 10 13:50:21 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 13:50:21 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 13:50:29 CST 2023 远程开门
+Tue Oct 10 13:50:29 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 13:50:29 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 13:54:54 CST 2023 远程开门
+Tue Oct 10 13:54:54 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 13:54:54 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 13:58:09 CST 2023 远程开门
+Tue Oct 10 13:58:09 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 13:58:09 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 13:59:58 CST 2023 远程开门
+Tue Oct 10 13:59:58 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 13:59:58 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 14:52:13 CST 2023 远程开门
+Tue Oct 10 14:52:13 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 14:52:13 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 14:55:20 CST 2023 远程开门
+Tue Oct 10 14:55:20 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 14:55:20 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 15:00:11 CST 2023 远程开门
+Tue Oct 10 15:00:11 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 15:00:11 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 15:14:16 CST 2023 远程开门
+Tue Oct 10 15:14:16 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 15:14:16 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 15:19:23 CST 2023 远程开门
+Tue Oct 10 15:19:26 CST 2023 通信失败!
+Tue Oct 10 15:21:29 CST 2023 远程开门
+Tue Oct 10 15:21:32 CST 2023 通信失败!
+Tue Oct 10 15:30:38 CST 2023 远程开门
+Tue Oct 10 15:30:41 CST 2023 通信失败!
+Tue Oct 10 15:36:22 CST 2023 远程开门
+Tue Oct 10 15:36:22 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 15:36:22 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 15:42:30 CST 2023 远程开门
+Tue Oct 10 15:42:30 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 15:42:30 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 15:45:13 CST 2023 远程开门
+Tue Oct 10 15:45:13 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : false,
+    "msg" : "控制器通信不上",
+    "code" : 0,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 15:45:13 CST 2023 225091650 远程开门  失败... 
+Tue Oct 10 16:16:59 CST 2023 远程开门
+Tue Oct 10 16:16:59 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : true,
+    "msg" : "控制器指令执行成功ok",
+    "code" : 1,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 16:16:59 CST 2023 225091650 远程开门  成功. 
+Tue Oct 10 16:24:56 CST 2023 远程开门
+Tue Oct 10 16:24:56 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : true,
+    "msg" : "控制器指令执行成功ok",
+    "code" : 1,
+    "设备序列号" : 225091650
+  },
+  "id" : 1001
+}
+Tue Oct 10 16:24:56 CST 2023 225091650 远程开门  成功. 
+Wed Oct 11 15:13:03 CST 2023 设置门控制参数
+Wed Oct 11 15:13:04 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : true,
+    "msg" : "控制器指令执行成功ok",
+    "code" : 1,
+    "设备序列号" : 225091650
+  },
+  "id" : 1004
+}
+Wed Oct 11 15:13:04 CST 2023 225091650 设置门控制参数  成功. 
+Wed Oct 11 15:15:57 CST 2023 设置门控制参数
+Wed Oct 11 15:15:58 CST 2023 {
+  "jsonrpc" : "2.0",
+  "result" : {
+    "success" : true,
+    "msg" : "控制器指令执行成功ok",
+    "code" : 1,
+    "设备序列号" : 225091650
+  },
+  "id" : 1004
+}
+Wed Oct 11 15:15:58 CST 2023 225091650 设置门控制参数  成功. 
+Thu Nov 09 14:50:19 CST 2023 设置门控制参数
+Thu Nov 09 14:50:23 CST 2023 通信失败!
+Thu Nov 09 14:56:10 CST 2023 设置门控制参数
+Thu Nov 09 14:56:14 CST 2023 通信失败!
+Thu Nov 09 15:01:40 CST 2023 设置门控制参数
+Thu Nov 09 15:01:44 CST 2023 通信失败!
+Thu Nov 09 16:51:41 CST 2023 设置门控制参数
+Thu Nov 09 16:52:01 CST 2023 通信失败!
+Thu Nov 09 16:52:22 CST 2023 设置门控制参数
+Thu Nov 09 16:52:27 CST 2023 通信失败!
+Thu Nov 09 16:52:33 CST 2023 设置门控制参数
+Thu Nov 09 16:52:38 CST 2023 通信失败!

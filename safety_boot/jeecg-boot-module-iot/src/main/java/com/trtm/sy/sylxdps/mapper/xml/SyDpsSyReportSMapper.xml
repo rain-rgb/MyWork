@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.sy.sylxdps.mapper.SyDpsSyReportSMapper">
+
+    <select id="selectBySampleno" resultType="com.trtm.sy.sylxdps.entity.SyDpsSyReportM">
+        select * from sy_dps_sy_Report_M where sampleNo = #{sampleno}
+    </select>
+</mapper>

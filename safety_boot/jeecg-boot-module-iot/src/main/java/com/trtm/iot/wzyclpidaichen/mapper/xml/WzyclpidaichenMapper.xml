@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.wzyclpidaichen.mapper.WzyclpidaichenMapper">
+
+    <select id="slistrqid" resultType="com.trtm.iot.wzyclpidaichen.entity.Wzyclpidaichen" flushCache="true" useCache="false">
+        select * from wzyclpidaichen
+        where id &gt; #{curid}
+          and shebeibianhao in (${shebeilist})
+          and jinchangshijian > "2024-07-09 00:00:00"
+            limit 100
+    </select>
+</mapper>

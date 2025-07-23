@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.trtm.sy.registertable.mapper.SyFormRecordMapper">
+
+    <delete id="deleteRecordSb">
+        delete from sy_record_sb where id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">#{item}</foreach>
+
+    </delete>
+
+    <select id="delByTableNum" resultType="com.trtm.sy.registertable.mapper.FormRecordMapper">
+        delete from sy_form_record where report_number = #{tableNum}
+    </select>
+</mapper>

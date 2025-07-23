@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.hc_transportrecords.mapper.HcTransportrecordsPaveMapper">
+
+    <delete id="deleteByMainId" parameterType="java.lang.String">
+		DELETE
+		FROM  hc_transportrecords_pave
+		WHERE
+			 zbid = #{mainId} 	</delete>
+
+    <select id="selectByMainId" parameterType="java.lang.String"
+            resultType="com.trtm.iot.hc_transportrecords.entity.HcTransportrecordsPave">
+		SELECT *
+		FROM  hc_transportrecords_pave
+		WHERE
+			 zbid = #{mainId} 	</select>
+
+    <select id="getList" resultType="com.trtm.iot.hc_transportrecords.entity.HcTransportrecords" flushCache="true"
+            useCache="false">
+        select *
+        from hc_transportrecords
+        where  truckId in (${shebeilist})
+        AND isdj = 0
+        LIMIT 100
+    </select>
+    <select id="getListjt" resultType="com.trtm.iot.hc_transportrecords.entity.HcTransportrecords" flushCache="true"
+            useCache="false">
+        select *
+        from hc_transportrecords
+        where  truckId in (${shebeilist})
+        AND id > #{curid}
+        LIMIT 100
+    </select>
+</mapper>

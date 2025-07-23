@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.sy.sysbjdjz.mapper.SyDpsJcShebeiJiandingjiaozhunMapper">
+
+
+    <select id="getJdJz" resultType="com.trtm.sy.sysbjdjz.entity.SbJianDingJiaoZhunResponse">
+        SELECT
+        jdjz.*,
+        sbv.shebeino,
+        sbv.shebeiname
+        FROM
+        sy_dps_jc_shebei_jiandingjiaozhun AS jdjz
+        LEFT JOIN sy_dps_jc_shebei AS sbv ON jdjz.shebeiid = sbv.id
+        WHERE
+        1 = 1
+        <if test="list != null and list.size > 0">
+            and jdjz.shebeiid in
+            <foreach collection="list" item="item" index="index" open="(" separator=","
+                     close=")">#{item}</foreach>
+        </if>
+        <if test="startTime != null and startTime != ''">AND a.jiandingjiaozhunriqi &gt;= #{startTime}</if>
+        <if test="endTime != null and endTime != ''">AND a.jiandingjiaozhunriqi &lt;= #{endTime}</if>
+        <if test="type!=null">AND jiandingjiaozhunleibie = #{type}</if>
+    </select>
+</mapper>

@@ -1,0 +1,1363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.sy.sydpssysample.mapper.SyDpsSySampleMapper">
+    <insert id="insertSql">
+
+        insert into ${tiNo} (${ziduanmings}) values
+
+        <foreach collection="values" item="item" index="," open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </insert>
+    <insert id="insertYiQiSheBei">
+
+                INSERT INTO sy_dps_jc_testitem_shebeiname (id,departId,tiNo,createPerson,shebeiName,titCode) values (#{uuid},#{orgCode},#{tiNo},#{username},#{yiqishebei},#{titcode})
+
+    </insert>
+    <insert id="insertSql1">
+
+                insert into ${tiTableNum} (id,tiNo,tiNoTemp,sampleNo,tableNumber,reportNo,departId) values (#{uuid},#{tino},#{i},#{sampleno},#{tablenumber},#{reportno},#{departid})
+
+    </insert>
+    <insert id="insertSql2">
+
+                insert into ${tiTableNum} (id,tiNo,tiNoTemp,sampleNo,tableNumber,reportNo,departId) values (#{uuid},#{tino},#{i},#{sampleno},#{tablenumber},#{reportno},#{departid})
+
+    </insert>
+    <insert id="insertSql3">
+
+                insert into sy_dps_sy_codingFlowNumber values (#{uuid},#{currentCode},#{insert})
+
+    </insert>
+
+    <!--<insert id="insertSql3">
+        insert into ${tiTableNum} (id,tiNo,tiNoTemp,sampleNo,tableNumber,reportNo,departId) values (#{uuid},#{s},#{i},#{sampleno},#{tablenumber},#{reportno},#{departid})
+    </insert>-->
+
+
+    <update id="updateSampleStatusByNo">
+
+                update sy_dps_sy_Sample set sampleState = 1 where sampleNo = #{sampleNo} and sampleState != 2
+
+    </update>
+    <update id="updateTiNo">
+
+                update ${tiNo} set ${key}=#{value} where sampleNo = #{sampleNo} and tiNoTemp = #{tiNoTemp}
+
+    </update>
+    <update id="updateTiNoSql">
+
+                update ${tiNo} set ${sql} where sampleNo = #{sampleNo} and tiNoTemp = #{tiNoTemp}
+
+    </update>
+    <update id="updateByTiNo">
+
+                update ${tiNo} set ${sql} where sampleNo = #{sampleNo} and tiNoTemp = #{tiNoTemp}
+
+    </update>
+    <update id="updateTiNoBy">
+
+                update sy_dps_sy_tableHeader set ${key}=#{value} where sampleNo = #{sampleNo} and tiNo =#{tiNo}
+
+    </update>
+    <update id="updateTiNoBySql">
+
+                update sy_dps_sy_tableHeader set ${sql} where sampleNo = #{sampleNo} and tiNo =#{tiNo}
+
+    </update>
+    <update id="updateByTiNoTemp">
+
+                update sy_dps_sy_tableHeader set ${key}=#{value} where sampleNo = #{sampleNo} and tiNo = #{tiNo} and tiNoTemp = 1
+
+    </update>
+    <update id="updateByTiNoTempSql">
+
+                update sy_dps_sy_tableHeader set ${sql} where sampleNo = #{sampleNo} and tiNo = #{tiNo} and tiNoTemp = 1
+
+    </update>
+    <update id="updateTiNoTempBySample">
+
+                update ${tiNo} set tiNoTemp =#{s},${key}=#{value} where sampleNo=#{sampleNo}
+
+    </update>
+    <update id="dynamicRevise">
+
+                update ${tableName}
+                set ${key1}=#{value1},
+                    ${key2}=#{value2}
+                where ${key3}=#{value3}
+
+    </update>
+    <update id="updateSql7">
+
+                update JB021401 set ceds = #{cedianshu}, pingjz = #{fourSSixRFiveCS},biaozc=#{fourSSixRFiveCS1},bianyixs= #{fourSSixRFiveCS2} ,daibz= #{fourSSixRFiveCS3} WHERE sampleNo = #{sampleNo}
+
+    </update>
+    <update id="updateSql8">
+
+                update sy_dps_sy_tableHeader set yiqishebei = #{yiqishebei} where sampleNo = #{sampleNo} and tiNo in (${s})
+
+    </update>
+    <update id="updateSql15">
+
+                update sy_dps_sy_Sample set sampleState = 1 , reportDate = #{baogaoriqi} , SYJG = #{syjg} , buhegeyuanyin = #{buhegeyuanyin} where sampleNo = #{sampleNo}
+
+    </update>
+    <update id="updateSql16">
+
+                update sy_dps_sy_tableHeader set baogaoriqi = #{baogaoriqi} where sampleNo = #{sampleNo} and tiNo = #{tiNo}  and baogaoriqi is null
+
+    </update>
+    <update id="updateSql17">
+
+                update sy_dps_sy_Sample set sampleState = 1 , reportDate = #{shiyanriqi} where sampleNo = #{sampleNo}
+
+    </update>
+    <update id="updateSql18">
+
+                update sy_dps_sy_Report_S set editState = 1 where uuid = #{id}
+
+    </update>
+    <update id="updateByTiNoTempTwo">
+
+                update sy_dps_sy_tableHeader set ${key}=#{value} where sampleNo = #{sampleNo} and tiNoTemp = #{tiNoTemp} and tiNo = #{tiNo}
+
+    </update>
+    <update id="updateByTiNoTempTwoSql">
+
+                update sy_dps_sy_tableHeader set ${sql} where sampleNo = #{sampleNo} and tiNoTemp = #{tiNoTemp} and tiNo = #{tiNo}
+
+    </update>
+    <update id="updateYiQiSheBei">
+
+                update sy_dps_jc_testItem_shebeiName set shebeiName=#{yiqishebei} where departId=#{orgCode} and tiNo=#{tiNo} and createPerson=#{username} and titCode=#{titcode}
+
+    </update>
+    <update id="updateSql19">
+
+                update sy_dps_sy_tableHeader set yiqishebei=#{y} where sampleNo=#{sampleNo} and tiNo=#{tiNo}
+
+    </update>
+    <update id="updateSql20">
+
+                update sy_dps_sy_tableHeader set shiyanyiju=#{y} where sampleNo=#{sampleNo} and tiNo=#{tiNo}
+
+    </update>
+    <update id="updateSql21">
+
+                update sy_dps_sy_Sample set baogaoriqi=#{baogaoriqi} where sampleNo=#{sampleNo}
+
+    </update>
+    <update id="updateSql22">
+
+                update sy_dps_sy_tableHeader set pandingyiju=#{y} where sampleNo=#{sampleNo} and tiNo=#{tiNo}
+
+    </update>
+    <update id="updateSql23">
+
+                update sy_dps_wzwt set tqzt=1 where sampleNo=#{wzid}
+
+    </update>
+    <update id="updateSql24">
+
+                update ${tiTableNum} set tiNo = #{tino} ,tiNoTemp = #{i} ,sampleNo = #{sampleno} ,tableNumber = #{tablenumber},reportNo = #{reportno},departId = #{departid},cbryj=#{cbryj} where sampleNo = #{sampleno1}
+
+    </update>
+    <update id="updateSql25">
+
+                update ${tiTableNum} set tiNo = #{tino} ,tiNoTemp = #{i} ,sampleNo = #{sampleno} ,tableNumber = #{tablenumber},reportNo = #{reportno},departId = #{departid} where sampleNo = #{sampleno1}
+
+    </update>
+    <update id="updateSql26">
+
+                update sy_dps_sy_tableHeader set yiqishebei = #{joinString} where sampleNo=#{sampleno} and tiNo=#{ptiNo}
+
+    </update>
+    <update id="updateSql27">
+
+                update sy_dps_sy_tableHeader set sampleGcbw = #{projectname} where sampleNo = #{sampleno}
+
+    </update>
+    <update id="updateTableHeader">
+
+                update sy_dps_sy_tableHeader set sampleGcbw = #{projectname} ,sampleName= #{samplename} ,sampleDescribe= #{sampledescribe} ,sampleQuYangDiDian= #{samplequyangdidian} ,sampleDaiBiaoShuLiang= #{sampledaibiaoshuliang} ,
+                                              sampleShengChanChangJia= #{sampleshengchanchangjia} ,sampleShengChanPiHao= #{sampleshengchanpihao} ,sampleYangHuTiaoJian= #{sampleyanghutiaojian} ,
+                                              sampleDate= #{sampledate} ,sampleChanDi= #{samplechandi} ,samplePinZhongDengJi= #{samplepinzhongdengji} ,sampleSheJiJiLiang= #{sampleshejijiliang} ,sampleJieHeLiaoZhongLei= #{samplejieheliaozhonglei} ,
+                                              sampleLiQingBiaoHao= #{sampleliqingbiaohao} ,sampleLiQingZhongLei= #{sampleliqingzhonglei} ,sampleJiPeiLeiXing= #{samplejipeileixing} ,sampleShiYanCengWei= #{sampleshiyancengwei} ,sampleLiQingHunHeLiaoLeiXing= #{sampleliqinghunheliaoleixing} ,
+                                              sampleGangJinZhiJing= #{samplegangjinzhijing} ,sampleGangJinZhongLei= #{samplegangjinzhonglei} ,sampleLingQi= #{samplelingqi} ,sampleWaiJiaJiChanLiang= #{samplewaijiajichanliang} ,sampleShengChanRIQi= #{sampleshengchanriqi} ,sampleGuiGeXingHao= #{sampleguigexinghao} ,
+                                              sampleQuYangRen= #{samplequyangren} ,sampleChuChangBianHao= #{samplechuchangbianhao} ,sampleQiangDuDengJi= #{sampleqiangdudengji} ,
+                                              sampleJiaoBanFangShi= #{samplejiaobanfangshi} ,sampleHunNingTuZhongLei= #{samplehunningtuzhonglei} ,sampleShaJiangZhongLei= #{sampleshajiangzhonglei},sampleShiYanZuShu=#{sampleshiyanzushu} ,
+                                              sampleChanDi2= #{samplechandi2},sampleChanDi3= #{samplechandi3},sampleQuYangDiDian2= #{samplequyangdidian2},sampleQuYangDiDian3= #{samplequyangdidian3},sampleDate2= #{sampledate2},sampleDate3= #{sampledate3},
+                                              sampleDaiBiaoShuLiang2=#{sampledaibiaoshuliang2},sampleDaiBiaoShuLiang3=#{sampledaibiaoshuliang3},sampleDaiBiaoShuLiang4=#{sampledaibiaoshuliang4},sampleDaiBiaoShuLiang5=#{sampledaibiaoshuliang5} ,
+                                              sampleGuiGeXingHao2=#{sampleguigexinghao2}, sampleGuiGeXingHao3=#{sampleguigexinghao3},sampleGuiGeXingHao4=#{sampleguigexinghao4}, sampleGuiGeXingHao5=#{sampleguigexinghao5},sampleGongChengBiHou=#{samplegongchengbihou},
+                                              ycjcwtdbh=#{ycjcwtdbh},sampleYangPinShuLiang=#{sampleyangpinshuliang},sampleYangPinShuLiang2=#{sampleyangpinshuliang2},sampleYangPinShuLiang3=#{sampleyangpinshuliang3},sampleYangPinShuLiang4=#{sampleyangpinshuliang4},
+                                              sampleYangPinShuLiang5=#{sampleyangpinshuliang5},shiyanyiju=#{shiYanYiJu},pandingyiju=#{panDingYiJu},sampleChangDu=#{samplechangdu},sampleZhiJianRiQi=#{samplezhijianriqi} where sampleNo = #{sampleno}
+
+    </update>
+    <update id="updateTableHeaderYPXX1">
+
+                update sy_dps_sy_tableHeader set ypxx=#{bgypxx} where sampleNo=#{sampleno} and tiNo in (select tiNo from sy_dps_jc_testItem where tiType=1)
+
+    </update>
+    <update id="updateTableHeaderYPXX2">
+
+                update sy_dps_sy_tableHeader set ypxx=#{jlypxx} where sampleNo=#{sampleno} and tiNo in (select tiNo from sy_dps_jc_testItem where tiType!=1)
+
+    </update>
+    <update id="updateTableHeaderByTiNo">
+
+                update sy_dps_sy_tableHeader set ypxx=#{ypxx} where sampleNo=#{sampleno} and tiNo=#{tiNo}
+
+    </update>
+    <update id="updateSql28">
+
+                update sy_dps_sy_codingFlowNumber set currentCode = #{currentCode} where id=#{id}
+
+    </update>
+    <update id="updateSql29">
+
+                update sy_dps_sy_codingFlowNumber set currentCode = #{currentCode} where id=#{id}
+
+    </update>
+    <update id="updateSql30">
+
+                UPDATE sy_dps_yy_yuancaijinchangdengji set sampleNo=#{sampleno},jianceyiju=#{jianceyiju},pandingyiju=#{pandingyiju},shiyanwanchengqixian=#{shiyanwanchengqixian}  WHERE id=#{yuancaijinchangdengjiId}
+
+    </update>
+    <update id="updateSql31">
+
+                UPDATE sy_dps_yy_yuancaiquyangweituo set sampleNo=#{sampleno} WHERE yuancaijinchangdengjiId=#{yuancaijinchangdengjiId}
+
+    </update>
+    <!--<update id="updateSql26">
+        update ${tiTableNum} set tiNo = #{s} ,tiNoTemp = #{i} ,sampleNo = #{sampleno} ,tableNumber = #{tablenumber},reportNo = #{reportno},departId = #{departid} where sampleNo = #{sampleno1}
+    </update>-->
+    <delete id="deleteSql1">
+
+                delete from sy_dps_sy_Report_S where tiNo=#{s} and sampleNo=#{sampleno}
+
+    </delete>
+    <delete id="deleteSql2">
+
+                delete from sy_dps_sy_tableHeader where tiNo=#{s} and sampleNo=#{sampleno}
+
+    </delete>
+    <delete id="deleteSql3">
+
+                delete from ${tiTableNum} where tiNo=#{s} and sampleNo=#{sampleno}
+
+    </delete>
+
+    <select id="selectReportSByUuid" resultType="java.util.Map">
+         /*flushCache="true" useCache="false"*/
+                select tiNo,sampleNo,tiNoTemp,tiType from sy_dps_sy_Report_S where uuid = #{id}
+
+    </select>
+    <select id="selectSampleByNo" resultType="com.trtm.sy.sydpssysample.entity.SyDpsSySample">
+
+                select * from sy_dps_sy_Sample where sampleNo=#{sampleNo}
+
+    </select>
+    <select id="selectItemTypeByTitCode" resultType="java.util.Map">
+
+                select titType from sy_dps_jc_testItemType where titCode=#{titcode}
+
+    </select>
+    <select id="selectReportSByNo" resultType="java.util.Map">
+
+                select tiNo,tiNoTemp from sy_dps_sy_Report_S where sampleNo=#{sampleNo} and tiType=1 limit 1
+
+    </select>
+    <select id="selectTestItemByTino" resultType="com.trtm.sy.sylxdps.entity.SyDpsJcTestitem">
+
+                select * from sy_dps_jc_testitem where tiNo=#{tiNo}
+
+    </select>
+    <select id="findSySColumns" resultType="java.lang.String">
+
+                select column_name
+                from information_schema.columns
+                where table_schema = #{dataSource} and table_name=#{tiNo}
+
+    </select>
+    <select id="findIdBySampleNo" resultType="java.util.Map">
+
+                select id from JJ0105d1 where sampleNo = ${sampleNo}
+
+    </select>
+    <select id="queryBySampleNo" resultType="java.util.Map">
+
+                select id from JJ0105d where sampleNo =#{sampleNo}
+
+    </select>
+    <select id="querySql1" resultType="java.util.Map">
+
+                SELECT b.uuid sid,a.* FROM JJ1401 a left join sy_dps_sy_Report_S b on a.sampleNo=b.sampleNo and a.tiNoTemp=b.tiNoTemp and a.tiNo='JJ1401' and b.tiType=0 WHERE a.sampleNo = #{sampleNo}
+
+    </select>
+    <select id="querySql2" resultType="java.util.Map">
+
+                select * from sy_M_PARAM_ta where n=#{cedianshu}
+
+    </select>
+    <select id="findByOrgCodeAndUserName" resultType="java.lang.Integer">
+
+                select count(0) from sy_dps_jc_testItem_shebeiName where departId=#{orgCode} and tiNo=#{tiNo} and createPerson=#{username} and titCode=#{titcode}
+
+    </select>
+    <select id="querySql3" resultType="java.util.Map">
+
+                select IFNULL(b.yiqishebei,'') yiqishebei from sy_dps_sy_Report_S a left join sy_dps_sy_tableHeader b on a.tiNo=b.tiNo and b.sampleNo=#{sampleNo} where  a.sampleNo=#{sampleNo1} and  a.tiType=0
+
+    </select>
+    <select id="querySql4" resultType="java.util.Map">
+
+                select IFNULL(b.shiyanyiju,'') shiyanyiju from sy_dps_sy_Report_S a left join sy_dps_sy_tableHeader b on a.tiNo=b.tiNo and b.sampleNo=#{sampleNo} where  a.sampleNo=#{sampleNo1} and  a.tiType=0
+
+    </select>
+    <select id="querySql5" resultType="java.util.Map">
+
+                select IFNULL(b.pandingyiju,'') pandingyiju from sy_dps_sy_Report_S a left join sy_dps_sy_tableHeader b on a.tiNo=b.tiNo and b.sampleNo=#{sampleNo} where  a.sampleNo=#{sampleNo1} and  a.tiType=0
+
+    </select>
+    <select id="getOneSql1" resultType="java.util.Map">
+
+                select * from sy_dps_jc_testItemType where titCode=#{titCode}
+
+    </select>
+    <select id="getOneSql2" resultType="com.trtm.sy.sylxdps.entity.SyDpsJcTestitemtype">
+
+                select * from sy_dps_jc_testItemType where uuid=#{id}
+
+    </select>
+    <select id="selectBySam" resultType="java.util.Map">
+
+                select a.uuid,a.tiNo,b.tiName,b.tiName name,a.tiNoTemp,a.tiType,b.tiDefaultGroupNum,b.plusMark from sy_dps_sy_Report_S a left join sy_dps_jc_testItem b on a.tiNo=b.tiNo where a.sampleNo=#{sampleno} and a.tiNo!='WJJHL_BG' order by a.tiType,b.tiSort,a.tiNoTemp
+
+    </select>
+    <select id="selectBgBySam" resultType="java.util.Map">
+
+                select a.uuid,a.tiNo,b.tiName,b.tiName name,a.tiNoTemp,a.tiType,b.tiDefaultGroupNum,b.plusMark from sy_dps_sy_Report_S a left join sy_dps_jc_testItem b on a.tiNo=b.tiNo where a.sampleNo=#{sampleno} and a.tiNo!='WJJHL_BG' order by a.tiType,b.tiSort,a.tiNoTemp
+
+    </select>
+    <select id="getDevice" resultType="java.util.Map">
+
+                select shebeiNo,shebeiName,shebeiGuiGe,shebeiJiLiangDanwei from sy_dps_jc_shebei where shebeiIsDel=0 and orgCode=#{orgCode} and shebeixiacijiaozhunriqi>#{format} order by case when titCode=#{titcode} then 0 else titCode end
+
+    </select>
+    <select id="selectBySam2" resultType="java.util.Map">
+
+                select a.uuid,a.tiNo,b.tiName,b.tiName name,a.tiNoTemp,a.tiType,b.tiDefaultGroupNum from sy_dps_sy_Report_S a left join sy_dps_jc_testItem b on a.tiNo=b.tiNo where a.sampleNo=#{sampleno} and a.tiNo !='JB010507' order by a.tiType,a.tiNo,a.tiNoTemp
+
+    </select>
+    <select id="selectBgBySam2" resultType="java.util.Map">
+
+                select a.uuid,a.tiNo,b.tiName,b.tiName name,a.tiNoTemp,a.tiType,b.tiDefaultGroupNum from sy_dps_sy_Report_S a left join sy_dps_jc_testItem b on a.tiNo=b.tiNo where a.sampleNo=#{sampleno} and a.tiNo !='JB010507' order by a.tiType,a.tiNo,a.tiNoTemp
+
+    </select>
+    <select id="getDepartById" resultType="com.trtm.sy.sydpssysample.entity.SysDepart">
+
+                select * from sys_depart where id=#{departid}
+
+    </select>
+    <select id="getDepartByIds" resultType="com.trtm.sy.sydpssysample.entity.SysDepart">
+
+                select * from sys_depart where id in (#{departid})
+
+    </select>
+    <select id="getOneSql3" resultType="java.util.Map">
+
+                select id from sy_dps_jc_testItemType_CodingRules where departId=#{id} and titCode=#{titCode}
+
+    </select>
+    <select id="getOneSql4" resultType="com.trtm.sy.sydpssysample.entity.SyDpsJcTestitemtypeCodingrules">
+
+                select * from sy_dps_jc_testItemType_CodingRules where id=#{id}
+
+    </select>
+    <select id="getOneSql5" resultType="com.trtm.sy.sylxdps.entity.SyDpsSyReportM">
+
+                select * from sy_dps_sy_Report_M where sampleNo=#{sampleno}
+
+    </select>
+    <select id="getOneSql6" resultType="java.util.Map">
+
+                select tiNo from sy_dps_sy_Report_S where sampleNo=#{sampleno} and tiType!=1
+
+    </select>
+    <select id="getOneSql7" resultType="java.util.Map">
+
+                select tiTableNum from sy_dps_jc_testItem where tiNo=#{s}
+
+    </select>
+    <select id="getOneSql8" resultType="java.util.Map">
+
+                select yiqishebei from sy_dps_sy_tableHeader where sampleNo=#{sampleno} and tiNo=#{ptiNo} limit 1
+
+    </select>
+    <select id="getCount1" resultType="java.lang.Long">
+
+                select count(*) as count1 from sy_dps_sy_Report_S where tiNo=#{s} and sampleNo=#{sampleno}
+
+    </select>
+    <select id="getOneSql9" resultType="java.util.Map">
+
+                select tiTableNum,tiType from sy_dps_jc_testItem where tiNo=#{s}
+
+    </select>
+    <select id="getOneSql10" resultType="java.util.Map">
+
+                select shebeiName from sy_dps_jc_testItem_shebeiName where departId=#{id} and tiNo=#{s} and createPerson=#{username} and titCode=#{titcode}
+
+    </select>
+    <select id="getCount2" resultType="java.lang.Long">
+
+                select count(*) as count1 from ${tiTableNum} where sampleNo=#{sampleno}
+
+    </select>
+    <select id="getOneSql11" resultType="java.util.Map">
+
+                select cbryj from ${tiTableNum} a left join sy_dps_sy_Sample b on a.sampleNo=b.sampleNo where b.departid=#{id}  order by a.sampleNo desc limit 1
+
+    </select>
+    <select id="getOneSql12" resultType="java.util.Map">
+
+                select id,currentCode from sy_dps_sy_codingFlowNumber where NoFlowNumber=#{insert}
+
+    </select>
+    <select id="getCount3" resultType="java.lang.Long">
+
+                select count(0) from sy_dps_sy_Sample where sampleNo != #{insert} and sampleNo like #{s}
+
+    </select>
+    <select id="getOneSql13" resultType="java.util.Map">
+
+                select id from sy_dps_sy_Sample where sampleNo = #{s}
+
+    </select>
+    <select id="getSql1" resultType="java.util.Map">
+
+                select id,currentCode from sy_dps_sy_codingFlowNumber where NoFlowNumber=#{yp}
+
+    </select>
+    <select id="getCount4" resultType="java.lang.Long">
+
+                select count(0) from sy_dps_sy_Sample where (insertNo is null or instr(insertNo, sampleNo) = 0) and sampleNo like #{s}
+
+    </select>
+    <select id="getSql2" resultType="java.util.Map">
+
+                select sampleNo from sy_dps_sy_Sample where (insertNo is null or instr(insertNo, sampleNo) = 0) and sampleNo like #{s}
+
+    </select>
+    <select id="getSql3" resultType="java.util.Map">
+
+                select tiTableNum,tiName from sy_dps_jc_testItem where tiNo=#{ptiNo}
+
+    </select>
+    <select id="getSql4" resultType="java.util.Map">
+
+                select tiTableNum,tiType,tiName from sy_dps_jc_testItem where tiNo=#{tiNo}
+
+    </select>
+    <select id="findByTiNo" resultType="com.trtm.sy.sylxdps.entity.SyDpsJcTestitem">
+
+                select * from sy_dps_jc_testItem where tiNo=#{tiNo}
+
+    </select>
+    <select id="getSheBeiName" resultType="java.util.Map">
+
+                select shebeiName from sy_dps_jc_testItem_shebeiName where departId=#{id} and tiNo=#{tiNo} and createPerson=#{username} and titCode=#{titcode}
+
+    </select>
+    <select id="getSql5" resultType="java.util.Map">
+
+                select a.cbryj from ${tiTableNum} a left join sy_dps_sy_Sample b on a.sampleNo=b.sampleNo where b.departid=#{id}  order by a.sampleNo desc limit 1
+
+    </select>
+
+    <!--<select id="getCount" resultType="java.lang.Integer">
+        select count(1) from ${view}
+    </select>-->
+    <select id="selectInfo1" resultType="java.util.Map">
+
+        select * from ${view}
+        WHERE 1=1
+
+        <if test="orgCode != null">
+
+            and orgCode like concat(#{orgCode},'%')
+
+        </if>
+        <if test="signature != null and signature == '0'">
+
+            and shenpizhuangtai = 1
+
+        </if>
+        <if test="titCode != null">
+
+            and titCode like concat(#{titCode},'%')
+
+        </if>
+        <if test="sampleState != null">
+
+            and sampleState in (#{sampleState})
+
+        </if>
+        <if test="sampleNo != null">
+
+            and sampleNoNew like concat('%',#{sampleNo},'%')
+
+        </if>
+        <if test="reportNo != null">
+
+            and reportNoNew like concat('%',#{reportNo},'%')
+
+        </if>
+        <if test="sampleName != null">
+
+            and sampleName like concat('%',#{sampleName},'%')
+
+        </if>
+        <if test="sampleGcbw != null">
+
+            and sampleGcbw like concat('%',#{sampleGcbw},'%')
+
+        </if>
+        <if test="titType != null">
+
+            and titType = #{titType}
+
+        </if>
+        <if test="tiNo != null">
+
+            and tiNo = #{tiNo}
+
+        </if>
+        <if test="lq != null">
+
+            and sampleLingQi like concat('%',#{lq},'%')
+
+        </if>
+        <if test="sampleDate != null">
+
+            and sampleDate like concat('%',#{sampleDate},'%')
+
+        </if>
+        <if test="lookself == true">
+
+            and reportEditPerson = #{reportEditPerson}
+
+        </if>
+        <if test="shenpizhuangtai != null and shenpizhuangtai != ''">
+
+            and shenpizhuangtai = #{shenpizhuangtai}
+
+        </if>
+        <if test="qianzhangzhuangtai != null and qianzhangzhuangtai != ''">
+
+            and qianzhangzhuangtai = #{qianzhangzhuangtai}
+
+        </if>
+        <if test="titCode == null and lookself == false and tiNo == null">
+
+            and reportEditPerson = #{reportEditPerson1}
+
+        </if>
+
+        order by sampleDate desc
+
+    </select>
+    <select id="selectTinoBySampleNo" resultType="java.util.Map">
+
+                select a.tiNo
+                from sy_dps_sy_tableHeader a
+                left join sy_dps_jc_testItem b
+                on a.tiNo=b.tiNo
+                where b.tiType = 0
+                and a.sampleNo = #{sampleNo}
+                group by a.tiNo
+
+    </select>
+    <select id="selectDate" resultType="java.util.Map">
+
+                select yiqishebei,shiyanriqi
+                from sy_dps_sy_tableHeader
+                where sampleNo = #{sampleNo}
+                and tiNo = #{tino}
+
+    </select>
+    <select id="selectByLeixing" resultType="java.util.Map">
+
+                select *
+                from sy_dps_jc_qianzhangliucheng
+                where qianzhangleixing = #{qianzhangleixing}
+                and ifnull(titCode,'') = #{titcode}
+                and liuchengleixing = #{liuchengleixing}
+                order by liuchengzhuangtaixuhao
+
+    </select>
+    <select id="selectByIdAndType" resultType="java.util.Map">
+
+                select a.id,a.tiNo,a.tiType,c.tiSort,a.tiNoTemp
+                from sy_dps_sy_Report_S a
+                left join sy_dps_sy_Sample b on a.sampleNo=b.sampleNo
+                left join sy_dps_jc_testItem c on a.tiNo=c.tiNo
+                where b.id=#{id}
+                and a.tiType=#{type}
+                and a.tiNo !='JB021402'
+                and a.tiNo !='WJJHL_BG'
+                order by c.tiSort,a.tiNoTemp
+
+    </select>
+    <select id="selectByRSId" resultType="java.util.Map">
+
+               SELECT a.id,a.tiNo,d.tiTableName,b.sampleNo,b.sampleNoNew,b.tableNumberNew,b.tableNumber,b.reportNo,b.reportNoNew,b.WtRwNo,b.WtSgDw,
+                b.baogaoriqi,b.departfullname,b.renwuNo,b.sampleGcbw ,b.shiyanyiju,b.shigongdanwei,b.pandingyiju,
+                b.sampleDescribe,b.sampleName,b.shiyantiaojian,b.shiyanriqi ,b.yiqishebei,b.remark,a.tiNoTemp,b.gongchengmingcheng,
+                d.tiCustomTableNum tiCustomTableNum,b.hetonghao,b.jianlidanwei,b.zonbaodanwei zbdw,
+                b.sampleQuYangDiDian,b.sampleDaiBiaoShuLiang,b.sampleShengChanChangJia,b.samplePihao,b.sampleYangHuTiaoJian,b.sampleDate,b.sampleChanDi,
+                b.sampleShengChanPiHao,b.samplePinZhongDengJi,b.sampleSheJiJiLiang,
+                b.sampleJieHeLiaoZhongLei,b.sampleLiQingBiaoHao,b.sampleLiQingZhongLei,
+                b.sampleJiPeiLeiXing,b.sampleShiYanCengWei,b.sampleLiQingHunHeLiaoLeiXing,
+                b.sampleGangJinZhiJing,b.sampleGangJinZhongLei,b.sampleLingQi,
+                b.sampleWaiJiaJiChanLiang,b.sampleShengChanRIQi,b.sampleGuiGeXingHao,
+                b.sampleQuYangRen,b.sampleChuChangBianHao,b.sampleQiangDuDengJi,
+                b.sampleJiaoBanFangShi,b.sampleHunNingTuZhongLei,b.sampleShaJiangZhongLei,
+                b.reportingSheetNoNew,b.approvalTableNoNew,b.ypxx,b.jlyj,b.sampleShiYanZuShu,
+                b.sampleChanDi2,b.sampleChanDi3,b.sampleQuYangDiDian2,b.sampleQuYangDiDian3,b.sampleDate2,b.sampleDate3,
+                b.sampleDaiBiaoShuLiang2,b.sampleDaiBiaoShuLiang3,b.sampleDaiBiaoShuLiang4,b.sampleDaiBiaoShuLiang5,b.sampleGuiGeXingHao2,
+                b.sampleGuiGeXingHao3,b.sampleGuiGeXingHao4,b.sampleGuiGeXingHao5,b.sampleGongChengBiHou,b.ycjcwtdbh,b.sampleYangPinShuLiang,
+                b.sampleYangPinShuLiang2,b.sampleYangPinShuLiang3,b.sampleYangPinShuLiang4,b.sampleYangPinShuLiang5,b.sampleChangDu,b.sampleZhiJianRiQi
+                FROM sy_dps_sy_Report_S a
+                LEFT JOIN sy_dps_sy_tableHeader b
+                ON (a.sampleNo = b.sampleNo AND a.tiNo = b.tiNo AND a.tiNoTemp = b.tiNoTemp)
+                LEFT JOIN sy_dps_jc_testItem d ON a.tiNo = d.tiNo
+
+                WHERE a.id = #{id}
+
+    </select>
+    <select id="selectBysampleNoAndtiNoTemp" resultType="java.util.Map">
+
+                select * from ${tiNo} where sampleNo = #{sampleno} and tiNoTemp = #{tinotemp}
+
+    </select>
+    <select id="selectTinoBySampleno" resultType="java.util.Map">
+
+                SELECT a.tiNo
+                FROM sy_dps_sy_tableHeader a
+                LEFT JOIN sy_dps_jc_testItem b
+                ON a.tiNo = b.tiNo
+                WHERE b.tiType = 1
+                AND tiNoTemp = 1
+                AND a.sampleNo = #{sampleNo}
+
+    </select>
+    <insert id="insert1">
+
+                        insert into ${tino} (id, tiNo, tiNoTemp, sampleNo, tableNumber, reportNo, departId) values (#{str}, #{tino}, #{tiNoTemp}, #{yp}, #{jl}, #{bg}, #{departId})
+
+    </insert>
+    <update id="update1">
+
+                update ${tino} set ${key}=#{value} where id=#{str}
+
+    </update>
+    <update id="updateCFN">
+
+                update sy_dps_sy_codingFlowNumber
+                set currentCode =
+                case
+                when #{sampleNo2} > currentCode
+                then #{sampleNo1}
+                else currentCode end
+                where NoFlowNumber = #{sampleNoNoSuffix}
+
+    </update>
+    <select id="getSampleId" resultType="java.util.Map">
+
+                SELECT a.id,a.sampleNoNew,a.tableNumberNew,a.reportNoNew,a.sampleNo,
+                a.sampleName,a.sampleGcbw,a.sampleDescribe,a.sampleDate,a.sampleChanDi,
+                a.sampleDaiBiaoShuLiang,a.sampleGuiGeXingHao,a.sampleQuYangDiDian,a.sampleQuYangRen,
+                a.sampleShengChanChangJia,a.sampleChuChangBianHao,a.sampleQiangDuDengJi,a.sampleJiaoBanFangShi,
+                a.sampleHunNingTuZhongLei,a.sampleYangHuTiaoJian,a.sampleShaJiangZhongLei,a.sampleRemark,
+                a.sampleShengChanRIQi,a.sampleShengChanPiHao,a.samplePinZhongDengJi,a.sampleSheJiJiLiang,
+                a.sampleJieHeLiaoZhongLei,a.sampleLiQingBiaoHao,a.sampleLiQingZhongLei,a.sampleJiPeiLeiXing,
+                a.sampleShiYanCengWei,a.sampleLiQingHunHeLiaoLeiXing,a.sampleGangJinZhiJing,
+                a.sampleGangJinZhongLei,a.sampleLingQi,a.sampleWaiJiaJiChanLiang,a.titCode,a.sampleShiYanZuShu,
+                b.projectCode,c.departname,c.id as departId,d.titName,d.titRemark,b.projectName,
+                a.shifouliuyang,a.liuyangriqi,a.liuyangqixian,a.liuyangchuli,a.projectId,
+                a.sampleChanDi2,a.sampleChanDi3,a.sampleQuYangDiDian2,a.sampleQuYangDiDian3,a.sampleDate2,a.sampleDate3,
+                a.sampleDaiBiaoShuLiang2,a.sampleDaiBiaoShuLiang3,a.sampleDaiBiaoShuLiang4,a.sampleDaiBiaoShuLiang5,a.sampleGuiGeXingHao2,
+                a.sampleGuiGeXingHao3,a.sampleGuiGeXingHao4,a.sampleGuiGeXingHao5,a.sampleGongChengBiHou,a.ycjcwtdbh,a.sampleYangPinShuLiang,
+                a.sampleYangPinShuLiang2,a.sampleYangPinShuLiang3,a.sampleYangPinShuLiang4,a.sampleYangPinShuLiang5,a.sampleChangDu,a.shikuaichicun,
+                a.sampleLiuYangShuLiang,a.sampleZhiJianRiQi,a.RigidrReboundshebeiNo
+                FROM sy_dps_sy_Sample a
+                LEFT JOIN sy_dps_sy_Report_M b ON a.sampleNo = b.sampleNo
+                LEFT JOIN sys_depart c ON a.sampleDepartId = c.id
+                LEFT JOIN sy_dps_jc_testItemType d ON a.titCode = d.titCode
+                where a.id= #{id}
+
+    </select>
+    <select id="get2" resultType="java.util.Map">
+
+        select * from ${biaoming} where 1 = 1
+
+        <if test="sql != ''">
+
+            ${sql}
+
+        </if>
+        <if test="orderby != null">
+
+            order by ${orderby}
+
+        </if>
+    </select>
+    <select id="get1" resultType="java.util.Map">
+
+        select ${groupby} from ${biaoming} where 1 = 1
+
+        <if test="sql != ''">
+
+            ${sql}
+
+        </if>
+
+        GROUP BY ${groupby}
+
+        <if test="orderby != null">
+
+            order by ${orderby}
+
+        </if>
+    </select>
+    <select id="getTable" resultType="java.util.Map">
+
+        select * from ${table} where 1=1
+
+        <if test="sql != ''">
+
+            ${sql}
+
+        </if>
+    </select>
+
+    <select id="selectByBiaoMing1" resultType="java.util.Map">
+
+        select j.*, t.WtRwNo,t.WtSgDw,approvalTableNo,t.approvalTableNoNew,t.baogaoriqi,t.departFullName,
+        t.gongZhangMingCheng,t.gongchengmingcheng,t.hetonghao,t.jianlidanwei,t.jianliyijian,t.jlyj,t.pandingyiju,
+        t.remark,t.renwuNo,t.reportNoNew,t.reportingSheetNo,t.reportingSheetNoNew,t.sampleChanDi,
+        t.sampleChuChangBianHao,t.sampleDaiBiaoShuLiang,t.sampleDate,t.sampleDescribe,t.sampleGangJinZhiJing,
+        t.sampleGangJinZhongLei,t.sampleGcbw,t.sampleGuiGeXingHao,t.sampleHunNingTuZhongLei,t.sampleJiPeiLeiXing,
+        t.sampleJiaoBanFangShi,t.sampleJieHeLiaoZhongLei,t.sampleLiQingBiaoHao,t.sampleLiQingHunHeLiaoLeiXing,
+        t.sampleLiQingZhongLei,t.sampleLingQi,t.sampleName,t.sampleNoNew,t.samplePihao,
+        t.samplePinZhongDengJi,t.sampleQiangDuDengJi,t.sampleQuYangDiDian,t.sampleQuYangRen,t.sampleShaJiangZhongLei,
+        t.sampleSheJiJiLiang,t.sampleShengChanChangJia,t.sampleShengChanPiHao,t.sampleShengChanRIQi,
+        t.sampleShiYanCengWei,t.sampleWaiJiaJiChanLiang,t.sampleYangHuTiaoJian,t.shigongdanwei,t.shiyanriqi,
+        t.shiyantiaojian,t.shiyanyiju,t.tableNumberNew,t.yiqishebei,t.ypxx
+        from ${biaoming} j join sy_dps_sy_tableHeader t on j.tiNo=t.tiNo AND j.tableNumber=t.tableNumber where 1 = 1
+
+        <if test="sql != ''">
+
+            ${sql}
+
+        </if>
+    </select>
+    <select id="selectByBiaoMing2" resultType="java.util.Map">
+
+        select * from ${biaoming} j where 1 = 1
+
+        <if test="sql != ''">
+
+            ${sql}
+
+        </if>
+    </select>
+    <select id="selectCBRDUSHU" resultType="java.util.Map">
+
+        SELECT  dushuxuhao,dushu FROM CBRDUSHU where departId=#{id} ORDER BY dushuxuhao
+
+    </select>
+    <select id="getSignatureGrid" resultType="java.util.Map">
+
+        select a.* from sy_dps_sy_SignatureView a inner join sy_dps_yy_UserAsTestItemType b on a.titCode=b.titCode
+        where 1=1 and a.orgCode = #{orgCode}
+        and a.liuchengleixing = #{liuchengleixing}
+        and a.userId = #{userId}
+        and b.userId =#{userId}
+
+        <if test="type != ''">
+
+            and a.qianzhangliuchengId like #{type}
+
+        </if>
+        <if test="sampleNo != ''">
+
+            and a.sampleNo like concat('%',#{sampleNo},'%')
+
+        </if>
+        <if test="reportNo != ''">
+
+            and a.reportNo like concat('%',#{reportNo},'%')
+
+        </if>
+        <if test="sampleName != ''">
+
+            and a.sampleName like concat('%',#{sampleName},'%')
+
+        </if>
+        <if test="sampleGcbw != ''">
+
+            and a.sampleGcbw like concat('%',#{sampleGcbw},'%')
+
+        </if>
+        <if test="beginReportDate != '' and endReportDate != ''">
+
+            and a.reportDate between #{beginReportDate} and #{endReportDate}
+
+        </if>
+        <if test="beginDate != '' and endDate != ''">
+
+            and a.shenpishijian between #{beginDate} and #{endDate}
+
+        </if>
+
+        order by a.reportNo desc
+
+    </select>
+    <select id="getSignatureGrid2" resultType="java.util.Map">
+
+        select * from sy_dps_sy_SignatureOver a
+        where 1=1 and a.orgCode = #{orgCode}
+        and a.liuchengleixing = #{liuchengleixing}
+        and a.userId = #{userId}
+
+        <if test="type != ''">
+
+            and a.qianzhangliuchengId like #{type}
+
+        </if>
+        <if test="sampleNo != ''">
+
+            and a.sampleNo like concat('%',#{sampleNo},'%')
+
+        </if>
+        <if test="reportNo != ''">
+
+            and a.reportNo like concat('%',#{reportNo},'%')
+
+        </if>
+        <if test="sampleName != ''">
+
+            and a.sampleName like concat('%',#{sampleName},'%')
+
+        </if>
+        <if test="sampleGcbw != ''">
+
+            and a.sampleGcbw like concat('%',#{sampleGcbw},'%')
+
+        </if>
+        <if test="beginReportDate != '' and endReportDate != ''">
+
+            and a.reportDate between #{beginReportDate} and #{endReportDate}
+
+        </if>
+        <if test="beginDate != '' and endDate != ''">
+
+            and a.shenpishijian between #{beginDate} and #{endDate}
+
+        </if>
+
+        order by a.reportNo desc
+
+    </select>
+    <select id="getGrid3" resultType="java.util.Map">
+
+        select id,sampleNoNew sampleNo,sampleName,sampleGcbw,reportNoNew reportNo,reportCreateDate,
+        jilubiaoqianzhangzhuangtai,baogaoqianzhangzhuangtai,baoyandanqianzhangzhuangtai,shenpibiaoqianzhangzhuangtai,
+        shenpizhuangtai,qianzhangzhuangtai from dps_sy_Sample_View
+        where 1=1 and orgCode = #{orgCode}
+
+        <if test="shenpizhuangtai != ''">
+
+            and shenpizhuangtai=3
+
+        </if>
+        <if test="shenpizhuangtai =''">
+
+            and shenpizhuangtai in (1,2)
+
+        </if>
+        <if test="self != ''">
+
+            and reportEditPerson = #{username}
+
+        </if>
+        <if test="state != ''">
+
+            and qianzhangzhuangtai = #{state}
+
+        </if>
+        <if test="titCode != ''">
+
+            and titCode like concat(#{sampleGcbw},'%')
+
+        </if>
+        <if test="sampleNo != ''">
+
+            and sampleNoNew like concat('%',#{sampleNo},'%')
+
+        </if>
+        <if test="reportNo != ''">
+
+            and reportNoNew like concat('%',#{reportNo},'%')
+
+        </if>
+        <if test="sampleName != ''">
+
+            and sampleName like concat('%',#{sampleName},'%')
+
+        </if>
+        <if test="sampleGcbw != ''">
+
+            and a.sampleGcbw like concat('%',#{sampleGcbw},'%')
+
+        </if>
+        <if test="tiNo != ''">
+
+            and tiNo = #{tiNo}
+
+        </if>
+        <if test="beginDate != ''and endDate != ''">
+
+            and reportCreateDate between #{beginDate} and #{endDate}
+
+        </if>
+
+        order by reportNo desc
+
+    </select>
+
+    <select id="getByJlb" resultType="java.util.Map">
+
+                select * from ${jlb} where sampleNo=#{wtid}
+
+    </select>
+    <select id="getByJlb2" resultType="java.util.Map">
+
+                select * from ${jlb} where sampleNo=#{wtid} and tiNoTemp=#{tiNoTemp}
+
+    </select>
+
+    <select id="selectSyjzb" resultType="java.util.Map">
+
+                select SYJID,ZZRQ,SJCC,QDDBZ,FBL,SYRQ,SJMJ from T_SYJZB where wtid = #{wtid} and LQ = #{lq} and sylx = #{sylx} ORDER BY ID
+
+    </select>
+
+    <select id="selectYaLiJi" resultType="java.util.Map">
+
+                select * from F_Yaliji where SYJID = #{syjid} ORDER BY SJXH
+
+    </select>
+
+    <select id="selectWnj" resultType="java.util.Map">
+
+                select LZ,LZQD,SJXH,WSBZ,QFLZ,QFQD,DHBZ,SCL,ZDLZSCL,LDCMS,DKWZ,SJMJ from F_Wangnj where SYJID = #{syjid} ORDER BY SJXH
+
+    </select>
+
+    <select id="getPzBmBySyJzb" resultType="java.util.Map">
+
+                select pzbm from T_SYJZB where wtid = #{wtid} ORDER BY ID
+
+    </select>
+
+    <select id="getSyJzbByGjPh" resultType="com.trtm.iot.syj.entity.TSyjzb">
+
+                select * from T_SYJZB where wtid = #{wtid} and pzbm = #{gangjpaih}
+
+    </select>
+
+    <select id="getSyJzb" resultType="java.util.Map">
+
+                select * from T_SYJZB where wtid = #{wtid} ORDER BY ID
+
+    </select>
+
+    <select id="selectBySampleList" resultType="java.util.Map">
+
+        SELECT
+        `a`.`id` AS `id`,
+        `a`.`sampleNo` AS `sampleNo`,
+        `a`.`sampleName` AS `sampleName`,
+        `a`.`sampleDescribe` AS `sampleDescribe`,
+        `a`.`sampleGcbw` AS `sampleGcbw`,
+        `a`.`sampleDate` AS `sampleDate`,
+        `a`.`sampleQuYangDiDian` AS `sampleQuYangDiDian`,
+        `a`.`sampleState` AS `sampleState`,
+        `c`.`realname` AS `realname`,
+        `a`.`sampleQuYangRen` AS `sampleQuYangRen`,
+        `a`.`sampleCreatePerson` AS `sampleCreatePerson`,
+        `a`.`sampleCreateDate` AS `sampleCreateDate`,
+        `a`.`orgCode` AS `orgCode`,
+        `a`.`titCode` AS `titCode`,
+        `a`.`reportDate` AS `reportCreateDate`,
+        `b`.`reportNo` AS `reportNo`,
+        `b`.`reportEditPerson` AS `reportEditPerson`,
+        `d`.`username` AS `username`,
+        `e`.`titType` AS `titType`,
+        NULL AS `qualifiedState`,
+        `a`.`insertNo` AS `insertNo`,
+        `a`.`sampleNoNew` AS `sampleNoNew`,
+        `a`.`reportNoNew` AS `reportNoNew`,
+        `a`.`tableNumberNew` AS `tableNumberNew`,
+        `a`.`shenpizhuangtai` AS `shenpizhuangtai`,
+        `a`.`qianzhangzhuangtai` AS `qianzhangzhuangtai`,
+        `a`.`jilubiaoqianzhangzhuangtai` AS `jilubiaoqianzhangzhuangtai`,
+        `a`.`baogaoqianzhangzhuangtai` AS `baogaoqianzhangzhuangtai`,
+        `a`.`baoyandanqianzhangzhuangtai` AS `baoyandanqianzhangzhuangtai`,
+        `a`.`shenpibiaoqianzhangzhuangtai` AS `shenpibiaoqianzhangzhuangtai`,
+        `a`.`SYJG` AS `SYJG`,
+        `a`.`shifouliuyang` AS `shifouliuyang`,
+        `a`.`buhegeyuanyin` AS `buhegeyuanyin`,
+        `a`.`liuyangriqi` AS `liuyangriqi`,
+        `a`.`liuyangqixian` AS `liuyangqixian`,
+        `a`.`liuyangchuli` AS `liuyangchuli`,
+        `a`.`sampleChanDi` AS `sampleChanDi`,
+        `a`.`sampleGuiGeXingHao` AS `sampleGuiGeXingHao`,
+        `a`.`sampleDaiBiaoShuLiang` AS `sampleDaiBiaoShuLiang`,
+        `a`.`sampleShengChanChangJia` AS `sampleShengChanChangJia`,
+        `a`.`sampleChuChangBianHao` AS `sampleChuChangBianHao`,
+        `a`.`sampleShengChanPiHao` AS `sampleShengChanPiHao`,
+        `a`.`departId` AS `departId`,
+        `a`.`sampleDepartId` AS `sampleDepartId`,
+        `a`.`baogaoriqi` AS `baogaoriqi`,
+        `a`.`sampleLingQi` AS `sampleLingQi`,
+        `a`.`plusMark` AS `plusMark`
+        FROM
+        `sy_dps_sy_sample` `a` LEFT JOIN `sy_dps_sy_report_m` `b` ON `a`.`sampleNo` = `b`.`sampleNo`
+        LEFT JOIN `sys_user` `c` ON `a`.`sampleCreatePerson` = `c`.`id`
+        LEFT JOIN `sys_user` `d` ON `b`.`reportEditPerson` = `c`.`id`
+        LEFT JOIN `sy_dps_jc_testitemtype` `e` ON `a`.`titCode` = `e`.`titCode`
+        WHERE
+        `a`.`sampleIsDel` = 0 AND `a`.`syzt` = 2
+
+        <if test="orgCode != null">
+
+            and a.orgCode like concat(#{orgCode},'%')
+
+        </if>
+        <if test="signature != null and signature == '0'">
+
+            and a.shenpizhuangtai = 1
+
+        </if>
+        <if test="titCode != null">
+
+            and a.titCode like concat(#{titCode},'%')
+
+        </if>
+        <if test="sampleState != null">
+
+            and a.sampleState in (#{sampleState})
+
+        </if>
+        <if test="sampleNo != null">
+
+            and a.sampleNoNew like concat('%',#{sampleNo},'%')
+
+        </if>
+        <if test="reportNo != null">
+
+            and a.reportNoNew like concat('%',#{reportNo},'%')
+
+        </if>
+        <if test="sampleName != null">
+
+            and a.sampleName like concat('%',#{sampleName},'%')
+
+        </if>
+        <if test="sampleGcbw != null">
+
+            and a.sampleGcbw like concat('%',#{sampleGcbw},'%')
+
+        </if>
+        <if test="titType != null">
+
+            and a.titType = #{titType}
+
+        </if>
+        <if test="tiNo != null">
+
+            and a.tiNo = #{tiNo}
+
+        </if>
+        <if test="lq != null">
+
+            and a.sampleLingQi like concat('%',#{lq},'%')
+
+        </if>
+        <if test="sampleDate != null">
+
+            and a.sampleDate like concat('%',#{sampleDate},'%')
+
+        </if>
+        <if test="lookself == true">
+
+            and b.reportEditPerson = #{reportEditPerson}
+
+        </if>
+        <if test="shenpizhuangtai != null and shenpizhuangtai != ''">
+
+            and a.shenpizhuangtai = #{shenpizhuangtai}
+
+        </if>
+        <if test="qianzhangzhuangtai != null and qianzhangzhuangtai != ''">
+
+            and a.qianzhangzhuangtai = #{qianzhangzhuangtai}
+
+        </if>
+        <if test="titCode == null and lookself == false and tiNo == null">
+
+            and b.reportEditPerson = #{reportEditPerson1}
+
+        </if>
+
+
+        order by a.sampleDate desc
+
+    </select>
+
+    <select id="selectInfo" resultType="com.trtm.sy.sydpssysample.entity.SyResponse">
+        SELECT
+        a.id,
+        a.sampleNo,
+        a.sampleName,
+        a.sampleGcbw,
+        a.reportDate,
+        a.sampleQuYangDiDian,
+        a.sampleQuYangRen,
+        a.sampleState,
+        a.reportNoNew,
+        b.reportEditPerson,
+        a.sampleCreatePerson,
+        b.reportCreateDate,
+        a.sampleDate,
+        a.shenpizhuangtai,
+        a.qianzhangzhuangtai,
+        a.pdfurl
+        FROM
+        sy_dps_sy_sample a
+        LEFT JOIN sy_dps_sy_report_m b ON a.sampleNo = b.sampleNo
+        LEFT JOIN sy_dps_yy_renwudan r ON a.sampleNo = r.sample_no
+        WHERE
+        a.sampleIsDel = 0 AND a.syzt = 2 AND a.titType=#{syRequest.titType} AND (r.jiancerenyuan != null or r.jiancerenyuan != '')
+        <if test="syRequest.orgCode!=null">
+            and a.orgCode like concat(#{syRequest.orgCode},'%')
+        </if>
+        <if test="syRequest.sys_depart_orgcode != null">
+
+            and a.orgCode like concat(#{syRequest.sys_depart_orgcode},'%')
+
+        </if>
+        <if test="syRequest.signature != null and syRequest.signature == '0'">
+
+            and a.shenpizhuangtai = 1
+
+        </if>
+        <if test="syRequest.titCode != null">
+
+            and a.titCode like concat(#{syRequest.titCode},'%')
+
+        </if>
+        <if test="syRequest.sampleState != null">
+
+            and a.sampleState in (#{syRequest.sampleState})
+
+        </if>
+        <if test="syRequest.sampleNo != null">
+
+            and a.sampleNoNew like concat('%',#{syRequest.sampleNo},'%')
+
+        </if>
+        <if test="syRequest.reportNo != null">
+
+            and a.reportNoNew like concat('%',#{syRequest.reportNo},'%')
+
+        </if>
+        <if test="syRequest.sampleName != null">
+
+            and a.sampleName like concat('%',#{syRequest.sampleName},'%')
+
+        </if>
+        <if test="syRequest.sampleGcbw != null">
+
+            and a.sampleGcbw like concat('%',#{syRequest.sampleGcbw},'%')
+
+        </if>
+        <!--        <if test="syRequest.titType!=null">-->
+        <!--            and a.titType = #{syRequest.titType}-->
+        <!--        </if>-->
+        <if test="syRequest.tiNo != null">
+
+            and a.tiNo = #{syRequest.tiNo}
+
+        </if>
+        <if test="syRequest.lq != null">
+
+            and a.sampleLingQi like concat('%',#{syRequest.lq},'%')
+
+        </if>
+        <if test="syRequest.sampleDate != null">
+
+            and a.sampleDate like concat('%',#{syRequest.sampleDate},'%')
+
+        </if>
+        <if test="syRequest.lookself == true">
+
+            and b.reportEditPerson = #{syRequest.username}
+
+        </if>
+        <if test="syRequest.shenpizhuangtai != null and syRequest.shenpizhuangtai != ''">
+
+            and a.shenpizhuangtai = #{syRequest.shenpizhuangtai}
+
+        </if>
+        <if test="syRequest.qianzhangzhuangtai != null and syRequest.qianzhangzhuangtai != ''">
+
+            and a.qianzhangzhuangtai = #{syRequest.qianzhangzhuangtai}
+
+        </if>
+        <!--        <if test="syRequest.titCode==null and syRequest.lookself==false and syRequest.tiNo==null">-->
+        <!--            and b.reportEditPerson = #{syRequest.reportEditPerson}-->
+        <!--        </if>-->
+        order by a.sampleDate desc
+
+    </select>
+
+    <select id="selectByBiaomingANDsampleno" resultType="java.util.Map">
+
+                select * from ${tablename} where sampleNo=#{sampleNo}
+
+    </select>
+
+    <select id="selectDepartRuleByUserOrgCode" resultType="com.trtm.sy.syrules.entity.SyCodingRules">
+
+                select r.* from sy_coding_rules r join sys_depart d on r.depart_id=d.id where d.org_code=#{departOrgCode}
+
+    </select>
+
+    <select id="getSampleById" resultType="java.util.Map">
+
+                SELECT
+                s.id,s.sampleName,s.sampleNo,s.sampleGcbw,s.sampleDescribe,s.sampleDate,s.sampleChanDi,s.sampleDaiBiaoShuLiang,s.sampleGuiGeXingHao,s.sampleQuYangDiDian,s.sampleQuYangRen,
+                s.sampleShengChanChangJia,s.sampleChuChangBianHao,s.sampleQiangDuDengJi,s.sampleJiaoBanFangShi,s.sampleHunNingTuZhongLei,s.sampleYangHuTiaoJian,s.sampleShaJiangZhongLei,s.sampleRemark,
+                s.departId,s.orgCode,s.sampleIsDel,s.sampleCreatePerson,s.sampleCreateDate,s.sampleState,s.sampleDepartId,s.sampleShengChanRIQi,s.sampleShengChanPiHao,s.samplePinZhongDengJi,s.sampleSheJiJiLiang,
+                s.sampleJieHeLiaoZhongLei,s.sampleLiQingBiaoHao,s.sampleLiQingZhongLei,s.sampleJiPeiLeiXing,s.sampleShiYanCengWei,s.sampleLiQingHunHeLiaoLeiXing,s.sampleGangJinZhiJing,s.sampleGangJinZhongLei,
+                s.sampleLingQi,s.sampleWaiJiaJiChanLiang,s.titCode,s.MSTATUS,s.plusMark,s.sampleShiYanZuShu,s.sampleNoNew,s.reportNoNew,s.tableNumberNew,s.reportDate,s.insertNo,s.SYJG,s.buhegeyuanyin,
+                s.shifouliuyang,s.liuyangriqi,s.liuyangqixian,s.liuyangchuli,s.shenpizhuangtai,s.jilubiaoqianzhangzhuangtai,s.baogaoqianzhangzhuangtai,s.baoyandanqianzhangzhuangtai,s.shenpibiaoqianzhangzhuangtai,
+                s.qianzhangzhuangtai,s.zhuanfazhuangtai,s.projectId,s.shenpiren,s.shenpishijian,s.reportingSheetNoNew,s.approvalTableNoNew,s.WTID,s.phbtzdid,s.phbtzdbh,s.samplejidu,s.sampleweidu,s.wtbh,s.baogaoriqi,
+                s.sampleChanDi2,s.sampleChanDi3,s.sampleQuYangDiDian2,s.sampleQuYangDiDian3,s.sampleDate2,s.sampleDate3,s.sampleGangJinDengji,s.syzt,s.sampleDaiBiaoShuLiang2,s.sampleDaiBiaoShuLiang3,
+                s.sampleGuiGeXingHao2,s.sampleGuiGeXingHao3,s.tiNames,s.sampleGongChengBiHou,s.ycjcwtdbh,s.zgzt,s.sampleYangPinShuLiang,s.sampleYangPinShuLiang2,s.sampleYangPinShuLiang3,s.sampleChangDu,
+                s.sampleLingQiMax,s.sampleDaiBiaoShuLiang4,s.sampleDaiBiaoShuLiang5,s.sampleGuiGeXingHao4,s.sampleGuiGeXingHao5,s.sampleYangPinShuLiang4,s.sampleYangPinShuLiang5,s.shikuaichicun,
+                s.sampleLiuYangShuLiang,s.sampleZhiJianRiQi,s.RigidrReboundshebeiNo,s.RigidrReboundshebeiCJ,s.jianceyiju,s.titType,s.tino tiNos,
+                h.tableNumber,h.renwuNo,h.shiyanyiju ShiYanYiJu,h.shiyantiaojian,h.shiyanriqi,h.yiqishebei,h.reportNo,h.remark,h.tiNoTemp,h.gongchengmingcheng,h.pandingyiju PanDingYiJu,h.shigongdanwei,h.departFullName,
+                h.gongZhangMingCheng,h.hetonghao,h.jianlidanwei,h.samplePihao,h.jianliyijian,h.WtRwNo,h.WtSgDw,h.ypxx,h.jlyj,h.zonbaodanwei,
+                r.yuancaijinchangdengjiId wztzid,r.jiancerenyuan,r.jilurenyuan,r.fuherenyuan,r.qianfarenyuan,w.pici,m.projectName
+                FROM
+                    sy_dps_sy_sample s
+                    left join sy_dps_sy_report_m m on s.sampleNo=m.sampleNo
+                    left join (select * from sy_dps_sy_tableheader group by sampleNo) h on s.sampleNo=h.sampleNo
+                    left join sy_dps_yy_renwudan r on s.sampleNo=r.sample_no
+                    left join wztaizhang w on r.yuancaijinchangdengjiId=w.id
+                WHERE
+                    s.id = #{id}
+
+    </select>
+
+    <select id="selectBgTiNo" resultType="java.lang.String">
+
+                select h.tino from sy_dps_sy_tableheader h join sy_dps_jc_testitem t on (t.tino=h.tino and t.tiType=1) where h.sampleNo=#{sampleNo}
+
+    </select>
+
+    <select id="getSyRenWu" resultType="java.util.Map">
+
+                SELECT
+                    id,
+                    sampleNo,
+                    sampleNoNew,
+                    sampleGcbw,
+                    sampleDate,
+                    sampleLingQi,
+                    sampleQiangDuDengJi,
+                    sampleGangJinZhongLei,
+                    sampleGangJinZhiJing,
+                    sampleDaiBiaoShuLiang,
+                    MSTATUS,
+                    orgCode,
+                    sampleName,
+                    sampleQuYangDiDian,
+                    sampleQuYangRen,
+                    sampleDescribe,
+                    sampleShiYanZuShu,
+                    sampleShengChanChangJia,
+                    sampleZhiJianRiQi,
+                    titCode,
+                    tiNo
+                FROM
+                    sy_dps_sy_sample
+                WHERE
+                    orgCode like concat(#{orgCode}, '%') and MSTATUS = 0
+
+    </select>
+    <select id="getTypeListByCode" resultType="java.util.Map">
+
+        select a.typecode value,a.typename name from t_s_type a left join t_s_typegroup b on a.typegroupid=b.id where b.typegroupcode=#{code} order by a.create_date
+
+    </select>
+
+    <select id="searchPhbData" resultType="java.util.Map">
+        SELECT
+        dps.shiyanriqi,
+        dps.tableNumber,
+        dps.tableNumberNew,
+        sam.sampleCreatePerson,
+        item.tiTableName,
+        item.tiName,
+        item.tiNo
+        FROM
+        ${tiNo} j
+        JOIN sy_dps_sy_tableHeader dps ON j.tiNo = dps.tiNo
+        AND j.sampleNo = dps.sampleNo
+        AND j.tableNumber = dps.tableNumber
+        JOIN sy_dps_sy_Sample sam ON j.sampleNo = sam.sampleNo
+        <!--            JOIN sys_depart t ON sam.departId = t.ID-->
+        JOIN sy_dps_jc_testItem item ON item.titCode = sam.titCode
+        AND j.tiNo = item.tiNo
+        WHERE
+        1 = 1 and sam.orgCode like concat(#{orgCode}, '%')
+        <if test="sampleNo != null">and dps.tableNumberNew LIKE concat('%', #{sampleNo}, '%')</if>
+    </select>
+    <select id="selectbywtdh" resultType="java.util.Map">
+        SELECT c.sampleDate,c.sampleNo,c.sampleQuYangDiDian,c.sampleYangPinShuLiang,c.sampleYangPinShuLiang2,c.sampleYangPinShuLiang3,c.sampleYangPinShuLiang4,c.sampleYangPinShuLiang5,b.shiyanwanchengqixian,replace(c.sampleNo,'YP','BG') as reportNo, a.jianlichoujianzhuangtai FROM sy_dps_yy_yuancaijinchangdengji a
+        LEFT join sy_dps_yy_renwudan b on a.id=b.yuancaijinchangdengjiId LEFT join sy_dps_sy_Sample c on a.sampleNo=c.sampleNo where a.id=#{wtdbh}
+    </select>
+    <select id="selectTitCodeBYSampleNo" resultType="java.util.Map">
+        select titCode from sy_dps_sy_Sample where sampleNo= #{sampleNo}
+    </select>
+    <select id="selectBaogaoriqiBySampleNO" resultType="java.util.Map">
+        select top 1 baogaoriqi from sy_dps_sy_tableHeader where sampleNo= #{sampleNo}
+    </select>
+    <select id="selectRolename" resultType="java.lang.String">
+        SELECT
+        r.role_name
+        FROM
+        sys_user_role  s
+        LEFT JOIN sys_role r ON s.role_id = r.id
+        WHERE
+        s.user_id = #{id}
+    </select>
+</mapper>

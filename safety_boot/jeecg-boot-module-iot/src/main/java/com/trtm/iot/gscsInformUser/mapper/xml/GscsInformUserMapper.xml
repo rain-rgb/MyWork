@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.gscsInformUser.mapper.GscsInformUserMapper">
+    <!-- 查询参加考试的总人数 去重 -->
+    <select id="selectJoinTestCount" resultType="integer">
+        select count(distinct(inform_to)) as count from gscs_inform_user
+    </select>
+</mapper>

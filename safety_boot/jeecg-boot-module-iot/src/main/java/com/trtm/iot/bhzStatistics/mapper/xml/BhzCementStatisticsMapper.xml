@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.bhzStatistics.mapper.BhzCementStatisticsMapper">
+
+    <select id="countList" resultType="java.util.Map">
+        	SELECT
+	d.depart_name,
+  IFNULL(sum(m.bhzcount),0) bhzcount,
+	IFNULL(sum(m.over1),0) chaobiao1,
+	IFNULL(sum(m.over2),0) chaobiao2,
+	IFNULL(sum(m.over3),0) chaobiao3,
+	(case WHEN sum(m.bhzcount) is null THEN 100 ELSE  ROUND( sum(m.over1)/sum(m.bhzcount)*100,1) END ) chaobiaolv1,
+	(case WHEN sum(m.bhzcount) is null THEN 100 ELSE  ROUND( sum(m.over2)/sum(m.bhzcount)*100,1) END ) chaobiaolv2,
+	(case WHEN sum(m.bhzcount) is null THEN 100 ELSE  ROUND( sum(m.over3)/sum(m.bhzcount)*100,1) END ) chaobiaolv3
+
+FROM
+(SELECT shebei_no,
+SUM( all_dish ) bhzcount,
+SUM( primary_dish ) AS over1,
+SUM( middle_dish ) AS over2,
+ SUM( advanced_dish ) AS over3
+FROM  bhz_cement_statistics  GROUP BY shebei_no ) m
+	INNER JOIN shebei_info s ON m.shebei_no = s.sbjno
+	RIGHT JOIN (	select depart_name,org_code from sys_depart  WHERE org_code LIKE #{orgCode} AND org_category = 6 ) d ON s.sys_org_code = d.org_code
+ GROUP BY d.org_code
+ ORDER BY chaobiaolv3 DESC
+    </select>
+    <select id="selectCountNumber" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select sum(estimate_number) from bhz_cement_statistics where shebei_no in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and statistics_time like concat(#{dateNowStr},"%")
+    </select>
+    <select id="countLists" resultType="java.util.Map">
+        SELECT
+        d.depart_name,
+        IFNULL( sum( m.bhzcount ), 0 ) bhzcount,
+        IFNULL( sum( m.over1 ), 0 ) chaobiao1,
+        IFNULL( sum( m.over2 ), 0 ) chaobiao2,
+        IFNULL( sum( m.over3 ), 0 ) chaobiao3,
+        (
+        CASE
+
+        WHEN sum( m.bhzcount ) IS NULL THEN
+        100 ELSE ROUND( sum( m.over1 )/ sum( m.bhzcount )* 100, 1 )
+        END
+        ) chaobiaolv1,
+        (
+        CASE
+
+        WHEN sum( m.bhzcount ) IS NULL THEN
+        100 ELSE ROUND( sum( m.over2 )/ sum( m.bhzcount )* 100, 1 )
+        END
+        ) chaobiaolv2,
+        (
+        CASE
+
+        WHEN sum( m.bhzcount ) IS NULL THEN
+        100 ELSE ROUND( sum( m.over3 )/ sum( m.bhzcount )* 100, 1 )
+        END
+        ) chaobiaolv3
+        FROM
+        (
+        SELECT
+        shebei_no,
+        SUM( all_dish ) bhzcount,
+        SUM( primary_dish ) AS over1,
+        SUM( middle_dish ) AS over2,
+        SUM( advanced_dish ) AS over3
+        FROM
+        bhz_cement_statistics
+        <if test="date == 0">
+            WHERE YEAR(statistics_time)=YEAR(NOW())
+        </if>
+        <if test="date == 1">
+            WHERE date_format(statistics_time,'%Y-%m') = date_format(now(),'%Y-%m')
+        </if>
+        <if test="date == 2">
+            WHERE to_days(statistics_time) = to_days(now())
+        </if>
+        <if test="date == 3">
+            WHERE QUARTER(statistics_time)=QUARTER(now())
+        </if>
+        <if test="date == 4">
+            WHERE YEARWEEK(date_format(statistics_time,'%Y-%m-%d')) = YEARWEEK(now())
+        </if>
+        GROUP BY
+        shebei_no
+        ) m
+        INNER JOIN shebei_info s ON m.shebei_no = s.sbjno
+        RIGHT JOIN ( SELECT depart_name, org_code FROM sys_depart WHERE org_code LIKE #{orgCode} AND org_category in
+        (${orgCategorys}) ) d ON s.sys_org_code = d.org_code
+        GROUP BY
+        d.org_code
+        ORDER BY
+        chaobiaolv3 DESC
+    </select>
+    <!--flushCache默认为false，表示任何时候语句被调用，都不会去清空本地缓存和二级缓存。
+    useCache默认为true，表示会将本条语句的结果进行二级缓存。-->
+    <select id="selectlimit" resultType="com.trtm.iot.bhzStatistics.entity.BhzCementStatistics" flushCache="true"
+            useCache="false">
+        select * from bhz_cement_statistics
+        where statistics_time=#{datanyr1} and shebei_no=#{shebeiNo}
+        <if test="projectName!=null and projectName!='' ">
+            AND project_name=#{projectName}
+        </if>
+        <if test="poureLocation!=null and poureLocation!='' ">
+            AND poure_location=#{poureLocation}
+        </if>
+        <if test="jobLocation!=null and jobLocation!='' ">
+            AND job_location=#{jobLocation}
+        </if>
+        <if test="formulaNo!=null and formulaNo!='' ">
+            AND formula_no=#{formulaNo}
+        </if>
+        <if test="strengthRank!=null and strengthRank!='' ">
+            AND strength_rank=#{strengthRank}
+        </if>
+        LIMIT 1
+    </select>
+    <select id="selectbydays" resultType="com.trtm.iot.bhzStatistics.entity.BhzCementStatistics">
+		SELECT IFNULL(b.estimateNumber,0) as estimateNumber , a.item as statistics_time, IFNULL(b.shebei_no,#{shebeiNo}) as shebei_no
+        FROM (
+            SELECT CURDATE() AS item
+            UNION ALL
+            SELECT DATE_SUB(CURDATE(), INTERVAL 1 DAY ) AS item
+            UNION ALL
+            SELECT DATE_SUB(CURDATE(), INTERVAL 2 DAY ) AS item
+            UNION ALL
+            SELECT DATE_SUB(CURDATE(), INTERVAL 3 DAY ) AS item
+            UNION ALL
+            SELECT DATE_SUB(CURDATE(), INTERVAL 4 DAY ) AS item
+            UNION ALL
+            SELECT DATE_SUB(CURDATE(), INTERVAL 5 DAY ) AS item
+            UNION ALL
+            SELECT DATE_SUB(CURDATE(), INTERVAL 6 DAY ) AS item
+                UNION ALL
+            SELECT DATE_SUB(CURDATE(), INTERVAL 7 DAY ) AS item
+                UNION ALL
+            SELECT DATE_SUB(CURDATE(), INTERVAL 8 DAY ) AS item
+                UNION ALL
+            SELECT DATE_SUB(CURDATE(), INTERVAL 9 DAY ) AS item
+                UNION ALL
+            SELECT DATE_SUB(CURDATE(), INTERVAL 10 DAY ) AS item
+                UNION ALL
+            SELECT DATE_SUB(CURDATE(), INTERVAL 11 DAY ) AS item
+                UNION ALL
+            SELECT DATE_SUB(CURDATE(), INTERVAL 12 DAY ) AS item
+                UNION ALL
+            SELECT DATE_SUB(CURDATE(), INTERVAL 13 DAY ) AS item
+                UNION ALL
+            SELECT DATE_SUB(CURDATE(), INTERVAL 14 DAY ) AS item
+        ) a LEFT JOIN (
+          SELECT sum(estimate_number) as estimateNumber, statistics_time, shebei_no
+          FROM `bhz_cement_statistics`
+            where shebei_no = #{shebeiNo}
+          GROUP BY statistics_time
+        ) b ON a.item = b.statistics_time ORDER BY a.item;
+	</select>
+    <select id="selectsum" resultType="com.trtm.iot.bhzStatistics.entity.BhzCementStatistics" flushCache="true"
+            useCache="false">
+        select sum(all_dish) all_dish,sum(all_overproof_dish) all_overproof_dish,sum(all_handle_dish) all_handle_dish
+        from bhz_cement_statistics where shebei_no in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and statistics_time like #{dateNowStr}
+    </select>
+
+    <select id="findRenwudanzs" resultType="com.trtm.iot.bhzStatistics.entity.BhzCementStatistics" flushCache="true"
+            useCache="false">
+        select sum(all_dish) all_dish,sum(all_overproof_dish) all_overproof_dish,sum(all_handle_dish) all_handle_dish
+        from bhz_cement_statistics where shebei_no in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}
+        </foreach>
+        and statistics_time like "2023%"
+    </select>
+    <select id="getQuarters" resultType="java.lang.String" flushCache="true" useCache="false">
+        SELECT DATE_FORMAT(NOW(), '%Y-%m') AS quarter_month
+        UNION ALL
+        SELECT DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 MONTH), '%Y-%m')
+        UNION ALL
+        SELECT DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 2 MONTH), '%Y-%m');
+    </select>
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.sy.formtoprint.mapper.DpsJcTestitemtypeMapper">
+
+    <resultMap id="resultMap1" type="com.trtm.sy.formtoprint.entity.DpsJcTestitemtype">
+        <result column="id" property="resultId"></result>
+        <result column="NAME" property="resultName"></result>
+        <result column="isParent" property="isParent"></result>
+        <result column="parentId" property="parentId"></result>
+    </resultMap>
+
+    <select id="getFormTreeList"  resultType="com.trtm.sy.formtoprint.entity.DpsJcTestitemtype">
+        SELECT
+            a.titCode as  resultId,
+            a.titName as resultName,
+            (CASE WHEN count( b.id )> 0 THEN 'true' ELSE 'false' END ) as isParent,
+            a.titParentCode as parentId
+        FROM
+            dps_jc_testItemType a
+                LEFT JOIN dps_jc_testItemType b ON a.titCode = b.titParentCode
+        WHERE
+            a.titIsDel = 0
+        GROUP BY
+            a.titCode,
+            a.titName,
+            a.titParentCode
+        ORDER BY
+            a.titCode
+    </select>
+
+</mapper>

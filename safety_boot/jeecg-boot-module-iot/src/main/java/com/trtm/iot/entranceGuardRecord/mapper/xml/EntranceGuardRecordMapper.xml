@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.entranceGuardRecord.mapper.EntranceGuardRecordMapper">
+
+    <select id="selectLists" resultType="com.trtm.iot.entranceGuardRecord.entity.EntranceGuardRecord" flushCache="true" useCache="false">
+        select *
+        from entrance_guard_record
+        where id &gt; #{id}
+          AND shebeino in (${shebeiNo})
+            limit 100
+    </select>
+
+</mapper>

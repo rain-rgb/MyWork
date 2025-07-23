@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.sy.sydpsshebeisyjl.mapper.SyDpsJcShebeiShiyongjiluMapper">
+
+
+    <select id="getSbSyJl" resultType="com.trtm.sy.sydpsshebeisyjl.entity.SheBeiSyJlResponse">
+        SELECT
+        a.id,
+        u.realname shiYongRen,
+        d.tiName tiName,
+        c.sampleNo sampleNo,
+        a.shiyanriqi shiYanRiQi,
+        b.shebeino sheBeiNo,
+        b.shebeiname sheBeiName
+        FROM
+        sy_dps_jc_shebei_shiyongjilu AS a
+        LEFT JOIN sy_dps_jc_shebei AS b ON a.shebeiId=b.id
+        LEFT JOIN sy_dps_sy_sample AS c ON a.sampleNo = c.sampleNo
+        LEFT JOIN ( SELECT tino, tiname FROM sy_dps_jc_testItem GROUP BY tino, tiname ) AS d ON a.tino = d.tino
+        LEFT JOIN sys_user AS u ON a.shiyongren = u.id
+        WHERE
+        1 = 1
+        <if test="sheBeiIds != null and sheBeiIds.size !=0">
+            AND a.shebeiid in
+            <foreach collection="sheBeiIds" item="item" index="index" open="(" separator="," close=")">#{item}</foreach>
+        </if>
+        <if test="startTime != null and startTime != ''">
+            AND a.shiyanriqi &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND a.shiyanriqi &lt;= #{endTime}
+        </if>
+    </select>
+</mapper>

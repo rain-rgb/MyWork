@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.chaoshengbo.mapper.ChaoshengboSyjbsjMapper">
+
+    <select id="selectLists" flushCache="true" useCache="false" resultType="com.trtm.iot.chaoshengbo.entity.ChaoshengboSyjbsj">
+    SELECT chaoshengbo_syjbsj.*
+    FROM chaoshengbo_syjbsj
+	JOIN hntht_consign
+	ON hntht_consign.uuid = chaoshengbo_syjbsj.liushuihao
+	WHERE hntht_consign.shebeibianhao in (${shebeino})
+    AND chaoshengbo_syjbsj.id > #{id}
+    LIMIT 100
+    </select>
+    <insert id="insertjbsj" parameterType="com.trtm.iot.chaoshengbo.entity.ChaoshengboSyjbsjs">
+        INSERT INTO chaoshengbo_syjbsj (
+            `shebeino`,
+            `syff`,
+            `shizhuangleixing`,
+            `ceshiyino`,
+            `liushuihao`,
+            `shizhuangno`,
+            `poumianlist`,
+            `chuanshuleirong`,
+            `baoxuhao`,
+            `dangqiantime`,
+            `ceshitime`,
+            `jiaozhutime`,
+            `wenjianming`,
+            `zhuangjing`,
+            `zhuangchang`,
+            `yiju`,
+            `guanshu`,
+            `poumianshu`,
+            `caiyangpinlv`,
+            `caiyanglength`,
+            `ADzhuanhuan`,
+            `boxingfuzhi`,
+            `boxingjixian`,
+            `jingdu`,
+            `weidu`,
+            `shoubozengqiang`,
+            `ruanjianlvbo`,
+            `shengceguan`,
+            `shengceguanwaijing`,
+            `shengceguanneijing`,
+            `tantouwaijing`,
+            `fangweijiao`,
+            `lunjing`,
+            `xianjing`,
+            `poumian1`,
+            `poumian2`,
+            `poumian3`,
+            `poumian4`,
+            `poumian5`,
+            `poumian6`,
+            `poumian7`,
+            `poumian8`,
+            `poumian9`,
+            `poumian10`,
+            `ceshiguifan`,
+            `hege`,
+            `chuzhiid`,
+            `shangchuantime`,
+            `projectName`,
+            `sgbwName`,
+            `Code`
+        )
+        VALUES
+            (#{shebeino},
+             #{syff},
+             #{shizhuangleixing},
+             #{ceshiyino},
+             #{liushuihao},
+             #{shizhuangno},
+             #{poumianlist},
+             #{chuanshuleirong},
+             #{baoxuhao},
+             #{dangqiantime},
+             #{ceshitime},
+             #{jiaozhutime},
+             #{wenjianming},
+             #{zhuangjing},
+             #{zhuangchang},
+             #{yiju},
+             #{guanshu},
+             #{poumianshu},
+             #{caiyangpinlv},
+             #{caiyanglength},
+             #{adzhuanhuan},
+             #{boxingfuzhi},
+             #{boxingjixian},
+             #{jingdu},
+             #{weidu},
+             #{shoubozengqiang},
+             #{ruanjianlvbo},
+             #{shengceguan},
+             #{shengceguanwaijing},
+             #{shengceguanneijing},
+             #{tantouwaijing},
+             #{fangweijiao},
+             #{lunjing},
+             #{xianjing},
+             #{poumian1},
+             #{poumian2},
+             #{poumian3},
+             #{poumian4},
+             #{poumian5},
+             #{poumian6},
+             #{poumian7},
+             #{poumian8},
+             #{poumian9},
+             #{poumian10},
+             #{ceshiguifan},
+             #{hege},
+             #{chuzhiid},
+             #{shangchuantime},
+             #{projectName},
+             #{sgbwName},
+             #{code}
+            );
+</insert>
+
+</mapper>

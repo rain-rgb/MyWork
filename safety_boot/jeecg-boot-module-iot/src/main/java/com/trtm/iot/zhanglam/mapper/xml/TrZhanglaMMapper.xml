@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.zhanglam.mapper.TrZhanglaMMapper">
+
+    <select id="countList" resultType="java.util.Map">
+        SELECT
+            t3.depart_name AS departName,
+            case COUNT(0)
+                when 0 then null
+                else COUNT(0) end
+            AS sum,
+	sum( t1.hege ) AS over
+        FROM (
+            SELECT
+            CASE
+            WHEN
+            sum(case hege
+            when '1' then '0'
+            else '1' end)!= '0' THEN
+            '1' ELSE '0'
+            END AS hege,
+            shebeibianhao,
+            SYJID,
+            zlsj
+
+            FROM tr_zhangla_m
+
+            GROUP BY SYJID
+            ) t1
+            JOIN shebei_info t2 ON t1.shebeibianhao = t2.sbjno
+            JOIN sys_depart t3 ON t2.sys_org_code = t3.org_code
+        WHERE DATE_FORMAT(STR_TO_DATE(t1.zlsj, '%Y-%m-%d %H:%i:%s'), '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')
+          and t3.org_code LIKE #{orgCode}"%"
+        GROUP BY t3.org_code
+    </select>
+    <select id="findBysyjid" flushCache="true" useCache="false"
+            resultType="com.trtm.iot.zhanglaxxb.entity.TrZhanglaXxbMStatistics">
+        select
+            hege
+        from
+            tr_zhangla_m
+        where
+            syjid=#{syjid}
+    </select>
+
+    <select id="selectmList" flushCache="true" useCache="false" resultType="com.trtm.iot.zhanglam.entity.TrZhanglaM">
+        select
+            *
+        from
+            tr_zhangla_m
+        where
+            syjid=#{syjid}
+    </select>
+
+
+
+
+    <select id="findXiangMuZS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_m where shebeibianhao in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+    </select>
+
+    <select id="findYuJingS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_m where shebeibianhao in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and (hege='0' or hege='不合格')
+    </select>
+
+    <select id="findBiHeS" parameterType="list" resultType="Integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_m where shebeibianhao in
+        <foreach collection="querySheBeiList" item="item" index="index" separator="," open="(" close=")">#{item}</foreach> and overproof_status=20
+    </select>
+
+    <select id="queryCount" resultType="integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_m where shebeibianhao=#{sheBeiNo}
+    </select>
+
+    <select id="queryBuhe" resultType="integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_m where shebeibianhao=#{sheBeiNo} and hege='0'
+    </select>
+
+    <select id="queryStatus" resultType="integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_m where shebeibianhao=#{sheBeiNo} and overproof_status=20
+    </select>
+
+    <select id="qyeryByXiangMu" resultType="com.trtm.iot.devicepipepilehistorydataone.entity.GongYiVo" flushCache="true" useCache="false">
+        select count(b.id) allDish,count(if(hege='0' or hege='不合格' , TRUE, NULL)) allWarnDish,s.depart_name sectionName,count(if(overproof_status=20, TRUE, NULL)) biheCount,
+               s.sys_org_code sysOrgCode
+        from `tr_zhangla_m` b
+                 join  (select depart.depart_name,depart.org_code,sb.sys_org_code,sb.sbjno,sb.sbname from `shebei_info` sb right join(select * from `sys_depart` where org_category =4 ) depart on  sb. sys_org_code like concat(depart.org_code,"%")) s
+                            on b.shebeibianhao = s.sbjno
+        where s.org_code like  concat(#{orgCode},"%")
+        GROUP BY s.org_code
+    </select>
+
+    <select id="queryCountZy" resultType="com.trtm.iot.devicepipepilehistorydataone.entity.GongYiVo" flushCache="true" useCache="false">
+    select
+    count(b.id) allDish,count(if(hege='0' or hege='不合格' , TRUE, NULL)) allWarnDish,count(if(overproof_status=20, TRUE, NULL)) biheCount,
+    s.sbname shebeiName,
+    s.depart_name sectionName,
+    s.sbjno shebeiNo,
+    s.sys_org_code sysOrgCode
+    from `tr_zhangla_m` b
+    join  (select depart.depart_name,depart.org_code,sb.sys_org_code,sb.sbjno,sb.sbname from `shebei_info` sb right join(select * from `sys_depart` where org_category =#{orgCategory}) depart on  sb.sys_org_code like concat(depart.org_code,"%")) s
+    on b.shebeibianhao = s.sbjno
+    where s.org_code like  concat(#{orgCode},"%")
+
+    GROUP BY b.shebeibianhao  ORDER BY allWarnDish desc limit 10
+    </select>
+
+    <select id="queryCountBySheBei" resultType="com.trtm.iot.devicepipepilehistorydataone.entity.GongYiVo" flushCache="true" useCache="false">
+    select
+    count(b.id) allDish,count(if(hege='0' or hege='不合格' , TRUE, NULL)) allWarnDish,count(if(overproof_status=20, TRUE, NULL)) biheCount,
+    s.sbname shebeiName,
+    s.depart_name sectionName,
+    s.sbjno shebeiNo,
+    s.sys_org_code sysOrgCode
+    from `tr_zhangla_m` b
+    join  (select depart.depart_name,depart.org_code,sb.sys_org_code,sb.sbjno,sb.sbname from `shebei_info` sb right join(select * from `sys_depart` where org_category =#{orgCategory} ) depart on  sb.sys_org_code like concat(depart.org_code,"%")) s
+    on b.shebeibianhao = s.sbjno
+    where s.org_code like  concat(#{orgCode},"%")
+    GROUP BY b.shebeibianhao  ORDER BY allWarnDish desc limit 10
+    </select>
+    <select id="count" resultType="java.lang.Integer" flushCache="true" useCache="false">
+        select count(*) from tr_zhangla_m where shebeibianhao in <foreach collection="sheBs" item="item" index="index" separator="," open="(" close=")">#{item}</foreach>
+    </select>
+
+    <select id="selectListbl" flushCache="true" useCache="false" resultType="com.trtm.iot.zhanglam.entity.TrZhanglaM">
+        SELECT
+        tr_zhangla_m.*
+    FROM
+        tr_zhangla_m
+        JOIN tr_zhangla_xxb ON tr_zhangla_m.syjid = tr_zhangla_xxb.syjid
+    WHERE
+        tr_zhangla_xxb.shebeibianhao IN (${shebeibianhao})
+	AND tr_zhangla_xxb.iszl != '0'
+	AND tr_zhangla_m.iszl = 0
+	LIMIT 100
+    </select>
+</mapper>

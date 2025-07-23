@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.sy.sywt.mapper.SyDpsYyXianchangjianceweituoMapper">
+    <insert id="insertCodingFlowNumber">
+        insert into sy_dps_sy_codingFlowNumber (id, currentCode, NoFlowNumber)
+        values (#{uuid}, #{currentCode}, #{bh})
+    </insert>
+
+    <update id="updateCodeById">
+        update sy_dps_sy_codingFlowNumber
+        set currentCode = #{currentCode}
+        where id = #{id}
+    </update>
+
+    <select id="getCountByTable" resultType="java.lang.Long">
+        select count(0)
+        from ${table}
+        where ${liushuihao} like concat(#{bh}, '%')
+    </select>
+
+    <select id="getCountForYcQyWt" resultType="java.lang.Long">
+        select count(0)
+        from sy_dps_yy_yuancaiquyangweituo
+        where ${liushuihao} like concat(#{bh}, '%')
+    </select>
+
+    <select id="getListXcWt" resultType="com.trtm.sy.sywt.entity.XcWtResponse">
+        select a.id AS xcwtdId, a.cailiaomingcheng AS yangpingmingcheng, a.cailiaochangjia, a.guigexinghao, a.titCode, a.sampleNo,
+        b.renwudanliushuihao, u.username jiancerenyuan, a.shiyongbuwei, a.sampleDate
+        from sy_dps_yy_xianchangjianceweituo a
+        left join sy_dps_yy_renwudan b on a.id = b.xcwtdid
+        left join sys_user u on b.jiancerenyuan = u.id
+        where a.shigongdanwei like concat(#{request.sys_depart_orgcode}, '%')
+        <if test="request.titCode != null and request.titCode != ''">
+            and a.titCode = #{request.titCode}
+        </if>
+        <if test="request.cailiaomingcheng != null and request.cailiaomingcheng != ''">
+            and a.cailiaomingcheng like concat('%',#{request.cailiaomingcheng},'%')
+        </if>
+    </select>
+
+    <select id="getXcWtById" resultType="java.util.Map">
+        SELECT
+        a.id AS xcwtdId,
+        a.jianglidanwei,
+        a.weituodanwei,
+        d.realname AS weituoren,
+        a.weituoriqi,
+        a.cailiaomingcheng yangpingmingcheng,
+        a.cailiaochangjia,
+        a.guigexinghao,
+        a.sampleDate,
+        a.sampleShuLiang yangpingshuliang,
+        a.shiyongbuwei,
+        a.titCode,
+        a.daibiaoshuliang,
+        a.quyangdidian,
+        a.baogaofenshu,
+        a.yangpinchulifangshi,
+        a.jiancexiangmu,
+        a.beizhu,
+        a.fujian,
+        a.sampleNo,
+        b.supervision_unit AS jianglidanwei,
+        a.shigongdanwei,
+        a.weituodanbianhao,
+        a.sampleDescribe yangpinmiaoshu,
+        b.depart_name AS gongcghengmingcheng,
+        b.construction_unit AS sgdwmc,
+        a.jianceyiju,
+        a.pandingyiju,
+        a.shiyanwanchengqixian
+        FROM
+        sy_dps_yy_xianchangjianceweituo a
+        LEFT JOIN sys_depart b ON a.shigongdanwei= b.org_code
+        <!--        	INNER JOIN t_s_depart c ON a.jianlidanweiorgcode= c.org_code-->
+        LEFT JOIN sys_user d ON a.weituoren= d.username
+        WHERE
+        a.id=#{id}
+    </select>
+
+
+</mapper>

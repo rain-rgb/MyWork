@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.cunliangprocedureconfig.mapper.CunliangProcedureConfigMapper">
+
+    <select id="selectprocedureList" resultType="com.trtm.iot.cunliangprocedureconfig.entity.CunliangProcedureConfig" flushCache="true" useCache="false">
+        select * from cunliang_procedure_config where switchsta = 1 group by uuid
+    </select>
+
+    <select id="selectprocedureLists" resultType="com.trtm.iot.cunliangprocedureconfig.entity.CunliangProcedureConfig" flushCache="true" useCache="false">
+        select * from cunliang_procedure_config where uuid=#{uuid}
+    </select>
+
+</mapper>

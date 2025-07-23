@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.jtwbs.mapper.JtwbsMapper">
+
+    <select id="getJtwbs" resultType="com.trtm.iot.jtwbs.entity.Jtwbs">
+        select * from jtwbs
+        where #{sysOrgCode} REGEXP sys_org_code
+    </select>
+</mapper>

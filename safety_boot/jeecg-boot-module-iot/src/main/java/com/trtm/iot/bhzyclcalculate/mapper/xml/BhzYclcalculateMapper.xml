@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.bhzyclcalculate.mapper.BhzYclcalculateMapper">
+
+    <select id="getTJInfoBySbjno" resultType="map" flushCache="true" useCache="false">
+        SELECT materiale_name AS materialeName,sum(reality_number) AS realityNumber,shebei_no AS shebeiNo,statistics_time AS statisticsTime
+        FROM bhz_cement_detail_statistics
+        WHERE statistics_time BETWEEN #{statisticsTime_begin} AND #{statisticsTime_end}
+        <if test="shebeiNo!=null and shebeiNo!=''">
+            AND shebei_no = #{shebeiNo}
+        </if>
+        GROUP BY materiale_name,shebei_no,statistics_time
+        ORDER BY statistics_time
+    </select>
+
+</mapper>

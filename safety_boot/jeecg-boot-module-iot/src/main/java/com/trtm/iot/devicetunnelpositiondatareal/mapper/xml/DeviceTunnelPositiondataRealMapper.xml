@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.devicetunnelpositiondatareal.mapper.DeviceTunnelPositiondataRealMapper">
+
+    <!--<select id="select" resultType="com.baomidou.mybatisplus.core.conditions.interfaces.Func">-->
+        <!--select * from device_tunnel_positiondata_real where shebeino=(select sbjno from shebei_info where-->
+<!--sys_org_code like #{orgCode} and sbname like ('%'#{jzwz}'%') and sbtype=#{sbtype})-->
+    <!--</select>-->
+    <select id="select"
+            resultType="com.trtm.iot.devicetunnelpositiondatareal.entity.DeviceTunnelPositiondataRealDto">
+        select * from device_tunnel_positiondata_real where shebeino=(select sbjno from shebei_info where
+sys_org_code like (#{orgCode}'%') and sbname like ('%'#{sbname}'%') and sbtype=#{sbtype})
+    </select>
+    <select id="queryJiXinList"
+            resultType="com.trtm.iot.devicetunnelpositiondatareal.entity.DeviceTunnelPositiondataReal">
+        select * from device_tunnel_positiondata_real
+        where shebeino=#{shebeino}
+          and datatime is not null and datatime &gt; DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s')
+          and dv &gt; 0
+        GROUP BY card
+        ORDER BY datatime desc
+    </select>
+    <select id="queryJiXinBanZuList"
+            resultType="com.trtm.iot.devicetunnelpositiondatareal.entity.DeviceTunnelPositiondataReal">
+        select count(DISTINCT(username)) as DepartmentID, DepartName,jzwz
+        from device_tunnel_positiondata_real
+        where shebeino=#{shebeino}
+          and datatime is not null and datatime &gt; DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s')
+          and dv &gt; 0
+        GROUP BY DepartName
+    </select>
+    <select id="querylistAttendance"
+            resultType="com.trtm.iot.devicetunnelpositiondatareal.entity.DeviceTunnelPositiondataReal">
+        select count(DISTINCT (username)) as isopen
+        from device_tunnel_positiondata_real
+        where shebeino=#{shebeino}
+          and datatime is not null and datatime &gt; DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s')
+
+    </select>
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.gqpx_employee_training.mapper.GqpxEmployeeTrainingMapper">
+
+    <select id="getUsers" resultType="com.trtm.iot.gqpx_employee_training.entity.SysUser" flushCache="true" useCache="false">
+        select *
+        from sys_user
+        where worktype = #{worktype}
+          and orgCode = #{orgCode}
+
+    </select>
+
+    <select id="getUsersById" resultType="com.trtm.iot.gqpx_employee_training.entity.SysUser" flushCache="true" useCache="false">
+        select *
+        from sys_user
+        where id = #{userid}
+    </select>
+    <select id="getUsersByBanzu" resultType="com.trtm.iot.gqpx_employee_training.entity.SysUser" flushCache="true" useCache="false">
+        select *
+        from sys_user
+        where org_code LIKE CONCAT(#{orgCode}, '%')
+        <if test="banzu != null and !banzu.isEmpty()">
+            AND banzu IN
+            <foreach item="item1" index="index" collection="banzu" open="(" separator="," close=")">
+                #{item1}
+            </foreach>
+        </if>
+        <if test="worktype != null and !worktype.isEmpty()">
+            AND (
+            <foreach item="item" index="index" collection="worktype" open="" separator=" OR " close="">
+                worktype LIKE CONCAT('%', #{item}, '%')
+            </foreach>
+            )
+        </if>
+    </select>
+<!--  updateUserStatus  根据userid修改user表中的status-->
+    <update id="updateUserStatus">
+        update sys_user
+        set status = #{status}
+        where id = #{userId}
+    </update>
+</mapper>

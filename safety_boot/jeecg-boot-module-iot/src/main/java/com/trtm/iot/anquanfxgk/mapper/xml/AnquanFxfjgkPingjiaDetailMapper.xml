@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.anquanfxgk.mapper.AnquanFxfjgkPingjiaDetailMapper">
+
+    <delete id="deleteAnquanFxfjgkPingjiaDetailByParent">
+      delete from anquan_fxfjgk_pingjia_detail where parent_id=#{parentId}
+    </delete>
+    <select id="getAnquanFxfjgkPingjiaDetailByParent"
+            resultType="com.trtm.iot.anquanfxgk.entity.AnquanFxfjgkPingjiaDetail">
+        select *from anquan_fxfjgk_pingjia_detail where parent_id=#{parentId}
+    </select>
+
+</mapper>

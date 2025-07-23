@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.safetyTunnelCarHistory.mapper.SafetyTunnelCarHistoryMapper">
+    <select id="selectLists" resultType="com.trtm.iot.safetyTunnelCarHistory.entity.SafetyTunnelCarHistory" flushCache="true" useCache="false">
+        select *
+        from safety_tunnel_car_history
+        where id &gt; #{id}
+        and shebeino in (${shebeino})
+        limit 100
+    </select>
+</mapper>

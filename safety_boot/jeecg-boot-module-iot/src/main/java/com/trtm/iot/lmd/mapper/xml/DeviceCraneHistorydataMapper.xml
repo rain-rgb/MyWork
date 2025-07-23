@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.lmd.mapper.DeviceCraneHistorydataMapper">
+
+    <select id="selectListsHistoryList2" resultType="com.trtm.iot.lmd.entity.DeviceCraneHistorydata" flushCache="true" useCache="false">
+      select *
+        from device_crane_historydata
+        where id > #{curid}
+        and alertstate = #{i}
+        and device_code in (${split})
+            limit 100
+    </select>
+
+    <select id="selectListToSHYJ" resultType="com.trtm.iot.lmd.entity.DeviceCraneHistorydata" flushCache="true" useCache="false">
+      select *
+        from device_crane_realdata
+        where
+        device_code in (${shebeiNo})
+    </select>
+
+    <select id="selectListbim" resultType="com.trtm.iot.lmd.entity.DeviceCraneHistorydata" flushCache="true" useCache="false">
+      select *
+        from device_crane_historydata
+        where id > #{id}
+        and device_code in (${shebeiNo})
+        limit 1000
+    </select>
+
+    <select id="selectListtoJG" resultType="com.trtm.iot.lmd.entity.DeviceCraneHistorydata" flushCache="true" useCache="false">
+      select *
+        from device_crane_historydata
+        where id > #{curid}
+        and device_code in (${shebeilist})
+        limit 1000
+    </select>
+
+    <select id="selectLmdList" resultType="com.trtm.iot.lmd.entity.DeviceCraneHistorydata" flushCache="true" useCache="false">
+      select *
+        from device_crane_historydata
+        where id > #{curid}
+        and device_code in (${shebeilist})
+            limit 1000
+    </select>
+
+    <select id="getYjList" resultType="map" flushCache="true" useCache="false">
+        SELECT
+	    	device_code, -- 设备编号
+	    	count( 1 ) sjl, -- 数据量
+	    	sum( main_hookstatus ) mainHookSta, -- 主钩载荷状态
+	    	sum( reserved_vicehookstatus ) viceHookSta, -- 预留副钩载荷状态
+	    	sum( wind_speedalarm ) windSpeed, -- 风速报警
+	    	sum( Bigcar_ALM ) bigCar, -- 支腿偏差报警
+	    	sum( main_vicealarm ) mainVice, -- 主副钩吊重预警
+	    	sum( overval1_height1 ) over1Height1, -- 主钩超高预警
+	    	sum( overval2_height2 ) over2Height2, -- 副钩超高预警
+	        sum( overval3_speed1 ) over3Speed1, -- 主钩超速预警
+	        sum( overval4_speed2 ) over4Speed2 -- 副钩超速预警
+		FROM
+			device_crane_historydata
+		WHERE
+			cranedate > DATE_SUB( NOW(), INTERVAL 10 * 5 SECOND )
+		GROUP BY
+			device_code
+    </select>
+</mapper>

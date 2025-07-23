@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.rebarWzcailiaonamedictMan.mapper.RebarWzcailiaonamedictManMapper">
+
+    <select id="getRebarWzcailiaoList"
+            resultType="com.trtm.iot.rebarWzcailiaonamedictMan.entity.RebarWzcailiaonamedictManVo">
+        SELECT sum(number) allNum,r.*
+        FROM rebar_wzcailiaonamedict_man r
+        WHERE isdel = 0 AND nodeType = '12'
+        <if test="startDate != null and startDate !='' ">
+            <![CDATA[ and DATE_FORMAT(create_time, '%Y-%m-%d') >= #{startDate} ]]>
+        </if>
+
+        <if test="endDate != null and endDate !='' ">
+            <![CDATA[ and DATE_FORMAT(create_time, '%Y-%m-%d') <= #{endDate} ]]>
+        </if>
+        GROUP BY sys_org_code,sys_org_codes,cailiaoNo
+    </select>
+    <select id="getUsedNumber" resultType="java.lang.String">
+        SELECT sum(number) allNum
+        FROM rebar_wzcailiaonamedict_man r
+        WHERE isdel = 0 AND nodeType = '12'
+        AND cailiaoNo = #{caiLiaoNo}
+        AND sys_org_code = #{sysOrgCode}
+        AND sys_org_codes = #{sysOrgCodes}
+    </select>
+</mapper>

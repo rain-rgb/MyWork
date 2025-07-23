@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.bhzSwJipeiStatistics.mapper.BhzSwJipeiStatisticsMapper">
+    <select id="selectList1" resultType="com.trtm.iot.bhzSwJipeiStatistics.entity.BhzSwJipeiStatistics" flushCache="true" useCache="false">
+        select baseid,MAX(id) id
+        from bhz_sw_jipei_statistics
+        where  sbjno in (${shebeilist})
+          AND id &gt; #{curid}
+          GROUP BY baseid  ORDER BY id
+    </select>
+    <select id="getList1" resultType="com.trtm.iot.bhzSwJipeiStatistics.entity.BhzSwJipeiStatistics" flushCache="true" useCache="false">
+        select *
+        from bhz_sw_jipei_statistics
+        where  baseid = #{baseid}
+    </select>
+</mapper>

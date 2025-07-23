@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.ycltesttaizhang.mapper.YclTestTaizhangMapper">
+
+    <select id="getList" resultType="com.trtm.iot.ycltesttaizhang.entity.YclTestTaizhang" flushCache="true"
+            useCache="false">
+        select *
+        from ycl_test_taizhang
+        where jinchangtime LIKE concat(#{time},'%')
+        <if test="orgCode!=null">
+            and sys_org_code like concat(#{orgCode},'%')
+        </if>
+    </select>
+    <select id="getHgList" resultType="com.trtm.iot.ycltesttaizhang.entity.YclTestTaizhang" flushCache="true"
+            useCache="false">
+        select *
+        from ycl_test_taizhang
+        where jinchangtime LIKE concat(#{time},'%')
+        and (reslut = '合格' or cjreslut = '合格')
+        <if test="orgCode!=null">
+            and sys_org_code like concat(#{orgCode},'%')
+        </if>
+    </select>
+    <select id="getBhCount" resultType="java.lang.Integer" flushCache="true"
+            useCache="false">
+        select count(1)
+        from wztaizhang
+        where jinchangshijian LIKE concat(#{time},'%')
+        and (jianyanstate = 2 or choujianstate = 2)
+          and zgzt = '20'
+        <if test="orgCode!=null">
+            and sys_org_code like concat(#{orgCode},'%')
+        </if>
+    </select>
+    <update id="updateByPici">
+        update ycl_test_taizhang set
+            cailiaoname = #{cailiaoname},
+            guige = #{guige},
+            nodetype = #{nodetype},
+            gongyingshang = #{gongyingshang},
+            jinchangtime = #{jinchangtime},
+            cunfangplace = #{cunfangplace},
+            shuliang = #{shuliang},
+            usepart = #{usepart},
+            sys_org_code = #{sysOrgCode},
+            create_time = #{createTime},
+            reslut = #{reslut},
+            zjpdf = #{zjpdf},
+            cjreslut = #{cjreslut},
+            cjpdf = #{cjpdf}
+            where pici = #{pici}
+    </update>
+
+</mapper>

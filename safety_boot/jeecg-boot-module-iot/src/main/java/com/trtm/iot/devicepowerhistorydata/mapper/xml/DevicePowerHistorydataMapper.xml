@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.devicepowerhistorydata.mapper.DevicePowerHistorydataMapper">
+
+
+    <select id="selectListToSHYJ" resultType="com.trtm.iot.devicepowerhistorydata.entity.DevicePowerHistorydata" flushCache="true" useCache="false">
+        select *
+        from `device_power_historydata`
+        where imei in (${shebeiNo})
+        and id >#{id}
+        limit 500
+    </select>
+
+    <select id="selectListbim" resultType="com.trtm.iot.devicepowerhistorydata.entity.DevicePowerHistorydata" flushCache="true" useCache="false">
+        select * from device_power_historydata
+        where imei in (${shebeiNo})
+        and id >#{id}
+        limit 1000
+    </select>
+
+    <select id="selectListtoJG" resultType="com.trtm.iot.devicepowerhistorydata.entity.DevicePowerHistorydata" flushCache="true" useCache="false">
+        select * from device_power_historydata
+        where imei in (${shebeilist})
+        and id >#{curid}
+        limit 1000
+    </select>
+</mapper>

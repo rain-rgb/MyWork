@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.sy.wtgl.qywtd.mapper.SyDpsYyYuancaiquyangweituoMapper">
+
+    <select id="selectQuYangList" resultType="com.trtm.sy.wtgl.qywtd.entity.QuYangVo">
+        SELECT t.id wtid,t.yuancaijinchangdengjiId wztzid,w.cailiaoNo,w.gongyingshangdanweibianma,w.guigexinghao,w.pici,w.jinchangshijian,t.zhipairen,t.zhipaishijian,
+            w.delegate_state,t.zhipaizhuangtai,t.quyangren,t.quyangshijian,t.shouyangren,t.shouyangshijian,t.erweimabianhao,t.quyangzhuangtai,t.shouyangzhuangtai
+        FROM sy_dps_yy_yuancaiquyangweituo t JOIN wztaizhang w ON t.yuancaijinchangdengjiId = w.id
+    </select>
+
+    <select id="countQuYangJiLu" resultType="java.lang.Long">
+        select count(0) from sy_dps_yy_quyangjiludan where yuancaijinchangdengjiId=#{wztzid}
+    </select>
+
+    <select id="queryUUIDByQrCode" resultType="java.util.Map">
+        SELECT uuid FROM QRCODE WHERE id=#{code}
+    </select>
+
+    <select id="findByQrCode" resultType="java.util.Map">
+        SELECT id FROM sy_dps_sy_sampleqrcode WHERE qrcode=#{codeString}
+    </select>
+
+    <select id="findByCodeNo" resultType="java.util.Map">
+        SELECT id FROM sy_t_consign_code WHERE codeno=#{codeString}
+    </select>
+
+    <select id="findByErWeiMa" resultType="com.trtm.sy.wtgl.qywtd.entity.SyDpsYyYuancaiquyangweituo">
+        SELECT * FROM sy_dps_yy_yuancaiquyangweituo WHERE erweimaweiyima=#{codeString} and shouyangzhuangtai!=0
+    </select>
+
+    <select id="findJinChangDJByEWM" resultType="com.trtm.sy.wtgl.qywtd.entity.SyDpsYyYuancaiquyangweituo">
+        SELECT * FROM sy_dps_yy_yuancaiquyangweituo WHERE erweimaweiyima=#{ewmuuid}
+    </select>
+
+    <select id="getSyLis" resultType="java.util.Map">
+        SELECT wt.id wtid,wt.yuancaijinchangdengjiId wztzid,w.cailiaoNo,w.gongyingshangdanweibianma,w.guigexinghao,w.pici,w.jinchangshijian,wt.zhipairen,wt.zhipaishijian,
+        w.delegate_state delegateState,wt.zhipaizhuangtai,wt.quyangren,wt.quyangshijian,wt.shouyangren,wt.shouyangshijian,wt.erweimabianhao,wt.quyangzhuangtai,wt.shouyangzhuangtai,
+        wt.shouyangzhuangtai
+        FROM sy_dps_yy_yuancaiquyangweituo wt
+        JOIN wztaizhang w ON wt.yuancaijinchangdengjiId = w.id
+
+        WHERE 1=1 and w.delegate_state = 1
+        <if test="null != queryVo.cailiaono">
+            and w.cailiaoNo in (${queryVo.cailiaono})
+        </if>
+        <!--<if test="null != orgCode">and wt.jianlidanweiorgcode=#{orgCode}</if>-->
+
+        <if test="null != queryVo.zhipaizhuangtai">and wt.zhipaizhuangtai=#{queryVo.zhipaizhuangtai}</if>
+        <if test="null != queryVo.quyangren">and wt.quyangren=#{queryVo.quyangren}</if>
+        <if test="null != queryVo.quyangshijian">and wt.quyangshijian like concat(#{queryVo.quyangshijian},"%")</if>
+        <if test="null != queryVo.quyangzhuangtai">and wt.quyangzhuangtai=#{queryVo.quyangzhuangtai}</if>
+        <if test="null != queryVo.shouyangren">and wt.shouyangren=#{queryVo.shouyangren}</if>
+        <if test="null != queryVo.shouyangshijian">and wt.shouyangshijian like concat(#{queryVo.shouyangshijian},"%")</if>
+        <if test="null != queryVo.shouyangzhuangtai">and wt.shouyangzhuangtai=#{queryVo.shouyangzhuangtai}</if>
+        <if test="null != queryVo.caiLiaoNos and queryVo.caiLiaoNos.size() &gt; 0">
+            and w.cailiaoNo in
+            <foreach collection="queryVo.caiLiaoNos" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="getYgList" resultType="java.util.Map">
+        SELECT wt.id wtid,wt.yuancaijinchangdengjiId wztzid,w.cailiaoNo,w.gongyingshangdanweibianma,w.guigexinghao,w.pici,w.jinchangshijian,wt.zhipairen,wt.zhipaishijian,
+        w.delegate_state delegateState,wt.zhipaizhuangtai,wt.quyangren,wt.quyangshijian,wt.shouyangren,wt.shouyangshijian,wt.erweimabianhao,wt.quyangzhuangtai,wt.shouyangzhuangtai,
+        wt.shouyangzhuangtai,cd.cailiaoName,gy.gongyingshangName,wt.sampleNo
+        FROM sy_dps_yy_yuancaiquyangweituo wt
+        LEFT JOIN wztaizhang w ON wt.yuancaijinchangdengjiId = w.id
+        LEFT JOIN ycl_cailiaodict cd ON w.cailiaoNo=cd.cailiaoNo
+        LEFT JOIN ycl_gongyingshang gy ON w.gongyingshangdanweibianma=gy.guid
+        WHERE 1=1 and w.delegate_state = 1 <if test="null != queryVo.guigexinghao">and w.guigexinghao like concat('%', #{queryVo.guigexinghao}, '%')</if>
+        <if test="null != queryVo.cailiaono">
+            and w.cailiaoNo in (${queryVo.cailiaono})
+        </if>
+        <!--<if test="null != orgCode">and wt.jianlidanweiorgcode=#{orgCode}</if>-->
+
+        <if test="null != queryVo.quyangzhuangtai and queryVo.quyangzhuangtai == 2">and wt.quyangzhuangtai=0</if>
+        <if test="null != queryVo.quyangzhuangtai and queryVo.quyangzhuangtai == 3">and wt.quyangzhuangtai=1</if>
+
+        <if test="null != queryVo.shouyangzhuangtai and queryVo.quyangzhuangtai == 2">and wt.shouyangzhuangtai=0</if>
+        <if test="null != queryVo.shouyangzhuangtai and queryVo.quyangzhuangtai == 3">and wt.shouyangzhuangtai=1</if>
+
+        <if test="null != queryVo.quyangren">and wt.quyangren=#{queryVo.quyangren}</if>
+        <if test="null != queryVo.quyangshijian">and wt.quyangshijian like concat(#{queryVo.quyangshijian},"%")</if>
+
+        <if test="null != queryVo.shouyangren">and wt.shouyangren=#{queryVo.shouyangren}</if>
+        <if test="null != queryVo.shouyangshijian">and wt.shouyangshijian like concat(#{queryVo.shouyangshijian},"%")</if>
+
+        <if test="null != queryVo.caiLiaoNos and queryVo.caiLiaoNos.size() &gt; 0">
+            and w.cailiaoNo in
+            <foreach collection="queryVo.caiLiaoNos" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="queryVo.sys_depart_orgcode != null">and w.sys_org_code like
+            concat(#{queryVo.sys_depart_orgcode},'%')
+        </if> order by wt.id desc
+    </select>
+
+    <select id="getCaiLiaoNo" resultType="java.lang.String">
+        select cailiaoNo from wzcailiaonamedict where nodeType=#{nodeType}
+    </select>
+    <select id="selectListB" resultType="com.trtm.sy.wtgl.qywtd.entity.SyDpsYyYuancaiquyangweituo">
+        select * from wztaizhang w join sy_dps_yy_yuancaiquyangweituo wt on wt.yuancaijinchangdengjiId = w.id where 1=1
+        <if test="null != queryVo.cailiaono">
+            and w.cailiaoNo in (${queryVo.cailiaono})
+        </if>
+        <if test="null != queryVo.caiLiaoNos and queryVo.caiLiaoNos.size() &gt; 0">
+            and w.cailiaoNo in
+            <foreach collection="queryVo.caiLiaoNos" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="queryVo.usePart != null">and w.use_part like concat('%',#{queryVo.usePart},'%')</if>
+        <if test="null != queryVo.guids">
+            and w.gongyingshangdanweibianma in (${queryVo.guids})
+        </if>
+        <if test="queryVo.jinchangshijian != null">and w.jinchangshijian like concat(#{queryVo.jinchangshijian},'%')
+        </if>
+        <if test="queryVo.delegateState == 1">and w.delegate_state = 1</if>
+        <if test="queryVo.delegateState == 0">and w.delegate_state = 0</if>
+        <if test="queryVo.sys_depart_orgcode != null">and w.sys_org_code like
+            concat(#{queryVo.sys_depart_orgcode},'%')
+        </if>
+    </select>
+
+    <select id="findJinChangDJByYCID" resultType="com.trtm.iot.syycjcdj.entity.SyDpsYyYuancaijinchangdengji">
+        select * from sy_dps_yy_yuancaijinchangdengji where yuancaijinchangdengjiId=#{yuancaijinchangdengjiid}
+    </select>
+    <select id="findUUIDByQRCODE" resultType="java.util.Map">
+        SELECT uuid FROM QRCODE WHERE id=#{s}
+    </select>
+    <select id="getContractNumber" resultType="java.lang.String">
+        select r.contract_number from wztaizhang w join sys_depart s on w.sys_org_code=s.org_code join sy_coding_rules r on s.id=r.depart_id where w.id=#{sysOrgCode}
+    </select>
+    <select id="getQueryConditionCl" resultType="com.trtm.sy.wtgl.qywtd.entity.response.ClResponse">
+        select cailiaoNo, cailiaoName, guigexinghao from ycl_cailiaodict where sys_org_code like concat (#{sysOrgCode}, '%') <if test="nodeType != null">and nodeType=#{nodeType}</if>
+    </select>
+    <select id="getPhotoUrl" resultType="java.lang.String">
+        select url from sy_dps_yy_sypic where qydid=#{qydid}
+    </select>
+    <select id="getDepartData" resultType="java.util.Map">
+        select depart_name_abbr xiangmumingcheng, memo weituodanwei, supervision_unit jianglidanwei, construction_unit shigongdanwei from sys_depart where org_code=#{orgCode}
+    </select>
+
+
+</mapper>

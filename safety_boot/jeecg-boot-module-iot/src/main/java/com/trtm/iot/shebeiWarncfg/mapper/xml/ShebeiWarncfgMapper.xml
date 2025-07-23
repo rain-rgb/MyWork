@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.shebeiWarncfg.mapper.ShebeiWarncfgMapper">
+
+    <select id="getcfgdata" useCache="false" flushCache="true" resultType="com.trtm.iot.shebeiWarncfg.entity.ShebeiWarncfg">
+        select * from shebei_warncfg where shebeino =#{sbjno}
+    </select>
+
+</mapper>

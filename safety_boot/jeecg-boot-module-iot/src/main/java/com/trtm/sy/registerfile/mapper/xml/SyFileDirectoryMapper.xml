@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.sy.registerfile.mapper.SyFileDirectoryMapper">
+
+    <!--
+    /**
+     * 通过目录id获取该目录下所有的文件
+     */
+     -->
+    <select id="getSyFileListByMlid" resultType="com.trtm.sy.registerfile.model.entity.SyFileDm">
+        select
+        bfdm.fjid as fjid,
+        bfdm.wjmlid as wjmlid,
+        bfdm.fdmid as fdmid,
+        bfdm.gcmc as gcmc,
+        bfdm.bbh as bbh,
+        bfdm.zxrq as zxrq,
+        bfdm.gqrq as gqrq,
+        bfdm.version as version,
+        bfdm.create_time as createTime,
+        bfdm.create_user as createUser
+        from sy_file_dm as bfdm
+        <if test="request.wjmlid != null and request.wjmlid != ''">
+            INNER JOIN (
+            SELECT
+            *
+            FROM
+            sy_file_directory
+            WHERE
+            del_flag = 'N'
+            AND ( FIND_IN_SET( #{request.wjmlid}, ml_chain ) OR wjmlid = #{request.wjmlid} )) as bfd on bfd.wjmlid =
+            bfdm.wjmlid
+        </if>
+        <where>
+            <if test="request.fdmid != null and request.fdmid != ''">
+                and bfdm.fdmid = #{request.fdmid}
+            </if>
+            <if test="request.gcmc != null and request.gcmc != ''">
+                and bfdm.gcmc like concat('%', #{request.gcmc}, '%')
+            </if>
+            <if test="request.bbh != null and request.bbh != ''">
+                and bfdm.bbh like concat('%', #{request.bbh}, '%')
+            </if>
+            and bfdm.del_flag = 'N'
+            GROUP BY bfdm.fdmid
+            order by bfdm.create_time desc
+        </where>
+    </select>
+
+    <!--
+    /**
+     * 获取树结构文件目录
+     */
+     -->
+    <select id="getTreeList" resultType="com.trtm.sy.registerfile.model.entity.SyFileDirectory">
+        SELECT
+        *
+        FROM
+        sy_file_directory
+        <where>
+            del_flag = 'N'
+            <if test="request.mlClass != null and request.mlClass != ''">
+                AND ml_class = #{request.mlClass}
+            </if>
+            <if test="request.wjmlid != null and request.wjmlid != ''">
+                AND ( FIND_IN_SET( #{request.wjmlid}, ml_chain ) OR wjmlid = #{request.wjmlid} )
+            </if>
+            order by create_time desc
+        </where>
+    </select>
+</mapper>

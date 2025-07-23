@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.ckqhistorydata.mapper.DeviceTrafficHistoryDataMapper">
+
+    <select id="selectWellsNumber" parameterType="String"
+            resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+     select id,v from device_traffic_historydata
+     where topic =#{topic}
+     and  pid like concat('%',#{pid}, '%')
+     and handle_status = '0'
+     group by v
+    </select>
+
+    <select id="selectDeviceMixinStation" parameterType="String"
+            resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+        select id,dataTime, pid, v from device_traffic_historydata
+        where topic =#{topic}
+        and handle_status_two = '0'
+        group by dataTime
+    </select>
+
+
+    <select id="selectGarbageDate" resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+        select id from device_traffic_historydata
+        where pid like concat('%','PUMP', '%')
+        and handle_status = '0'
+        and v= '0'
+    </select>
+
+
+    <select id="selectGarbageDateBigMixinStation"
+            resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+        select id ,v ,handle_status from device_traffic_historydata
+        where handle_status = '0'
+        and pid like concat('%','W', '%')
+        and v>2000
+    </select>
+
+
+    <select id="countTheoryCement" parameterType="String" resultType="String">
+         select  sum(v) from device_traffic_historydata
+          where  handle_status_two = '0'
+          and dataTime like concat('%',#{nowData}, '%')
+          and  (pid like concat('%','CT1', '%') or pid like concat('%','CT2', '%'))
+    </select>
+
+    <select id="countRealityCement" parameterType="String" resultType="String">
+          select  sum(v) from device_traffic_historydata
+          where  handle_status_two = '0'
+          and dataTime like concat('%',#{nowData}, '%')
+          and  (pid like concat('%','CT1_W', '%') or pid like concat('%','CT2_W', '%'))
+    </select>
+
+    <select id="countTheoryFlyAsh" parameterType="String" resultType="String">
+           select  sum(v) from device_traffic_historydata
+          where  handle_status_two = '0'
+          and dataTime like concat('%',#{nowData}, '%')
+          and  (pid like concat('%','FLY1', '%') or pid like concat('%','FLY2', '%'))
+    </select>
+
+    <select id="countRealityFlyAsh" parameterType="String" resultType="String">
+           select  sum(v) from device_traffic_historydata
+          where  handle_status_two = '0'
+          and dataTime like concat('%',#{nowData}, '%')
+          and  (pid like concat('%','FLY1_W', '%') or pid like concat('%','FLY2_W', '%'))
+    </select>
+
+    <select id="deleteTrafficHistoryDataGarbage"
+            resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+         select id ,handle_status from device_traffic_historydata
+        where handle_status = '0'
+        and
+        (v= '0' or v like concat('%','-', '%') or v= ''
+        )
+        and
+        (pid like concat('%','CT', '%')
+        or  pid like concat('%','FL', '%')
+        )
+    </select>
+
+    <select id="selectDTHBid" parameterType="String"
+            resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+          select id from device_traffic_historydata
+          where  handle_status_two = '0'
+          and topic =#{topic}
+          and dataTime like concat('%',#{nowData}, '%')
+          and v != '0'
+          and v != ''
+          and pid =#{pid}
+    </select>
+
+    <select id="selectDTHBidCount" parameterType="String"
+            resultType="double">
+          select sum(v) from device_traffic_historydata
+          where  handle_status_two = '0'
+          and topic =#{topic}
+          and dataTime like concat('%',#{nowData}, '%')
+          and v != '0'
+          and v!=''
+          and pid =#{pid}
+    </select>
+
+    <select id="selectDTHBidTheoryValues" parameterType="String" resultType="String">
+        select  v  from  device_traffic_historydata
+        where handle_status_two = '0'
+        and topic =#{topic}
+        and  pid =#{pid}
+        and v != ''
+        group by  V
+        ORDER BY dataTime desc
+    </select>
+
+    <select id="selectDTHBidTheoryValuesSetStatus" parameterType="String"
+            resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+        select  id  from  device_traffic_historydata
+        where handle_status_two = '0'
+        and topic =#{topic}
+        and  pid =#{pid}
+        and v=#{v}
+        ORDER BY dataTime desc
+    </select>
+
+    <select id="selectDTHOneBidTwoMixinStationFLY1S" parameterType="String"
+            resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+        select  id ,v,handle_status_two from  device_traffic_historydata
+        where handle_status_two = '0'
+        and topic ='/usr/plcnet/BP1_2_PUMP/edge/u'
+        and pid ='FLY1S'
+        and dataTime like concat('%',#{nowData}, '%')
+        ORDER BY dataTime desc
+    </select>
+
+    <select id="selectDTHOneBidTwoMixinStationCT1S"
+            parameterType="String" resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+        select  id ,v,handle_status_two from  device_traffic_historydata
+        where handle_status_two = '0'
+        and topic ='/usr/plcnet/BP1_2_PUMP/edge/u'
+        and  pid ='CT1S'
+        and dataTime like concat('%',#{nowData}, '%')
+        ORDER BY dataTime desc
+    </select>
+
+    <select id="selectDTHFourBidOneMixinStationGroupByV"
+            parameterType="String" resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+        select  id ,v,handle_status_two from  device_traffic_historydata
+        where handle_status_two = '0'
+        and topic ='/usr/plcnet/BP4_1_STA/edge/u'
+        and  pid =#{pid}
+        and dataTime like concat('%',#{nowData}, '%')
+        and v!='0'
+		and v!=''
+		GROUP BY v
+    </select>
+
+    <select id="selectDTHFourBidOneMixinStationSum"
+            parameterType="String" resultType="double">
+        select  sum(v) from  device_traffic_historydata
+        where handle_status_two = '0'
+        and topic ='/usr/plcnet/BP4_1_STA/edge/u'
+        and  pid =#{pid}
+        and dataTime like concat('%',#{nowData}, '%')
+        and v!='0'
+		and v!=''
+		and v=#{v}
+    </select>
+
+    <select id="selectDTHFourBidOneMixinStationList"
+            parameterType="String" resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+        select id from  device_traffic_historydata
+        where handle_status_two = '0'
+        and topic ='/usr/plcnet/BP4_1_STA/edge/u'
+        and  pid =#{pid}
+        and dataTime like concat('%',#{nowData}, '%')
+        and v!='0'
+		and v!=''
+		and v=#{v}
+    </select>
+
+
+    <select id="selectGroutingPumpRealTimeData" parameterType="String"
+            resultType="com.trtm.iot.ckqhistorydata.vo.LookDeviceTrafficHistoryDataVo">
+        select pid,v,dataTime from  device_traffic_historydata
+        where topic =#{sid}
+        and  pid =#{pid}
+        and v !='0'
+        and v!=''
+        order by id desc
+        limit 1
+    </select>
+
+    <select id="selectGroutingPumpRealTotal" parameterType="String"
+            resultType="com.trtm.iot.ckqhistorydata.vo.LookDeviceTrafficHistoryDataVo">
+        select a.v  from (select pid,v from  device_traffic_historydata
+        where topic =#{sid}
+        and v!='0'
+        and v!=''
+        and v not like concat('%','-', '%')
+		and pid like concat('%','FM', '%')
+		and pid IN ('FM1','FM2','FM3','FM4','FM5','FM6','FM7','FM8','FM10','FM11')
+		order by id desc
+		LIMIT 8)  a GROUP BY a.pid
+    </select>
+
+
+    <select id="selectSixFM" parameterType="String"
+            resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+        select id,sid,dataTime,pid,v from device_traffic_historydata
+        <where>
+            and pid=#{pid}
+            <if test="sid!= null and sid!='' ">
+            and sid=#{sid}
+            </if>
+            and topic='6_1'
+            and handle_status_two ='0'
+            order by dataTime asc
+        </where>
+
+    </select>
+
+    <select id="selectSixFMWhetherComplete" parameterType="String"
+            resultType="com.trtm.iot.ckqhistorydata.entity.DeviceTrafficHistoryData">
+         select id,sid from device_traffic_historydata
+          where pid=#{pid}
+         and topic='6_1'
+         and handle_status_two ='0'
+         group by  sid
+         order by dataTime asc
+    </select>
+
+
+</mapper>

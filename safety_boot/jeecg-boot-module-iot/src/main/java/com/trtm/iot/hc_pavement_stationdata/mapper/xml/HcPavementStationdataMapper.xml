@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.hc_pavement_stationdata.mapper.HcPavementStationdataMapper">
+    <select id="getData" resultType="com.trtm.iot.hc_pavement_stationdata.entity.HcPavementStationdataP"
+            flushCache="true" useCache="false">
+        SELECT
+        CONCAT(
+        'K',
+        IF
+        (
+        SUBSTRING( station, 1, LENGTH( station ) - 3 ) = '',
+        '0',
+        SUBSTRING( station, 1, LENGTH( station ) - 3 )),
+        '+',
+        SUBSTRING( station, LENGTH( station ) - 2 )) AS station,
+        timesFirst,
+        timesRepeat,
+        pavingtemperature,
+        temperatureFirst,
+        temperatureRepeat
+        FROM
+        hc_pavement_stationdata
+        where 1 = 1
+        <if test="carNumber!=null and carNumber!='' ">
+            AND station=#{carNumber}
+        </if>
+    </select>
+
+    <select id="getavg" resultType="com.trtm.iot.hc_pavement_stationdata.entity.HcPavementStationdata" flushCache="true"
+            useCache="false">
+		SELECT
+		ROUND(SUM(CASE WHEN 7 > (timesFirst + timesRepeat)  THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS layer,
+		ROUND(SUM(CASE WHEN (timesFirst + timesRepeat) = 7 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS pavingtemperature,
+		ROUND(SUM(CASE WHEN (timesFirst + timesRepeat) = 8 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS temperaturesegregation,
+		ROUND(SUM(CASE WHEN (timesFirst + timesRepeat) > 8 THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS temperaturefirst
+		FROM
+		Hc_Pavement_Stationdata
+		WHERE
+		CAST(station AS SIGNED) >= #{start}
+		AND #{end} >= CAST(station AS SIGNED)
+		AND timesFirst > 0
+		AND pavingtemperature > 0
+		AND temperatureFirst > 0
+    </select>
+</mapper>

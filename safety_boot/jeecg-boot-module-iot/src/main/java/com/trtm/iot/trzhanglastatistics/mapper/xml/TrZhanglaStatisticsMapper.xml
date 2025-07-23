@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.trzhanglastatistics.mapper.TrZhanglaStatisticsMapper">
+    <!--flushCache默认为false，表示任何时候语句被调用，都不会去清空本地缓存和二级缓存。
+   useCache默认为true，表示会将本条语句的结果进行二级缓存。-->
+    <select id="selectlimit" resultType="com.trtm.iot.trzhanglastatistics.entity.TrZhanglaStatistics" flushCache="true" useCache="false">
+        select * from tr_zhangla_statistics
+        where sqsj=#{datanyr1} and shebeibianhao=#{shebeibianhao}
+        <if test="gcmc!=null and gcmc!='' ">
+            AND gcmc=#{gcmc}
+        </if>
+        <if test="yzlc!=null and yzlc!='' ">
+            AND yzlc=#{yzlc}
+        </if>
+        <if test="gjbh!=null and gjbh!='' ">
+            AND gjbh=#{gjbh}
+        </if>
+        <if test="gjmc!=null and gjmc!='' ">
+            AND gjmc=#{gjmc}
+        </if>
+        <if test="snsjqd!=null and snsjqd!='' ">
+            AND snsjqd=#{snsjqd}
+        </if>
+        <if test="infoSbjno!=null and infoSbjno!='' ">
+            AND sys_org_code=#{infoSbjno}
+        </if>
+    </select>
+
+</mapper>

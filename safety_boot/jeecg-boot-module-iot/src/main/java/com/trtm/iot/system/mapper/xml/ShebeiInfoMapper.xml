@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.system.mapper.ShebeiInfoMapper">
+
+    <select id="selectbhzone" resultType="com.trtm.iot.system.entity.ShebeiInfo" useCache="false" flushCache="true">
+        select *
+        from shebei_info
+        where sbtype = #{sbtype}
+          and shebei_status = 1 limit 100
+    </select>
+
+    <select id="selectshebeione" resultType="com.trtm.iot.system.entity.ShebeiInfo" flushCache="true" useCache="false">
+        select *
+        from shebei_info
+        where sbjno = #{sbjno}
+    </select>
+
+    <select id="selectbhzonelist" resultType="com.trtm.iot.system.entity.ShebeiInfo" flushCache="true" useCache="false">
+        select *
+        from shebei_info
+        where shebei_status = 1
+    </select>
+
+    <select id="shebeilists" resultType="com.trtm.iot.system.entity.ShebeiInfo" flushCache="true" useCache="false">
+        select *
+        from shebei_info
+        where shebei_status = 1
+          and sbtype = #{sbtype}
+          and sys_org_code like #{orgcode}
+    </select>
+    <select id="selectLists" resultType="com.trtm.iot.system.entity.ShebeiInfo" flushCache="true" useCache="false">
+        select *
+        from shebei_info
+        where sys_org_code like #{orgcode}
+          and id > #{curid}
+    </select>
+
+    <select id="queryShebeis" resultType="com.trtm.iot.system.entity.ShebeiInfo" flushCache="true" useCache="false">
+        select sbjno, sbname
+        from shebei_info
+        where sys_org_code = #{code}
+    </select>
+
+    <select id="querySheBeiMC" resultType="string" flushCache="true" useCache="false">
+        select sbname
+        from shebei_info
+        where sbjno = #{sheBeiNo}
+    </select>
+
+    <select id="queryShebeiCode" resultType="String" flushCache="true" useCache="false">
+        select depart_name
+        from sys_depart
+        where org_code = #{orgcode}
+          and org_category = 7
+    </select>
+
+    <select id="selectShebeNoiList" resultType="String" flushCache="true" useCache="false">
+        select sbjno
+        from shebei_info
+        where sys_org_code LIKE '${orgCode}%'
+    </select>
+
+    <select id="findSheBeis" resultType="java.lang.String" flushCache="true" useCache="false">
+        select sb.sbjno
+        from `shebei_info` sb
+                 right join(select * from `sys_depart` where org_code like concat(#{orgCode}, "%")) depart
+                           on sb.sys_org_code like concat(depart.org_code, "%")
+        where sb.sbjno is not null
+        group by sb.sbjno
+    </select>
+    <select id="findSBeis" resultType="java.lang.String" flushCache="true" useCache="false">
+        select sb.sbjno
+        from `shebei_info` sb
+                 right join(select * from `sys_depart` where org_code like concat('A', "%")) depart
+                           on sb.sys_org_code like concat(depart.org_code, "%")
+        where sb.sbjno is not null
+        group by sb.sbjno
+    </select>
+
+    <select id="getDataByOrgCode" parameterType="java.util.List" resultType="map" flushCache="true" useCache="false">
+        select `org_code` as orgCode,`depart_name` as departName,`create_by` as createId,`create_time` as createTime
+        from `sys_depart` WHERE 1 = 1
+        <if test="list.size>0">
+            and org_code in
+            <foreach collection="list" item="code" open="(" separator="," close=")">
+                #{code,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+    </select>
+    <select id="selectSBListByCodeList" resultType="java.lang.String" flushCache="true" useCache="false">
+        SELECT
+        s.sbjno
+        FROM
+        shebei_info s
+        LEFT JOIN bhz_call_cfg c ON c.bhjno = s.sbjno
+        WHERE
+
+        ( c.czperson IS NOT NULL AND c.czperson NOT LIKE "%未设处置人%" )
+        AND ( c.shperson IS NOT NULL AND c.shperson NOT LIKE "%未设审核人%" )
+        AND ( c.spperson IS NOT NULL AND c.spperson NOT LIKE "%未设审批人%" )
+        AND s.sys_org_code LIKE concat( #{strsToList1}, '%' )
+
+
+
+    </select>
+
+    <select id="getEquipType" resultType="java.lang.String" flushCache="true" useCache="false">
+        SELECT
+            a.item_text as sbjno
+        FROM
+            sys_dict_item a
+                JOIN sys_dict b ON b.id = a.dict_id
+        WHERE
+            dict_code = 'zlpzsbtype'
+          AND a.item_value = #{sbtype}
+    </select>
+
+</mapper>

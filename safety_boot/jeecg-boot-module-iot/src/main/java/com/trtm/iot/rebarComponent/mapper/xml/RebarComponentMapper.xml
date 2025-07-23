@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.rebarComponent.mapper.RebarComponentMapper">
+    <update id="isDeleteById">
+        update rebar_component set is_deleted = 1 where 1=1
+        <if test="id !=null and id !=''">
+            and id = #{id}
+        </if>
+    </update>
+    <update id="editDepartComponent">
+        update rebar_component
+        <set>
+            org_codes = #{orgCodes}
+        </set>
+        where is_deleted = 0
+        and id in
+        <foreach collection="ids" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </update>
+    <update id="updateByComponentId">
+        update rebar_component
+        <set>
+            component_number = #{componentNumber}
+        </set>
+        where
+        org_codes = #{orgCodes}
+        and
+        component_id = #{componentId}
+    </update>
+    <update id="editComponentByTaskIdAndComponentId">
+        update rebar_component
+        <set>
+            status = 2
+        </set>
+        where
+        task_id = #{taskId}
+        and
+        component_id = #{componentId}
+    </update>
+
+    <select id="queryComponentByTaskId" resultType="com.trtm.iot.rebarComponent.entity.RebarComponent">
+        select * from rebar_component rc
+        left join rebar_component_task rct on rc.component_id = rct.component_id
+        left join rebar_task_checklist rtc on rtc.task_id = rct.task_id
+        where 1=1
+        <if test="taskId !=null and taskId !=''">
+            and rct.task_id = #{taskId}
+        </if>
+        <if test="orgCode !=null and orgCode !=''">
+            and rc.org_code = #{orgCode}
+        </if>
+        <if test="orgCodes !=null and orgCodes !=''">
+            and rc.org_codes = #{orgCodes}
+        </if>
+    </select>
+    <select id="queryComponentByComponentId" resultType="com.trtm.iot.rebarComponent.entity.RebarComponent">
+        select * from rebar_component where is_deleted = 0 and component_id = #{componentId}
+    </select>
+    <select id="queryComponentPageList" resultType="com.trtm.iot.rebarComponent.entity.RebarComponent">
+        select * from rebar_component where is_deleted = 0
+        <if test="sys_depart_orgcode !=null and sys_depart_orgcode !=''">
+            and org_code like concat(#{sys_depart_orgcode},'%')
+        </if>
+        <if test="componentName !=null and componentName !=''">
+            and component_name like concat('%',#{componentName},'%')
+        </if>
+        <if test="startDate != null and startDate !='' ">
+            <![CDATA[ and DATE_FORMAT(create_time, '%Y-%m-%d') >= #{startDate} ]]>
+        </if>
+
+        <if test="endDate != null and endDate !='' ">
+            <![CDATA[ and DATE_FORMAT(create_time, '%Y-%m-%d') <= #{endDate} ]]>
+        </if>
+        <if test="sys_depart_orgcodes !=null and sys_depart_orgcodes !=''">
+            and org_codes = #{sys_depart_orgcodes}
+        </if>
+        and status = #{status}
+    </select>
+    <select id="getBycomponentId" resultType="com.trtm.iot.rebarComponent.entity.RebarComponent">
+        select * from rebar_component where is_deleted = 0
+        <if test="componentId !=null and componentId !=''">
+            and component_id = #{componentId}
+        </if>
+        <if test="orgCodes !=null and orgCodes !=''">
+            and org_codes = #{orgCodes}
+        </if>
+--         and org_codes &lt;&gt; 1
+    </select>
+    <select id="queryComponentByComponentIdAndOrgCodes"
+            resultType="com.trtm.iot.rebarComponent.entity.RebarComponent">
+        select * from rebar_component where is_deleted = 0
+        <if test="componentId !=null and componentId !=''">
+            and component_id = #{componentId}
+        </if>
+        <if test="orgCodes !=null and orgCodes !=''">
+            and org_codes = #{orgCodes}
+        </if>
+    </select>
+    <select id="queryComponentPageList1" resultType="com.trtm.iot.rebarComponent.entity.RebarComponent">
+        select * from rebar_component where is_deleted = 0
+        <if test="sys_depart_orgcode !=null and sys_depart_orgcode !=''">
+            and org_code like concat(#{sys_depart_orgcode},'%')
+        </if>
+        <if test="componentName !=null and componentName !=''">
+            and component_name like concat('%',#{componentName},'%')
+        </if>
+        <if test="startDate != null and startDate !='' ">
+            <![CDATA[ and DATE_FORMAT(create_time, '%Y-%m-%d') >= #{startDate} ]]>
+        </if>
+
+        <if test="endDate != null and endDate !='' ">
+            <![CDATA[ and DATE_FORMAT(create_time, '%Y-%m-%d') <= #{endDate} ]]>
+        </if>
+            and status = #{status}
+            and org_codes &lt;&gt; 1
+        order by create_time desc
+    </select>
+</mapper>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trtm.iot.anquanfxgk.mapper.AnquanFxfjgkBaseMapper">
+
+    <update id="modifyFxfjgkBaseApprovalStatus">
+        update anquan_fxfjgk_base set approval_status=#{status} ,approval_opinion=#{opinion}
+            where base_guid in
+            <foreach collection="list" item="id" open="(" close=")" separator=",">#{id}</foreach>
+    </update>
+    <select id="getAnquanFxfjgkBaseByManage" resultType="com.trtm.iot.anquanfxgk.entity.AnquanFxfjgkBase">
+        select*from anquan_fxfjgk_base where base_guid=#{manageLocation}
+    </select>
+</mapper>
