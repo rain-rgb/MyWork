@@ -1,0 +1,65 @@
+<template>
+	<div class="location">
+		<map v-if="mapshow" style="width: 100%; height: 100%;" :latitude="latitude" :longitude="longitude"
+			:markers="covers"></map>
+	</div>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				mapshow: false,
+				covers: [],
+			}
+		},
+		props:["latitude","longitude"],
+		mounted() {
+			this.huidian()
+		},
+		methods:{
+			huidian(e) {
+				// console.log(e)
+				// console.log(e.ltdfloat)
+				// console.log(e.lgdfloat)
+				if (this.ltdfloat == 0) {
+					// console.log(111)
+					this.latitude = 39.909
+					this.longitude = 116.39742
+					this.mapshow = true
+					return
+				}
+				this.latitude = parseFloat(this.latitude)
+				this.longitude = parseFloat(this.longitude)
+				this.covers = [{
+					latitude: parseFloat(this.latitude),
+					longitude: parseFloat(this.longitude),
+					iconPath: '../../static/icon/snjbz.png',
+					width: 30,
+					height: 30,
+					callout: { //自定义标记点上方的气泡窗口 点击有效
+						content: `经度：${this.latitude}
+											纬度：${this.longitude}
+											高程：0`, //文本
+						color: '#ffffff', //文字颜色
+						fontSize: 14, //文本大小
+						borderRadius: 2, //边框圆角
+						bgColor: '#00c16f', //背景颜色
+						display: 'ALWAYS', //常显
+					},
+				}]
+				this.mapshow = true
+			},
+		}
+	}
+</script>
+
+<style>
+	.location {
+		width: 690upx;
+		height: 370upx;
+		margin: 0 auto;
+		margin-top: 30upx;
+		background-color: #007AFF;
+	}
+</style>

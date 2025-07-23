@@ -1,0 +1,93 @@
+<template>
+    <div class="wrapper">
+        <div class="section-text" v-if="carInfo">
+          <div class="tab">
+                <u-icon class="tab-icon" name="close" @click="carInfo = false">></u-icon>
+          </div>
+          <div class="tab-c">
+                <text class="tab-t">车牌号</text>
+                <text class="tab-text">:{{ carList.shebeiNo_dictText }}</text>
+          </div>
+          <div class="tab-c">
+                <text class="tab-t">速度</text>
+                <text class="tab-text">:{{ carList.speed }}</text>
+          </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+                carInfo:false,
+                carList:"",
+            }
+        },
+        onLoad() {
+            //全局事件订阅，只要订阅了事件就可以收到值
+            uni.$on("getDataTop", async (res) => {
+                this.carList = res;
+                this.carInfo = true;
+                console.log(res,'top----------------'); //我是全局事件订阅的调用方法
+            });
+            uni.$on("shwoDown", async (res) => {
+                this.carInfo = res;
+            });
+        },
+        created() {
+        },
+        beforeDestroy() {
+            uni.$off();
+        },
+        methods: {
+            submit() {
+                // uni.$emit('showTabFun', true);
+                this.show = true;
+            },
+            open() {
+              // console.log('open');
+            },
+            close() {
+              this.show = false;
+              // console.log('close');
+            },
+        }
+    }
+</script>
+
+<style>
+    .wrapper {
+        position: relative;
+        flex: 1;
+        justify-content: space-between;
+        align-items: center;
+        /* background-color: #d267ff; */
+/*        border-color: #eee;
+        border-style: solid;
+        border-width: 4px; */
+    }
+
+    .section-text{
+        width: 600rpx;
+        background-color: #fff;
+        margin: 0 0 0 0;
+        padding: 10px;
+        border-radius: 10rpx;
+    }
+    .tab{
+        flex-direction: row-reverse;
+    }
+    .tab-c{
+        flex-direction: row;
+    }
+    .tab-t{
+        width: 130upx;
+        display: inline-block;
+        text-align: justify;
+        text-align-last: justify;
+    }
+    .tab-text{
+        color: #4c5971;
+    }
+</style>

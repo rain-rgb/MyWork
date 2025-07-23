@@ -1,0 +1,74 @@
+<template>
+    <div class="wrapper">
+        <div class="list"   v-if="show">
+            <u-icon name="arrow-right-double" @click="submit()"  size="28"></u-icon>
+            <u-icon name="arrow-left-double"  @click="submit1()"  size="28"></u-icon>
+<!--            <text class="text" @click="submit('0')">保存</text>
+            <text class="text" @click="submit('1')">提交</text> -->
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+                show:true
+            }
+        },
+        created() {
+
+        },
+        beforeDestroy() {
+        },
+        methods: {
+            submit() {
+                uni.$emit('showTabFun', true);
+                console.log(true,"----"); //我是全局事件订阅的调用方法
+                // uni.$emit('getData',111);
+            },
+            submit1() {
+                uni.navigateTo({
+                  //保留当前页面，跳转到应用内的某个页面
+                  url: "/pages/CarDispatch/CarInfo/CarDispatch",
+                });
+            },
+        }
+    }
+</script>
+
+<style>
+    .wrapper {
+        position: relative;
+        flex: 1;
+        justify-content: space-between;
+        align-items: center;
+        /* background-color: #fff; */
+/*        border-color: #eee;
+        border-style: solid;
+        border-width: 4px; */
+    }
+
+
+    .list {
+        /* position: absolute; */
+        width: 690rpx;
+        height: 90px;
+        /* top:100px; */
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        /* background-color: #fff; */
+    }
+
+    .text {
+        height: 50px;
+        color: #fff;
+        background-color: #192c7c;
+        width: 275rpx;
+        text-align: center;
+        line-height: 50px;
+        border-radius: 25px;
+        font-size: 30upx;
+    }
+</style>

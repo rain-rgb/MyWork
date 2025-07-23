@@ -1,0 +1,1205 @@
+{
+	"pages": [
+		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+
+		{
+			"path": "pages/index/index",
+			"style": {}
+		},
+		{
+		 			"path": "pages/login/JTlogin",
+		 			"style": {}
+		 		},
+		{
+			"path": "pages/Labellist/Labellist",
+			"style": {}
+
+		},
+		{
+			"path": "pages/basics/layout",
+			"style": {}
+		},
+		{
+			"path": "pages/basics/background",
+			"style": {}
+		},
+		{
+			"path": "pages/basics/text",
+			"style": {}
+		},
+		{
+			"path": "pages/basics/icon",
+			"style": {}
+		},
+		{
+			"path": "pages/basics/button",
+			"style": {}
+		},
+		{
+			"path": "pages/basics/design",
+			"style": {}
+		},
+		{
+			"path": "pages/basics/tag",
+			"style": {}
+		},
+		{
+			"path": "pages/basics/avatar",
+			"style": {}
+		},
+		{
+			"path": "pages/basics/progress",
+			"style": {}
+		},
+		{
+			"path": "pages/basics/shadow",
+			"style": {}
+		},
+		{
+			"path": "pages/basics/loading",
+			"style": {}
+		},
+		{
+			"path": "pages/component/bar",
+			"style": {}
+		},
+		{
+			"path": "pages/component/nav",
+			"style": {}
+		},
+		{
+			"path": "pages/component/list",
+			"style": {}
+		},
+		{
+			"path": "pages/component/card",
+			"style": {}
+		},
+		{
+			"path": "pages/component/form",
+			"style": {}
+		},
+		{
+			"path": "pages/component/timeline",
+			"style": {}
+		},
+		{
+			"path": "pages/component/chat",
+			"style": {}
+		},
+		{
+			"path": "pages/component/swiper",
+			"style": {}
+		},
+		{
+			"path": "pages/component/modal",
+			"style": {}
+		},
+		{
+			"path": "pages/component/steps",
+			"style": {}
+		}, {
+			"path": "pages/plugin/indexes",
+			"style": {}
+		}, {
+			"path": "pages/plugin/animation",
+			"style": {}
+		}, {
+			"path": "pages/plugin/drawer",
+			"style": {}
+		}, {
+			"path": "pages/plugin/verticalnav",
+			"style": {}
+		}, {
+			"path": "pages/home/home",
+			"style": {}
+		}, {
+			"path": "pages/login/login",
+			"style": {}
+		}, {
+			"path": "pages/user/userexit",
+			"style": {}
+		}, {
+			"path": "pages/user/userdetail",
+			"style": {}
+		}, {
+			"path": "pages/user/useredit",
+			"style": {}
+		}, {
+			"path": "pages/user/people",
+			"style": {}
+		}, {
+			"path": "pages/common/exit",
+			"style": {}
+		}, {
+			"path": "pages/common/success",
+			"style": {}
+		}, {
+			"path": "pages/common/helloWorld",
+			"style": {}
+		}, {
+			"path": "pages/smartbh/pourorder/pourManage",
+			"style": {
+				"enablePullDownRefresh": true
+			}
+		}, {
+			"path": "pages/smartbh/pourorder/pourAdd",
+			"style": {}
+
+		}, {
+			"path": "pages/home/homes",
+			"style": {}
+
+		}, {
+			"path": "pages/smartbh/smartbh",
+			"style": {
+
+			}
+		},
+		{
+			"path": "pages/Labellist/Labellist",
+			"style": {}
+
+		}, {
+			"path": "pages/labeldata/labeldata",
+			"style": {}
+		},
+		{
+			"path": "pages/labeldata/labeldata",
+			"style": {}
+
+		}, {
+			"path": "pages/smartbh/pourorder/pourDetail",
+			"style": {}
+
+		}, {
+			"path": "pages/smartbh/mix/mixoverview",
+			"style": {}
+
+		}, {
+			"path": "pages/smartbh/mix/mixzlfx",
+			"style": {}
+
+		}, {
+			"path": "pages/smartbh/mix/mixdatadetail",
+			"style": {}
+
+		}, {
+			"path": "pages/smartbh/mix/mixdatalist",
+			"style": {
+				"enablePullDownRefresh": true
+			}
+
+		}, {
+			"path": "pages/ruanji/ruanji",
+			"style": {}
+
+		}, {
+			"path": "pages/ruanji/workorder",
+			"style": {
+				// "enablePullDownRefresh": true
+			}
+
+		}, {
+			"path": "pages/ruanji/workorderdetail",
+			"style": {
+				"enablePullDownRefresh": true
+			}
+
+		}, {
+			"path": "pages/ruanji/workorderadd",
+			"style": {}
+
+		}, {
+			"path": "pages/ruanji/pilerecord",
+			"style": {}
+
+		}, {
+			"path": "pages/ruanji/pilerecorddetail",
+			"style": {
+				"enablePullDownRefresh": true
+			}
+		}, {
+			"path": "pages/ruanji/pilenote",
+			"style": {}
+
+		}, {
+			"path": "pages/ruanji/pilenotedetail",
+			"style": {}
+
+		},
+		{
+			"path": "pages/Entitydetection/Entitydetection",
+			"style": {}
+
+		},
+		{
+			"path": "pages/Entitydetection/Entitydetectionadd",
+			"style": {}
+
+		},
+		{
+			"path": "pages/Entitydetection/Entitydetectiondetils",
+			"style": {}
+
+		}, {
+			"path": "pages/ruanji/mixpile",
+			"style": {
+				// "enablePullDownRefresh": true
+			}
+
+		}, {
+			"path": "pages/ruanji/mixpilerealtime",
+			"style": {
+				"enablePullDownRefresh": true
+			}
+
+		}, {
+			"path": "pages/ruanji/fillingPile",
+			"style": {
+				"enablePullDownRefresh": true
+			}
+
+		},   {
+			"path": "pages/ruanji/fillingPileDetail",
+			"style": {
+				"enablePullDownRefresh": true
+			}
+
+		},{
+			"path": "pages/Rawmaterial/Rawmaterial",
+			"style": {}
+
+		}, {
+			"path": "pages/Rawmaterial/Statistics",
+			"style": {}
+
+		}, {
+			"path": "pages/Rawmaterial/Statisticdetails",
+			"style": {}
+
+		}, {
+			"path": "pages/Entitydetection/Entitydetection",
+			"style": {}
+
+		},
+		{
+			"path": "pages/Entitydetection/Entitydetectionadd",
+			"style": {}
+
+		},
+		{
+			"path": "pages/Entitydetection/Entitydetectiondetils",
+			"style": {}
+
+		}, {
+			"path": "pages/smartsy/shigongphb/shigongphbManage",
+			"style": {
+				"enablePullDownRefresh": true
+			}
+		}, {
+			"path": "pages/smartsy/shigongphb/shigongphbAdd",
+			"style": {}
+		},{
+			"path": "pages/smartsy/shigongphb/shigongphbAdd47",
+			"style": {}
+		}, {
+			"path": "pages/smartsy/shigongphb/shigongphbDetail",
+			"style": {}
+		}, {
+			"path": "pages/theory/theory",
+			"style": {
+				// "enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/theory/theoryadd",
+			"style": {}
+		},
+		{
+			"path": "pages/theory/theorydetails",
+			"style": {}
+		},
+		{
+			"path": "pages/theory/theoryedit",
+			"style": {}
+		},
+		{
+			"path": "pages/smartsy/smartsy",
+			"style": {}
+		},
+		{
+			"path": "pages/smartsy/testingmachine/testingmachinehome",
+			"style": {}
+		}, {
+			"path": "pages/Testdetection/Testdetection",
+			"style": {
+
+			}
+
+		},
+		{
+			"path": "pages/Testdetection/Testwnj",
+			"style": {
+
+			}
+
+		},
+		{
+			"path": "pages/Testdetection/Testwnjdetails",
+			"style": {
+
+			}
+
+		},
+		{
+			"path": "pages/Testdetection/Testylj",
+			"style": {
+
+			}
+
+		},
+		{
+			"path": "pages/Testdetection/Testyljdetails",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Testdetection/Testkykz",
+			"style": {
+
+			}
+
+		},
+		{
+			"path": "pages/Testdetection/Testkykzdetails",
+			"style": {
+
+			}
+
+		},
+		{
+			"path": "uni_modules/uni-upgrade-center-app/pages/upgrade-popup",
+			"style": {
+				"disableScroll": true,
+				"app-plus": {
+					"backgroundColorTop": "transparent",
+					"background": "transparent",
+					"titleNView": false,
+					"scrollIndicator": false,
+					"popGesture": "none",
+					"animationType": "fade-in",
+					"animationDuration": 200
+
+				}
+			}
+		},
+
+		// ……其他页面配置
+		{
+			"path": "pages/UpApp/UpApp",
+			"style": {
+				"disableScroll": true,
+				"app-plus": {
+					"backgroundColorTop": "transparent",
+					"background": "transparent",
+					"titleNView": false,
+					"scrollIndicator": false,
+					"popGesture": "none",
+					"animationType": "fade-in",
+					"animationDuration": 200
+				}
+			}
+		},
+		{
+			"path": "uni_modules/uni-upgrade-center/pages/version/list",
+			"style": {
+				"navigationBarTitleText": "版本列表"
+			}
+		}, {
+			"path": "uni_modules/uni-upgrade-center/pages/version/add",
+			"style": {
+				"navigationBarTitleText": "新版发布"
+			}
+		}, {
+			"path": "uni_modules/uni-upgrade-center/pages/version/detail",
+			"style": {
+				"navigationBarTitleText": "版本信息查看"
+			}
+		}, {
+			"path": "pages/Testdetection/Testdetection",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Testdetection/Testwnj",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Testdetection/Testwnjdetails",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Testdetection/Testylj",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Testdetection/Testyljdetails",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Testdetection/Testkykz",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Testdetection/Testkykzdetails",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/smartbh/Entitytracing",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Rawmaterial/depart/departlist",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Rawmaterial/depart/departadd",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Rawmaterial/check/checklist",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Rawmaterial/Realtime/realtimedata",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Rawmaterial/statistics/statistics",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/smartsy/sampling/samplinglist",
+			"style": {}
+
+		},
+		{
+			"path": "pages/smartsy/sampling/samplinglist",
+			"style": {
+				"enablePullDownRefresh": true
+			}
+
+		}, {
+			"path": "pages/smartsy/sampling/samplingadd",
+			"style": {}
+
+		}, {
+			"path": "pages/smartsy/sampling/samplingdetail",
+			"style": {}
+
+		}, {
+			"path": "pages/smartsy/sampling/testblocksave",
+			"style": {}
+
+		}, {
+			"path": "pages/smartsy/sampling/testblockdown",
+			"style": {}
+		}, {
+			"path": "pages/smartsy/testingmachine/testingmachinehome",
+			"style": {}
+		}, {
+			"path": "pages/Testdetection/Testdetection",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/Testdetection/Testwnj",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/Testdetection/Testwnjdetails",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/Testdetection/Testylj",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/Testdetection/Testyljdetails",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/Testdetection/Testkykz",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/Testdetection/Testkykzdetails",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/smartbh/Entitytracing",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/Rawmaterial/depart/departlist",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Rawmaterial/depart/departadd",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Rawmaterial/depart/departdetails",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+
+		{
+			"path": "pages/smartsy/sampling/samplinglist",
+			"style": {}
+
+		},
+		{
+			"path": "pages/smartsy/sampling/samplingadd",
+			"style": {}
+
+		},
+		{
+			"path": "pages/smartsy/sampling/samplingdetail",
+			"style": {}
+
+		},
+		{
+			"path": "pages/smartsy/sampling/testblocksave",
+			"style": {}
+
+		},
+		{
+			"path": "pages/smartsy/sampling/testblockdown",
+			"style": {}
+		},
+		{
+			"path": "pages/smartsy/testingmachine/testingmachinehome",
+			"style": {}
+		},
+		{
+			"path": "pages/Testdetection/Testdetection",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Testdetection/Testwnj",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Testdetection/Testwnjdetails",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Testdetection/Testylj",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Testdetection/Testyljdetails",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Testdetection/Testkykz",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/Testdetection/Testkykzdetails",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/smartbh/Entitytracing",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/ruanji/pilequality",
+			"style": {}
+		},
+		{
+			"path": "pages/ruanji/maprealtime",
+			"style": {}
+		},
+		{
+			"path": "pages/smartbh/pourorder/pourAudit",
+			"style": {}
+		},
+		{
+			"path": "pages/Rawmaterial/check/arrivaledlist",
+			"style": {}
+		},
+		{
+			"path": "pages/Rawmaterial/check/jiesuo",
+			"style": {}
+		},
+		{
+			"path": "pages/smartsy/Concreteiron/concreteiron",
+			"style": {}
+		},
+		{
+			"path": "pages/smartsy/Concreteiron/concrete",
+			"style": {}
+		},
+		{
+			"path": "pages/smartsy/Concreteiron/Cktesting",
+			"style": {}
+		},
+		{
+			"path": "pages/smartsy/Concreteiron/Zjtesting",
+			"style": {}
+		},
+		{
+			"path": "pages/ruanji/pileefficiency",
+			"style": {}
+		}, {
+			"path": "pages/smartlc/smartlc",
+			"style": {}
+		},
+		{
+			"path": "pages/smartlc/infolist/infolist",
+			"style": {}
+		},
+		{
+			"path": "pages/smartlc/infolist/infodetails",
+			"style": {}
+		},
+		{
+			"path": "pages/smartlc/steplist/steplist",
+			"style": {}
+
+		},
+		{
+			"path": "pages/smartlc/steplist/stepdetails",
+			"style": {}
+
+		},
+		{
+			"path": "pages/smartlc/steplist/stepConfirm",
+			"style": {}
+
+		},
+		{
+			"path": "pages/smartlc/steplist/stepTake",
+			"style": {}
+
+		},
+		{
+			"path": "pages/smartlc/steplist/stepSave",
+			"style": {}
+
+		},
+		{
+			"path": "pages/smartlc/Storagebeam/Storagebeam",
+			"style": {}
+		},
+		{
+			"path": "pages/smartlc/Storagebeam/Storagedetails",
+			"style": {}
+
+		},
+		{
+			"path": "pages/smartlc/Gantrycrane/Gantrycrane",
+			"style": {}
+
+		},
+		{
+			"path": "pages/smartlc/Zllist/Zllist"
+		},
+		{
+			"path": "pages/smartlc/Zllist/Zldetails"
+		},
+		{
+			"path": "pages/smartlc/selfhelp/selfhelp"
+		},
+		{
+			"path": "pages/smartlc/Yjlist/Yjlist"
+		},
+		{
+			"path": "pages/smartlc/Yjlist/Yjdetails"
+		},
+		{
+			"path": "pages/smartlc/orderTracking/orderTracking"
+		}, {
+			"path": "pages/smartlc/orderTracking/orderlist"
+		}, {
+			"path": "pages/smartlc/beamInfo/beamInfo"
+		},
+		{
+			"path": "pages/SmartPavement/SmartPavement"
+		},
+		{
+			"path": "pages/smartlc/orderTracking/orderadd"
+
+		},
+		{
+			"path": "pages/smartlc/orderTracking/Zlcheck"
+		},
+		{
+			"path": "pages/SmartYd/SmartYd"
+		},
+		{
+			"path": "pages/smartbh/concreteorder/concreteorder"
+		},
+		{
+			"path": "pages/smartlc/orderTracking/jzllist"
+		},
+		{
+			"path": "pages/smartbh/messageDetails"
+		},
+		{
+			"path": "pages/smartlc/customerPay/customerPay"
+		},
+		{
+			"path": "pages/smartlc/customerPay/customerList"
+		},
+		{
+			"path": "pages/SmartPavement/asphalt/asphalt"
+		},
+		{
+			"path": "pages/SmartPavement/waterControl/waterControl"
+		},
+		{
+			"path": "pages/SmartPavement/Paving/Paving"
+		},
+		{
+			"path": "pages/smartbh/Seemorelist"
+		},
+		{
+			"path": "pages/smartbh/messagelook"
+		},
+		{
+			"path": "pages/SmartPavement/asphalt/asphaltmix"
+		},
+		{
+			"path": "pages/SmartPavement/asphalt/asphaltmixdetails"
+		},
+		{
+			"path": "pages/SmartPavement/AsphaltOverproof/AsphaltOverproof"
+		},
+		{
+			"path": "pages/SmartPavement/AsphaltOverproof/AsphaltOverDetail"
+		},
+		{
+			"path": "pages/SmartPavement/WaterOverproof/WaterOverproof"
+		},
+		{
+			"path": "pages/SmartPavement/WaterOverproof/WaterOverDetail"
+		},
+		{
+			"path": "pages/home/message"
+		},
+		{
+			"path": "pages/smartbh/mix/Silomonitor"
+		},
+		{
+			"path": "pages/Rawmaterial/Tasklist/Tasklist"
+		},
+		{
+			"path": "pages/Rawmaterial/Tasklist/Tasklistdetails"
+		},
+		{
+			"path": "pages/MaterialProcurement/DeliveryDeclaration/DeliveryDeclaration"
+		},
+		{
+			"path": "pages/MaterialProcurement/DeliveryManagement/DeliveryManagement"
+		},
+		{
+			"path": "pages/MaterialProcurement/check/arrivaledlist"
+		},
+		{
+			"path": "pages/MaterialProcurement/check/checklist"
+		},
+		{
+			"path": "pages/MaterialProcurement/check/checkdetails"
+		},
+		{
+			"path": "pages/MaterialInspection/sampling/sampling"
+		},
+		{
+			"path": "pages/MaterialProcurement/check/spotCheck"
+		},
+		{
+			"path": "pages/MaterialProcurement/check/spotCheckAudit"
+		},
+		{
+			"path": "pages/MaterialProcurement/check/spotCheckAuditDetails"
+		},
+		{
+			"path": "pages/CarDispatch/CarInfo/CarInfo",
+			"style": {
+                // "navigationBarTitleText": "",
+                "app-plus": {
+                    "subNVues": [
+                        {
+                            "id": "video_mask",
+                            "path": "pages/CarDispatch/CarInfo/subnvue/center.nvue",
+                            "style": {
+                                "position": "absolute",
+                                "top": "400px",
+                                "left": "0",
+                                "width": "100%",
+                                "height": "90px",
+                                "background": "transparent"
+                            }
+                        },
+						{
+                            "id": "popup",
+                            "path": "pages/CarDispatch/CarInfo/subnvue/popup.nvue",
+                            "style": {
+                                "position": "absolute",
+                                "top": "76px",
+                                "left": "0",
+                                "width": "100%",
+                                "height": "100%",
+                                "background": "transparent"
+                            }
+                        },
+                        {
+                            "id": "top",
+                            "path": "pages/CarDispatch/CarInfo/subnvue/top.nvue",
+                            "style": {
+                                "position": "absolute",
+                                "top": "100px",
+                                "left": "0",
+                                "width": "100%",
+                                "height": "100%",
+                                "background": "transparent"
+                            }
+                        }
+                    ]
+                }
+
+            }
+		},
+		{
+			"path": "pages/CarDispatch/CarInfo/CarDispatch"
+		},
+		{
+			"path": "pages/CarDispatch/CarInfo/CarTrack"
+		},
+		{
+			"path": "pages/CarDispatch/CarInfo/CarTrack1"
+		},
+		{
+			"path": "pages/MaterialInspection/sampling/entrustDetails"
+		},
+		{
+			"path": "pages/smartlc/orderTracking/zlTaskList"
+		},
+		{
+			"path": "pages/smartlc/orderTracking/yjTaskList"
+		},
+		{
+			"path": "pages/smartlc/ZlOverproof/ZlOverproof"
+		},
+		{
+			"path": "pages/smartlc/ZlOverproof/ZlOverDetail"
+		},
+		{
+			"path": "pages/smartlc/YjOverproof/YjOverproof"
+		},
+		{
+			"path": "pages/smartlc/YjOverproof/YjOverDetail"
+		},
+		{
+			"path": "pages/smartgb/smartgb"
+		},
+		{
+			"path": "pages/smartgb/Smartgb/smartgblist"
+		},
+		{
+			"path": "pages/smartgb/Smartgb/smartgbdetails"
+		},
+		{
+			"path": "pages/smartgb/Smartgb/smartgbjc"
+		},
+		{
+			"path": "pages/smartgb/Smartgb/smartgbcc"
+		},
+		{
+			"path": "pages/smartgb/Smartenv/smartenv"
+		},
+		{
+			"path": "pages/smartgb/SafeCheck/SafeCheck"
+		},
+		{
+			"path": "pages/smartgb/SafeCheck/handle/AddList"
+		},
+		{
+			"path": "pages/smartgb/SafeCheck/handle/edit"
+		},
+		{
+			"path": "pages/smartgb/VideoMonitor/VideoMonitorlist"
+		},
+		{
+			"path": "pages/smartgb/VideoMonitor/VideoMonitorDetail"
+		},
+		{
+			"path": "pages/smartgb/lmdrealdata/DeviceCraneRealdataList"
+		},
+		{
+			"path": "pages/smartgb/lmdrealdata/DeviceCraneRealdataDetail"
+		},
+		{
+			"path": "pages/smartgb/bridgerealdata/DeviceCraneRealdataList"
+		},
+		{
+			"path": "pages/smartgb/bridgerealdata/DeviceCraneRealdataDetail"
+		},
+		{
+			"path": "pages/smartbh/overHandle/overHandle"
+		},
+		{
+			"path": "pages/smartbh/mix/handle/ChuZhi"
+		},
+		{
+			"path": "pages/smartbh/mix/handle/ShenHe"
+		},
+		{
+			"path": "pages/smartbh/mix/handle/ShenPi"
+		},
+		{
+			"path": "pages/smartbh/mix/handle/DealDetail"
+		},
+		{
+			"path": "pages/smartlc/ZlOverproof/handle/ZlChuZhi"
+		},
+		{
+			"path": "pages/smartlc/ZlOverproof/handle/ZlShenHe"
+		},
+		{
+			"path": "pages/smartlc/ZlOverproof/handle/ZlShenPi"
+		},
+		{
+			"path": "pages/smartlc/YjOverproof/handle/YjChuZhi"
+		},
+		{
+			"path": "pages/smartlc/YjOverproof/handle/YjShenHe"
+		},
+		{
+			"path": "pages/smartlc/YjOverproof/handle/YjShenPi"
+		},
+		{
+			"path": "pages/Rawmaterial/SiloManagement/SiloManagement"
+		},
+		{
+			"path": "pages/Rawmaterial/SiloManagement/SiloManageDetail"
+		},
+		{
+			"path": "pages/WebView/Iroadw"
+		},
+		{
+			"path": "pages/ruanji/PipeProduction"
+		},
+		{
+			"path": "pages/ruanji/PipeProductionDetail"
+		},
+		{
+			"path": "pages/ruanji/PipeWarning"
+		},
+		{
+			"path": "pages/ruanji/PipeMonitoring"
+		},
+		{
+			"path": "pages/ruanji/PipeMonitoringDetail"
+		},
+		{
+			"path": "pages/smartbh/Instruct/InstructList"
+		},
+		{
+	        "path": "pages/CarDispatch/CarInfo/carlist"
+	    },
+		{
+	        "path": "pages/zlyj/zl/zlTaskList"
+	    },
+		{
+	        "path": "pages/zlyj/zl/zlAdd"
+	    },
+		{
+	        "path": "pages/zlyj/yj/yjTaskList"
+	    },
+		{
+	        "path": "pages/zlyj/yj/yjAdd"
+	    },
+		{
+	        "path": "pages/personManage/StaffBaseInfoListM"
+	    },
+	    {
+	    	"path" : "pages/personManage/StaffInfo"
+	    },
+	    {
+	    	"path" : "pages/personManage/StaffInfo1"
+	    },
+	    {
+	    	"path" : "pages/MonthHour/MonthHourListM"
+	    },
+	    {
+	    	"path" : "pages/personManage/EntranceGuardRecordList"
+	    },
+	    {
+	    	"path" : "pages/DeviceManage/MobileDevice"
+	    },
+	    {
+	    	"path" : "pages/DeviceManage/DeviceCheck"
+	    },
+	    {
+	    	"path" : "pages/DeviceManage/DeviceCheckInfo"
+	    },
+	    {
+	    	"path" : "pages/DeviceManage/AddDeviceCheck"
+	    },
+		{
+			"path" : "pages/smartgb/DeviceCheck/DeviceCheck"
+		},
+		{
+			"path" : "pages/smartgb/DeviceCheck/DeviceCurve"
+		}
+
+
+	],
+	"globalStyle": {
+		"mp-alipay": {
+			/* 支付宝小程序特有相关 */
+			"transparentTitle": "always",
+			"allowsBounceVertical": "NO"
+		},
+		"navigationBarBackgroundColor": "#0081ff",
+		"navigationBarTitleText": "standard-uniapp",
+		"navigationStyle": "custom",
+		"navigationBarTextStyle": "white",
+		"backgroundColor": "#FFFFFF",
+		"pageOrientation": "auto"
+	},
+	"usingComponts": true,
+	"condition": { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [{
+			"name": "表单", //模式名称
+			"path": "pages/index/index", //启动页面
+			"query": "" //启动参数
+		}]
+	}
+
+}

@@ -1,0 +1,143 @@
+<template>
+    <div class="wrapper">
+        <div class="list"   v-if="show">
+            <u-popup :show="show" mode="left" @close="close" @open="open">
+              <u-list @scrolltolower="scrolltolower">
+                <u-list-item v-for="(item, index) in position" :key="index">
+                  <u-cell
+                    icon="map"
+                    :title="item.shebeiNo_dictText"
+                    :value="item.status_dictText"
+                    @click="shwoTab(item.id)"
+                  ></u-cell>
+                </u-list-item>
+              </u-list>
+            </u-popup>
+            {{getDataPop1}}
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+                show:false,
+                position:[],
+                carInfo:false,
+            }
+        },
+        onLoad() {
+            //全局事件订阅，只要订阅了事件就可以收到值
+            uni.$on("showTabFun", async (res) => {
+              console.log(res); //我是全局事件订阅的调用方法
+              this.show = res;
+              uni.$emit('shwoDown', false);
+            });
+            uni.$on("getDataPop", async (res) => {
+              // this.show = true;
+              this.position = res;
+              console.log(res,'子组件 getDataPop-----------'); //我是全局事件订阅的调用方法
+            });
+        },
+        created() {
+        },
+        beforeDestroy() {
+            uni.$off();
+        },
+        methods: {
+            shwoTab(id) {
+              this.show = false;
+              this.carInfo = true;
+              this.carList = "";
+              this.carList = this.position.filter((e) => {
+                e.id == id;
+              });
+              this.position.forEach((e) => {
+                if (e.id == id) {
+                  this.carList = e;
+                  console.log(e, "e----------------");
+                }
+              });
+              uni.$emit('getDataTop', this.carList)
+              console.log(this.carList, "this.carList----------------");
+            },
+            submit() {
+                // uni.$emit('showTabFun', true);
+                this.show = true;
+            },
+            open() {
+              // console.log('open');
+            },
+            close() {
+              this.show = false;
+              // console.log('close');
+            },
+            getData(){
+                console.log('getData-------------')
+                this.$http
+                .get(`/clgl/clxxRealdata/listView`, {
+                params: { pageSize: 40 },
+                })
+                .then((res) => {
+                    this.position = res.data.result.records;
+                    this.position.forEach((e) => {
+                        e.status == 0
+                        ? (e.status_dictText = "在途运输")
+                        : e.status == 1
+                        ? (e.status_dictText = "卸料中")
+                        : e.status == 2
+                        ? (e.status_dictText = "场内空闲")
+                        : (e.status_dictText = "接料中");
+                    });
+                // console.log(res.data.result.records, "pageSize: 40 ");
+                });
+            }
+        }
+    }
+</script>
+
+<style>
+    .wrapper {
+        position: relative;
+        flex: 1;
+        justify-content: space-between;
+        align-items: center;
+        /* background-color: #fff; */
+/*        border-color: #eee;
+        border-style: solid;
+        border-width: 4px; */
+    }
+
+
+    .list {
+        /* position: absolute; */
+        width: 690rpx;
+        /* height: 190px; */
+        /* top:100px; */
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        /* background-color: #fff; */
+    }
+    .section-text{
+        background-color: #fff;
+        margin: 0 40px 0 0;
+        border-radius: 10rpx;
+    }
+    .tab{
+        flex-direction: row-reverse;
+    }
+    .tab-c{
+        flex-direction: row;
+    }
+    .tab-t{
+        width: 130upx;
+        display: inline-block;
+        text-align: justify;
+        text-align-last: justify;
+    }
+    .tab-text{
+        color: #4c5971;
+    }
+</style>
