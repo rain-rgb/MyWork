@@ -1,0 +1,293 @@
+div, table, textarea {
+  box-sizing: border-box;
+}
+
+/******************字体 字号******************/
+body {
+  font-family: SimSun;
+  font-weight: normal;
+  font-size: 12px;
+}
+
+.layui-table td,
+.layui-table td {
+  font-size: 12px;
+}
+
+input {
+  /*font-family: FangSong;*/
+}
+
+/****** A4纸张大小210mm*290mm 96dpi-->793px*1122px  5mm==18px  15mm==56px ******/
+/*
+  A4打印设置： 边距 15mm 15mm 15mm 25mm
+  浏览器打印默认边距：10mm
+  综上：A4实际设置大小 190mm*270mm(≈718px*1046px)  留边5mm 5mm 5mm 15mm
+*/
+.paperA4 {
+  border: 0 solid white;
+  /*overflow: hidden;*/
+  box-sizing: border-box;
+  background-color: white;
+}
+
+/*由于比例原因 横向纵向宽高有细微调整 防止打印超出*/
+/*横向*/
+.paperA4-horizontal {
+  height: 716px;
+  width: 1046px;
+  border-width: 18px 18px 36px;
+}
+
+/*纵向*/
+.paperA4-vertical {
+  height: 1046px;
+  width: 716px;
+  border-width: 18px 18px 18px 54px;
+}
+
+/*多页*/
+.paper-next {
+  /*margin-top: 2px;*/
+  page-break-before: always;
+}
+
+/***********************全局样式设置***********************/
+.layui-table {
+  margin: 0;
+  border: 2px solid #000;
+  color: #000;
+  background-color: white;
+}
+
+.layui-table tbody tr:hover,
+.layui-table[lay-even] tr:nth-child(even) {
+  background-color: transparent;
+}
+
+.layui-table th,
+.layui-table td {
+  padding: 1px;
+  height: 24px;
+  line-height: 16px;
+  text-align: center;
+  border-color: #000;
+  position: relative;
+}
+
+.next {
+  border-top: none;
+  margin-top: -2px;
+}
+
+.table-noborder {
+  border: none;
+  margin: 0;
+  width: 100%;
+}
+
+.table-noborder th,
+.table-noborder td {
+  border: none;
+}
+
+input[type="text"] {
+  border: none;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+}
+
+input[type='checkbox'], input[type='radio'] {
+  vertical-align: middle;
+}
+
+/*可编辑下拉框控件*/
+input.editable-select {
+  height: 99% !important;
+  width: 99% !important;
+  border: none !important;
+}
+
+select {
+  text-align-last: center;
+  height: 100%;
+  width: 100%;
+}
+
+textarea {
+  resize: none;
+  border: none;
+  height: 100%;
+  width: 100%;
+  padding: 1px;
+  vertical-align: middle;
+}
+
+/*隐藏滚动条*/
+textarea[autoheight] {
+  text-align: center;
+  overflow: hidden;
+}
+
+input[readonly], textarea[readonly] {
+  background-color: white;
+}
+
+/*******************************表结构样式*******************************/
+.tableContent, .tableContent1, .tableContent2, .tableContent3, .tableContent4, .tableContent5, .tableContent6,
+.tableRemark, .tableRemark1, .tableRemark2, .tableRemark3, .tableRemark4, .tableRemark5,
+.tableRemark6 {
+  margin-top: -2px;
+}
+
+/********************************表头表尾样式********************************/
+/*表头*/
+.head .projectName {
+  text-align: center;
+  font-size: 22px;
+  box-sizing: content-box;
+  font-weight: bold;
+}
+
+.head .tablename {
+  padding: 0 0 10px 0;
+  text-align: center;
+  position: relative;
+  font-size: 19px;
+  box-sizing: content-box;
+}
+
+[id^=tiTableName] {
+  font-weight: bold;
+}
+
+.head .tiCustomTableNum {
+  display: table-cell;
+  vertical-align: bottom;
+  position: absolute;
+  font-size: 12px;
+  right: 0;
+  bottom: -2px;
+  font-weight: normal;
+}
+
+.head .page,
+.head .page1,
+.head .page2,
+.head .page3,
+.head .page4,
+.head .page5,
+.head .page6 {
+  position: absolute;
+  font-size: 12px;
+  right: 0;
+  top: 0;
+}
+
+.head .bianhao, .tableNumber {
+  float: right;
+}
+
+.head textarea {
+  text-align: center;
+}
+
+.head .tablecontent .table-noborder {
+  margin: 4px 0;
+}
+
+/*表尾*/
+.tail .beizhu {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  line-height: normal;
+}
+
+.tail .qianzi {
+  position: absolute;
+  bottom: 2px;
+  width: 100%;
+  height: 18px;
+}
+
+.qianzi .fuzeren {
+  position: absolute;
+  left: 26px;
+}
+
+.qianzi .riqi {
+  position: absolute;
+  right: 10px;
+}
+
+.tail .bz {
+  /* min-height: 50px; */
+  height: calc(100% - 24px);
+}
+
+.tail .bz tr {
+  height: 50%;
+}
+
+.tail .remark {
+  text-indent: 5em;
+}
+
+.tail .foot {
+  padding-top: 6px;
+  border: none;
+}
+
+.tail .foot td {
+  border: none;
+  text-align: left;
+}
+
+.tail .yj td {
+  width: 50%;
+}
+
+/***************其他样式************/
+
+input.es-input {
+  padding-right: 0!important;
+  background: white;
+}
+
+/*select去边框和下拉箭头*/
+.select-hide {
+  border: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/*打印不显示的背景色*/
+.noprint-color {
+  background-color: rgb(178, 214, 237);
+}
+
+
+/*****************************打印设置*****************************/
+  .paperA4 {
+    border-color: white;
+    margin: 0 auto;
+  }
+
+  select {
+    border: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  select::-ms-expand {
+    display: none;
+  }
+
+  .noprint {
+    display: none;
+  }
+

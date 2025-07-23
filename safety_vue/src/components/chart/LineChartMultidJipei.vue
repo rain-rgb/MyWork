@@ -1,0 +1,94 @@
+<template>
+  <div :style="{ padding: '0 0 32px 32px' }">
+    <h4 :style="{ marginBottom: '20px' }">{{ title }}</h4>
+    <v-chart :force-fit="true" :height="height" :data="data" :scale="scale" :onClick="handleClick">
+      <v-tooltip/>
+      <v-axis/>
+      <v-legend/>
+      <v-line position="type*y" color="x"/>
+      <v-point position="type*y" color="x" :size="4" :v-style="style" :shape="'circle'"/>
+    </v-chart>
+  </div>
+</template>
+
+<script>
+  import { DataSet } from '@antv/data-set'
+  import { ChartEventMixins } from './mixins/ChartMixins'
+  export default {
+    name: 'LineChartMultidJipei',
+    mixins: [ChartEventMixins],
+    props: {
+      title: {
+        type: String,
+        default: ''
+      },
+      dataSource: {
+        type: Array,
+        default: () => [
+          { type: 'Jan', jeecg: 7.0, jeebt: 3.9 , jeecg1: 7.0, jeebt1: 3.9, jeecg2: 7.0, jeebt2: 3.9},
+          { type: 'Feb', jeecg: 6.9, jeebt: 4.2 , jeecg1: 7.0, jeebt1: 3.9, jeecg2: 7.0, jeebt2: 3.9},
+          { type: 'Mar', jeecg: 9.5, jeebt: 5.7 , jeecg1: 7.0, jeebt1: 3.9, jeecg2: 7.0, jeebt2: 3.9},
+          { type: 'Apr', jeecg: 14.5, jeebt: 8.5 , jeecg1: 7.0, jeebt1: 3.9, jeecg2: 7.0, jeebt2: 3.9},
+          { type: 'May', jeecg: 18.4, jeebt: 11.9 , jeecg1: 7.0, jeebt1: 3.9, jeecg2: 7.0, jeebt2: 3.9},
+          { type: 'Jun', jeecg: 21.5, jeebt: 15.2 , jeecg1: 7.0, jeebt1: 3.9, jeecg2: 7.0, jeebt2: 3.9},
+          { type: 'Jul', jeecg: 25.2, jeebt: 17.0 , jeecg1: 7.0, jeebt1: 3.9, jeecg2: 7.0, jeebt2: 3.9},
+          { type: 'Aug', jeecg: 26.5, jeebt: 16.6 , jeecg1: 7.0, jeebt1: 3.9, jeecg2: 7.0, jeebt2: 3.9},
+          { type: 'Sep', jeecg: 23.3, jeebt: 14.2 , jeecg1: 7.0, jeebt1: 3.9, jeecg2: 7.0, jeebt2: 3.9},
+          { type: 'Oct', jeecg: 18.3, jeebt: 10.3 , jeecg1: 7.0, jeebt1: 3.9, jeecg2: 7.0, jeebt2: 3.9},
+          { type: 'Nov', jeecg: 13.9, jeebt: 6.6 , jeecg1: 7.0, jeebt1: 3.9, jeecg2: 7.0, jeebt2: 3.9},
+          { type: 'Dec', jeecg: 9.6, jeebt: 4.8 , jeecg1: 7.0, jeebt1: 3.9, jeecg2: 7.0, jeebt2: 3.9}
+        ]
+      },
+      fields: {
+        type: Array,
+        default: () => ['jeecg', 'jeebt','jeecg1', 'jeebt1']
+      },
+      // 别名，需要的格式：[{field:'name',alias:'姓名'}, {field:'sex',alias:'性别'}]
+      aliases:{
+        type: Array,
+        default: () => [{field:'jeecg',alias:'级配上限(%)'}, {field:'jeebt',alias:'级配中值(%)'},{field:'jeecg1',alias:'级配下限(%)'}, {field:'jeebt1',alias:'合成级配(%)'}]
+      },
+      height: {
+        type: Number,
+        default: 254
+      }
+    },
+    data() {
+      return {
+        scale: [{
+          type: 'cat',
+          dataKey: 'x',
+          min: 0,
+          max: 1
+        }],
+        style: { stroke: '#fff', lineWidth: 1 }
+      }
+    },
+    computed: {
+      data() {
+        const dv = new DataSet.View().source(this.dataSource)
+        dv.transform({
+          type: 'fold',
+          fields: this.fields,
+          key: 'x',
+          value: 'y'
+        })
+        let rows =  dv.rows
+        // 替换别名
+        rows.forEach(row => {
+          for (let item of this.aliases) {
+            if (item.field === row.x) {
+              row.x = item.alias
+              break
+            }
+          }
+        })
+        return rows
+      }
+    }
+  }
+</script>
+
+<style scoped>
+
+</style>
